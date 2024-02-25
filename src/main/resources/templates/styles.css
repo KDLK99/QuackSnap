@@ -1,0 +1,198 @@
+
+* {
+    box-sizing: border-box;
+}
+
+.fila {
+    display: flex;
+    justify-content: center;
+}
+.columna {
+    margin: 12px; /* Ajusta el margen según sea necesario */
+}
+
+img {
+    /* Para que sea responsiva */
+    width: 90%;
+
+}
+
+.tituloPrincipal
+{
+    text-align: center;
+}
+
+.logo
+{
+    float: left;
+    margin-left: 20px;
+    width: 20%;
+    
+}
+.logoaux
+{
+    float: right;
+    margin-left: 20px; 
+    width: 20%;         
+    
+}
+.center
+{
+    text-align: center;
+    margin-left: 15px;
+}
+
+.tabla1 {
+    width: 100%;
+    border-collapse: collapse;
+}
+.columna {
+    text-align: center;
+    width: 33.33%; /* Distribuir el ancho de las celdas */
+}
+.contenedor {
+    width: 75%;
+    margin: 0 auto; /* Centrar el contenedor */
+}
+
+.tabla2 {
+    width: 100%;
+}
+
+.columna1 {
+    text-align: center;
+    padding: 1%; /* Espacio entre las imágenes */
+}
+.imagenError {
+    text-align: center;
+     /* Espacio entre las imágenes */
+}
+
+.search {
+    display: inline-block;
+    position: relative;
+  }
+  
+  .search input[type="text"] {
+    width: 200px;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search button[type="submit"] {
+    background-color: #4e99e9;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 0;
+    right: 0;
+    transition: .9s ease;
+  }
+  
+  .search button[type="submit"]:hover {
+    transform: scale(1.1);
+    color: rgb(255, 255, 255);
+    background-color: blue;
+  }
+  .contactButton {
+    background: #3cb371;
+    color: white;
+    font-family: inherit;
+    padding: 0.5em;
+    padding-left: 1.2em;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 1em;
+    border: none;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    box-shadow: inset 0 0 1.8em -0.7em #2e8b57;
+    overflow: hidden;
+    position: relative;
+    height: 3em;
+    padding-right: 3.5em;
+  }
+  
+  .iconButton {
+    margin-left: 1.2em;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.4em;
+    width: 2.4em;
+    border-radius: 1.2em;
+    box-shadow: 0.15em 0.15em 0.8em 0.3em #32cd32;
+    right: 0.4em;
+    transition: all 0.3s;
+  }
+  
+  .contactButton:hover {
+    transform: translate(-0.05em, -0.05em);
+    box-shadow: 0.2em 0.2em #228b22;
+  }
+  
+  .contactButton:active {
+    transform: translate(0.05em, 0.05em);
+    box-shadow: 0.1em 0.1em #228b22;
+  }
+
+  .input {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    background-color: #0D1117;
+    justify-content: center;
+    border-radius: 5px
+  }
+  
+  .value {
+    background-color: transparent;
+    border: none;
+    padding: 10px;
+    color: white;
+    display: flex;
+    position: relative;
+    gap: 5px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .value:not(:active):hover,
+  .value:focus {
+    background-color: #21262C;
+  }
+  
+  .value:focus,
+  .value:active {
+    background-color: #1A1F24;
+    outline: none;
+  }
+  
+  .value::before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: -10px;
+    width: 5px;
+    height: 80%;
+    background-color: #2F81F7;
+    border-radius: 5px;
+    opacity: 0;
+  }
+  
+  .value:focus::before,
+  .value:active::before {
+    opacity: 1;
+  }
+  
+  .value svg {
+    width: 15px
+  }
