@@ -7,9 +7,6 @@
     display: flex;
     justify-content: center;
 }
-.columna {
-    margin: 12px; /* Ajusta el margen según sea necesario */
-}
 
 img {
     /* Para que sea responsiva */
@@ -49,6 +46,7 @@ img {
     text-align: center;
     width: 33.33%; /* Distribuir el ancho de las celdas */
 }
+
 .contenedor {
     width: 75%;
     margin: 0 auto; /* Centrar el contenedor */
