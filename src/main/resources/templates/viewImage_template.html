@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .photo-container {
+            display: flex;
+            align-items: center;
+        }
+        .photo {
+            max-width: 200px;
+            margin-right: 20px;
+        }
+        .photo-details {
+            margin-bottom: 20px;
+        }
+        .photo-name {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .photo-description {
+            margin-bottom: 20px;
+        }
+        .buttons {
+            margin-bottom: 20px;
+        }
+        .comment-form {
+            margin-top: 20px;
+        }
+        .comment-form input[type="text"] {
+            width: calc(100% - 100px);
+            padding: 8px;
+            margin-right: 10px;
+        }
+        .comment-form input[type="submit"] {
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="photo-container">
+        <img src="https://phantom-elmundo.unidadeditorial.es/03216350ddcf4dccd2902d43fbd37daa/crop/0x0/840x560/resize/600/f/webp/assets/multimedia/imagenes/2023/10/19/16977227924509.jpg" alt="Photo" class="photo">
+        <div class="photo-details">
+            <div class="photo-name">Photo Name</div>
+            <hr>
+            <div class="photo-description">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ac justo vitae augue porta varius.
+            </div>
+        </div>
+    </div>
+    <div class="buttons">
+        <button>Delete</button>
+        <button>Edit</button>
+        <button>Like</button>
+    </div>
+    <form class="comment-form">
+        <input type="text" placeholder="Your name">
+        <input type="text" placeholder="Add a comment">
+        <input type="submit" value="Add Comment">
+    </form>
+    <div class="comments-container">
+        <!-- Comments will be dynamically added here -->
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const commentForm = document.querySelector('.comment-form');
+        const commentsContainer = document.querySelector('.comments-container');
+
+        commentForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const nameInput = commentForm.querySelector('input[type="text"][placeholder="Your name"]');
+            const commentInput = commentForm.querySelector('input[type="text"][placeholder="Add a comment"]');
+            const name = nameInput.value.trim();
+            const comment = commentInput.value.trim();
+
+            if (name !== '' && comment !== '') {
+                addComment(name, comment);
+                nameInput.value = '';
+                commentInput.value = '';
+            } else {
+                alert('Please enter your name and comment');
+            }
+        });
+
+        function addComment(name, comment) {
+            const commentElement = document.createElement('div');
+            commentElement.classList.add('comment');
+            commentElement.innerHTML = `<strong>${name}</strong>: ${comment}`;
+            commentsContainer.appendChild(commentElement);
+        }
+    });
+</script>
+</body>
