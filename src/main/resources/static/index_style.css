@@ -257,3 +257,9 @@ img {
   .icon {
     font-size: 20px;
   }
+
+  a
+  {
+      color: #fff;
+      text-decoration: none;
+  }
