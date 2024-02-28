@@ -263,3 +263,9 @@ img {
       color: #fff;
       text-decoration: none;
   }
+
+  .col-4
+  {
+  margin-top: 4.15%;
+    margin-bottom: 4.15%;
+  }

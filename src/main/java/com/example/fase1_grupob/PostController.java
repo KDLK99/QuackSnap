@@ -54,7 +54,7 @@ public class PostController {
 
     @PostMapping("/upload_image")
     public String uploadImages(Post post, @RequestParam MultipartFile image, Model model,
-            @RequestParam String imageCategory) throws IOException {
+            @RequestParam String imageCategory, @RequestParam String imageDesc, @RequestParam String postTitle) throws IOException {
 
         model.addAttribute("posts", posts);
 
@@ -62,6 +62,8 @@ public class PostController {
 
         this.nImages++;
 
+        post.setTitle(postTitle);
+        post.setDescription(imageDesc);
         post.setImageName("image" + this.nImages + ".jpg");
         post.setCategories(imageCategory);
 
@@ -75,6 +77,16 @@ public class PostController {
 
         return "index";
     }
+
+    @GetMapping("/viewPost/{index}")
+    public String showPost(@PathVariable int index, Model model) throws MalformedURLException {
+        model.addAttribute("description", posts.get(index - 1).getDescription());
+        model.addAttribute("title", posts.get(index - 1).getTitle());
+        model.addAttribute("index", index);
+
+        return "viewPost_template";
+    }
+    
 
     @GetMapping("/download_image/{index}")
     public ResponseEntity<Object> downloadImage(Model model, @PathVariable int index) throws MalformedURLException {
