@@ -2,6 +2,7 @@ package com.example.fase1_grupob;
 
 import java.io.PipedInputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Post {
