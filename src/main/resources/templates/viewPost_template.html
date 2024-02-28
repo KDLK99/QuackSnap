@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link type="text/css" rel="stylesheet" href="viewImage_style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photo Details</title>
@@ -9,12 +10,12 @@
 <body>
 <div class="container">
     <div class="photo-container">
-        <img src="https://phantom-elmundo.unidadeditorial.es/03216350ddcf4dccd2902d43fbd37daa/crop/0x0/840x560/resize/600/f/webp/assets/multimedia/imagenes/2023/10/19/16977227924509.jpg" alt="Photo" class="photo">
+        <img src="/download_image/{{index}}" alt="Photo" class="photo">
         <div class="photo-details">
-            <div class="photo-name">Photo Name</div>
+            <div class="photo-name">{{title}}</div>
             <hr>
             <div class="photo-description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ac justo vitae augue porta varius.
+                {{description}}
             </div>
         </div>
     </div>
