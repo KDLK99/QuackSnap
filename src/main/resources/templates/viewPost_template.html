@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link type="text/css" rel="stylesheet" href="viewImage_style.css">
+    <link type="text/css" rel="stylesheet" href="/viewImage_style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photo Details</title>
-    <link type="text/css" rel="stylesheet" href="../static/viewImage_style.css">
 </head>
 <body>
 <div class="container">
@@ -24,13 +23,17 @@
         <button>Edit</button>
         <button>Like</button>
     </div>
-    <form class="comment-form">
-        <input type="text" placeholder="Your name">
-        <input type="text" placeholder="Add a comment">
-        <input type="submit" value="Add Comment">
+    <form class="comment-form" action="/viewPost/{{index}}" method="post" enctype="multipart/form-data">
+        <input type="text" name="userName" placeholder="Your name" required>
+        <input type="text" name="comment" placeholder="Add a comment" required>
+        <input type="submit" class="SubmitButton" value="Add Comment">
     </form>
+    <br>
     <div class="comments-container">
-        <!-- Comments will be dynamically added here -->
+
+        {{#comments}}
+        {{{.}}}<br>
+        {{/comments}}
     </div>
 </div>
 </body>

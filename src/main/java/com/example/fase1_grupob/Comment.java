@@ -16,7 +16,7 @@ public class Comment {
         }
 
         public String getUser() {
-            return user;
+            return this.user;
         }
 
         public void setUser(String user) {
@@ -26,11 +26,16 @@ public class Comment {
 
 
         public String getText() {
-            return text;
+            return this.text;
         }
 
         public void setText(String text) {
             this.text = text;
+        }
+
+
+        public String toString(){
+            return "<strong>" + this.user + ": "  + "</strong>"+ this.text;
         }
 
 }

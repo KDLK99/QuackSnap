@@ -84,6 +84,9 @@ public class PostController {
         model.addAttribute("title", posts.get(index - 1).getTitle());
         model.addAttribute("index", index);
 
+        Post post = posts.get(index - 1);
+        model.addAttribute("comments", post.getComments());
+
         return "viewPost_template";
     }
     
@@ -96,5 +99,19 @@ public class PostController {
         Resource image = new UrlResource(imagePath.toUri());
 
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(image);
+    }
+
+    @PostMapping("/viewPost/{index}")
+    public String comment(Model model, @PathVariable int index, @RequestParam String userName, @RequestParam String comment){
+        Comment comment1 = new Comment(userName, comment);
+        Post post = posts.get(index - 1);
+        post.addComment(comment1);
+        model.addAttribute("comments", post.getComments());
+
+        model.addAttribute("description", posts.get(index - 1).getDescription());
+        model.addAttribute("title", posts.get(index - 1).getTitle());
+        model.addAttribute("index", index);
+
+        return "viewPost_template";
     }
 }
