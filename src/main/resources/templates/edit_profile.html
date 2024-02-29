@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="styles_upload.css">
+</head>
+<body>
+<div class="container">
+    <form action="/upload_info" method="post" enctype="multipart/form-data">
+        <p>Change Username:</p>
+        <input type='text' name='username'/>
+        <p>Change Description:</p>
+        <textarea type='text' name="description"></textarea>
+        <p>Image file:</p><input type='file' name='image' accept=".jpg, .jpeg"/>
+          <input type='submit' value='Save'/>
+
+        
+    </form>
+    <a href="http://localhost:8080/">
+        <button class="button">
+        Back
+        </button>
+    </a>
+
+</div>
+</body>
+</html>

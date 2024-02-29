@@ -1,0 +1,52 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.photo-container {
+    display: flex;
+    align-items: center;
+    float: left;
+    width: 20%;
+    max-width: 200px;
+    margin-right: 20px;
+    margin-top: -5px;
+}
+
+.photo-container img {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover; /* Ajusta la imagen dentro del contenedor manteniendo su relación de aspecto */
+}
+.photo {
+    max-width: 200px;
+    margin-right: 20px;
+}
+.photo-details {
+    flex-grow: 1; /* Permite que la parte de detalles del contenedor se expanda para ocupar el espacio restante */
+    padding: 0 17px; /* Añade un poco de espacio entre la imagen y los detalles */
+}
+.photo-name {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+.photo-description {
+    margin-bottom: 20px;
+}
+.buttons {
+    margin-top: 20%; /* Agrega un espacio entre la foto y los botones */
+    display: flex; /* Utiliza un modelo de caja flexible para los botones */
+    gap: 10%; /* Agrega un espacio entre los botones */
+}
+
+.buttons button {
+    flex: 1; /* Hace que los botones se expandan para ocupar el espacio disponible */
+}
