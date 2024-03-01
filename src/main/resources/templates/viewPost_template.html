@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <form action="/viewPost/{index}}" method="post">
+        <form action="/viewPost/{{index}}" method="post">
             <div class="comment-react">
                 <button>
                     <svg
@@ -43,7 +43,7 @@
         </form>
     </div>
     <div class="buttons">
-        <button>Delete</button>
+        <a href="/deletePost/{{index}}"><button>Delete</button></a>
         <button>Edit</button>
     </div>
     <form class="comment-form" action="/viewPost/{{index}}" method="post" enctype="multipart/form-data">
@@ -55,7 +55,7 @@
     <div class="comments-container">
 
         {{#comments}}
-        {{{.}}}<br>
+        <strong>{{user}}:</strong>{{text}}<br>
         {{/comments}}
     </div>
 </div>

@@ -1,5 +1,6 @@
 package com.example.fase1_grupob;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import org.springframework.http.HttpHeaders;
@@ -117,5 +118,17 @@ public class PostController {
         model.addAttribute("likes", post.getLikes());
 
         return "viewPost_template";
+    }
+
+    @GetMapping("/deletePost/{index}")
+    public String deletePost(Model model, @PathVariable int index) throws MalformedURLException {
+        Path imgPath = IMAGES_FOLDER.resolve(posts.get(index - 1).getImageName());
+        File img = imgPath.toFile();
+        img.delete();
+        posts.remove(index - 1);
+
+        model.addAttribute("posts", posts);
+
+        return "redirect:/";
     }
 }
