@@ -87,6 +87,8 @@ public class PostController {
         Post post = posts.get(index - 1);
         model.addAttribute("comments", post.getComments());
 
+        model.addAttribute("likes", post.getLikes());
+
         return "viewPost_template";
     }
     
@@ -111,6 +113,8 @@ public class PostController {
         model.addAttribute("description", posts.get(index - 1).getDescription());
         model.addAttribute("title", posts.get(index - 1).getTitle());
         model.addAttribute("index", index);
+
+        model.addAttribute("likes", post.getLikes());
 
         return "viewPost_template";
     }

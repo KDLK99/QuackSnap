@@ -11,6 +11,7 @@ public class Post {
     private String[] categories;
     private String postTitle;
     private List<Comment> comments = new ArrayList<>();
+    private int likes;
 
 
     public Post(String imageName, String description, String title){
@@ -57,6 +58,14 @@ public class Post {
 
     public List getComments(){
         return this.comments;
+    }
+
+    public void addLike(){
+        this.likes++;
+    }
+
+    public int getLikes(){
+        return this.likes;
     }
 
     @Override
