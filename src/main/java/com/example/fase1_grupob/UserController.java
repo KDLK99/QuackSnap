@@ -87,4 +87,10 @@ public class UserController
 
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(image);
     }
+
+    @GetMapping("/user/posts")
+    public String userPosts(Model model, User user){
+        model.addAttribute("posts", user.getUserPosts());
+        return "userPosts_Template";
+    }
 }

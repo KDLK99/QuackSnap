@@ -1,12 +1,20 @@
 package com.example.fase1_grupob;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jdk.dynalink.linker.LinkerServices;
 
-public class User 
+import java.util.ArrayList;
+import java.util.List;
+
+public class User
 {
     private String profilePhoto;
     private String username;
     private String description;
+    @JsonIgnore
+
+    private List<Post> userPosts = new ArrayList<>();
 
     public User() 
     {
@@ -61,5 +69,16 @@ public class User
         
     }
 
+    public List getUserPosts(){
+        return this.userPosts;
+    }
+
+    public void addPost(Post post){
+        this.userPosts.add(post);
+    }
+
+    public void deletePost(Post post){
+        this.userPosts.remove(post);
+    }
     
 }

@@ -1,16 +1,24 @@
 package com.example.fase1_grupob;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import java.io.PipedInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class Post {
+    interface Basic{}
+    @JsonView(Basic.class)
     private String imageName;
+    @JsonView(Basic.class)
     private String description;
+    @JsonView(Basic.class)
     private String[] categories;
+    @JsonView(Basic.class)
     private String postTitle;
     private List<Comment> comments = new ArrayList<>();
+    @JsonView(Basic.class)
     private int likes;
 
 
@@ -66,6 +74,15 @@ public class Post {
 
     public int getLikes(){
         return this.likes;
+    }
+
+    public boolean checkCategory(String category){
+        for(int i = 0; i < this.categories.length;i++){
+            if(this.categories[i].equals(category)){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

@@ -15,10 +15,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
@@ -27,23 +24,10 @@ public class PostController {
     private List<Post> posts = new ArrayList<>();
     private int nImages = 0;
 
-    /*
-     * @PostMapping("/upload_image")
-     * public String uploadImage(@RequestParam String imageName, @RequestParam
-     * MultipartFile image, Model model)
-     * throws IOException {
-     * 
-     * Files.createDirectories(IMAGES_FOLDER);
-     * 
-     * Path imagePath = IMAGES_FOLDER.resolve(imageName);
-     * 
-     * image.transferTo(imagePath);
-     * 
-     * model.addAttribute("imageName", imageName);
-     * 
-     * return "index1";
-     * }
-     */
+    public ArrayList<Post> getAllPosts(){
+        return (ArrayList<Post>) this.posts;
+    }
+
 
     @GetMapping("/")
     public String showPosts(Model model) {
@@ -120,6 +104,15 @@ public class PostController {
         return "viewPost_template";
     }
 
+    @PostMapping("/viewPost/{index}/increaseLikes")
+    public String comment(@PathVariable int index){
+        Post post = posts.get(index - 1);
+        post.addLike();
+
+        return "redirect:/viewPost/{index}";
+    }
+
+
     @GetMapping("/deletePost/{index}")
     public String deletePost(Model model, @PathVariable int index) throws MalformedURLException {
         Path imgPath = IMAGES_FOLDER.resolve(posts.get(index - 1).getImageName());
@@ -130,5 +123,17 @@ public class PostController {
         model.addAttribute("posts", posts);
 
         return "redirect:/";
+    }
+
+    @GetMapping("/search")
+    public String searchByCategory(@RequestParam String category, Model model) {
+        List<Post> postAux = new ArrayList<>();
+        for (Post post : posts) {
+            if (post.checkCategory(category)) {
+                postAux.add(post);
+            }
+        }
+        model.addAttribute("posts", postAux);
+        return "index";
     }
 }
