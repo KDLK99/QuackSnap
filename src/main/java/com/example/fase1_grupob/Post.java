@@ -20,6 +20,8 @@ public class Post {
     private List<Comment> comments = new ArrayList<>();
     @JsonView(Basic.class)
     private int likes;
+    @JsonView(Basic.class)
+    private Long id;
 
 
     public Post(String imageName, String description, String title){
@@ -83,6 +85,14 @@ public class Post {
             }
         }
         return false;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override

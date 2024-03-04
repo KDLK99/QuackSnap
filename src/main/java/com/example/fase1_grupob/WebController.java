@@ -3,6 +3,8 @@ package com.example.fase1_grupob;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,13 +21,23 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-public class PostController {
+public class WebController {
     private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images");
     private List<Post> posts = new ArrayList<>();
     private int nImages = 0;
 
-    public ArrayList<Post> getAllPosts(){
-        return (ArrayList<Post>) this.posts;
+    private User user = new User();
+    private List<User> userlist = new ArrayList<>();
+
+
+
+    private int nProfilePhoto = 0;
+
+    @Autowired
+    private PostService postService;
+
+    public WebController(){
+        this.userlist.add(user);
     }
 
 
@@ -55,6 +67,7 @@ public class PostController {
         Path imagePath = IMAGES_FOLDER.resolve(post.getImageName());
 
         posts.add(post);
+        this.postService.save(post);
 
         image.transferTo(imagePath);
 
@@ -82,6 +95,7 @@ public class PostController {
     public ResponseEntity<Object> downloadImage(Model model, @PathVariable int index) throws MalformedURLException {
 
         Path imagePath = IMAGES_FOLDER.resolve(posts.get(index - 1).getImageName());
+
 
         Resource image = new UrlResource(imagePath.toUri());
 
@@ -135,5 +149,67 @@ public class PostController {
         }
         model.addAttribute("posts", postAux);
         return "index";
+    }
+
+    @GetMapping("/contactus")
+    public String contactus()
+    {
+        return "contact";
+    }
+
+    @GetMapping("/user")
+    public String user(Model model)
+    {
+        model.addAttribute("index", 1);
+        model.addAttribute("username", this.user.getUsername());
+        model.addAttribute("description", this.user.getDescription());
+
+        return "user_template";
+    }
+
+    @GetMapping("/edit_profile")
+    public String editprofile()
+    {
+
+        return "edit_profile";
+    }
+    @PostMapping("/upload_info")
+    public String uploadInfo(@RequestParam String username, @RequestParam String description, @RequestParam MultipartFile image, Model model) throws IOException
+    {
+        if(!image.isEmpty())
+        {
+            Files.createDirectories(IMAGES_FOLDER);
+
+            this.user.setProfilePhotoName("profphoto" + 1 + ".jpg");
+
+            Path imagePath = IMAGES_FOLDER.resolve(user.getProfilePhotoName());
+            userlist.add(user);
+            image.transferTo(imagePath);
+            model.addAttribute("profile", user.getProfilePhotoName());
+        }
+
+        this.user.updateUsername(username);
+        this.user.updateDescription(description);
+
+        model.addAttribute("username", this.user.getUsername());
+        model.addAttribute("description", this.user.getDescription());
+        model.addAttribute("index", 1);
+        return "user_template";
+    }
+
+    @GetMapping("/updated_profile/{index}")
+    public ResponseEntity<Object> downloadImageUSer(Model model, @PathVariable int index) throws MalformedURLException {
+
+        Path imagePath = IMAGES_FOLDER.resolve(userlist.get(index - 1).getProfilePhotoName());
+
+        Resource image = new UrlResource(imagePath.toUri());
+
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(image);
+    }
+
+    @GetMapping("/user/posts")
+    public String userPosts(Model model, User user){
+        model.addAttribute("posts", user.getUserPosts());
+        return "userPosts_Template";
     }
 }
