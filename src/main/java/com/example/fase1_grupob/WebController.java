@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
@@ -51,8 +52,6 @@ public class WebController {
     public String uploadImages(Post post, @RequestParam MultipartFile image, Model model,
             @RequestParam String imageCategory, @RequestParam String imageDesc, @RequestParam String postTitle) throws IOException {
 
-        model.addAttribute("posts", this.postService.findAll());
-
         Files.createDirectories(IMAGES_FOLDER);
 
         this.nImages++;
@@ -71,7 +70,7 @@ public class WebController {
 
         model.addAttribute("imageName", post.getImageName());
 
-        return "index";
+        return "redirect:/";
     }
 
     @GetMapping("/viewPost/{index}")
@@ -93,7 +92,6 @@ public class WebController {
     public ResponseEntity<Object> downloadImage(Model model, @PathVariable int index) throws MalformedURLException {
 
         Path imagePath = IMAGES_FOLDER.resolve(this.postService.findById(index).getImageName());
-
 
         Resource image = new UrlResource(imagePath.toUri());
 
@@ -136,6 +134,29 @@ public class WebController {
         model.addAttribute("posts",  this.postService.findAll());
 
         return "redirect:/";
+    }
+
+    @PostMapping("/updatePost/{index}")
+    public String updatePost(Model model, @PathVariable int index, @RequestParam MultipartFile image,
+            @RequestParam String imageCategory, @RequestParam String imageDesc, @RequestParam String postTitle)
+            throws IOException {
+        Post post = this.postService.findById(index);
+        if (!image.isEmpty()) {
+            Files.createDirectories(IMAGES_FOLDER);
+            Path imagePath = IMAGES_FOLDER.resolve(post.getImageName());
+            image.transferTo(imagePath);
+        }
+        post.setCategories(imageCategory);
+        post.setDescription(imageDesc);
+        post.setTitle(postTitle);
+
+        return "redirect:/viewPost/{index}";
+    }
+
+    @GetMapping("/editPost/{index}")
+    public String updatePost(Model model, @PathVariable int index){
+        model.addAttribute("index", index);
+        return "edit_post";
     }
 
     @GetMapping("/search")

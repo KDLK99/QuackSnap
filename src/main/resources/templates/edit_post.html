@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Post</title>
+    <link rel="stylesheet" href="styles_upload.css">
+</head>
+<body>
+<div class="container">
+    <form action="/updatePost/{{index}}" method="post" enctype="multipart/form-data">
+        <p>Change post tittle:</p>
+        <input type='text' name='postTitle'/>
+        <p>Change post description:</p>
+        <textarea type='text' name="imageDesc"></textarea>
+        <p>Change image category:</p>
+        <textarea type='text' name="imageCategory"></textarea>
+        <p>Image file:</p><input type='file' name='image' accept=".jpg, .jpeg"/>
+          <input type='submit' value='Save'/>
+
+        
+    </form>
+    <a href="http://localhost:8080/">
+        <button class="button">
+        Back
+        </button>
+    </a>
+
+</div>
+</body>
+</html>
