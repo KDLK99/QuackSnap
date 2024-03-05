@@ -15,21 +15,24 @@ public class Post {
     @JsonView(Basic.class)
     private String description;
     @JsonView(Basic.class)
-    private List<String> categories = new ArrayList<>();
+    private List<String> categories;
     @JsonView(Basic.class)
     private String postTitle;
-    private List<Comment> comments = new ArrayList<>();
+    private List<Comment> comments;
     @JsonView(Basic.class)
     private int likes;
     @JsonView(Basic.class)
     private Long id;
+    private List<User> likedUsers;
 
 
     public Post(String imageName, String description, String title){
         this.imageName = imageName;
         this.description = description;
         this.postTitle = title;
-        this.categories = null;
+        this.categories = new ArrayList<>();
+        this.comments = new ArrayList<>();
+        this.likedUsers = new ArrayList<>();
 
     }
 
@@ -80,8 +83,11 @@ public class Post {
     }
 
 
-    public void addLike(){
-        this.likes++;
+    public void addLike(User u){
+        if (!this.likedUsers.contains(u)) {
+            this.likedUsers.add(u);
+            this.likes++;
+        }
     }
 
     public int getLikes(){

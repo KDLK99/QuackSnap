@@ -69,6 +69,7 @@ public class WebController {
         image.transferTo(imagePath);
 
         model.addAttribute("imageName", post.getImageName());
+        this.user.addPost(post);
 
         return "redirect:/";
     }
@@ -99,8 +100,8 @@ public class WebController {
     }
 
     @PostMapping("/viewPost/{index}")
-    public String comment(Model model, @PathVariable int index, @RequestParam String userName, @RequestParam String comment){
-        Comment comment1 = new Comment(userName, comment);
+    public String comment(Model model, @PathVariable int index, @RequestParam String comment){
+        Comment comment1 = new Comment(this.user.getUsername(), comment);
         Post post = this.postService.findById(index);
         post.addComment(comment1);
         model.addAttribute("comments", post.getComments());
@@ -117,7 +118,7 @@ public class WebController {
     @PostMapping("/viewPost/{index}/increaseLikes")
     public String likes(@PathVariable int index){
         Post post = this.postService.findById(index);
-        post.addLike();
+        post.addLike(this.user);
 
         return "redirect:/viewPost/{index}";
     }
@@ -128,25 +129,21 @@ public class WebController {
         Path imgPath = IMAGES_FOLDER.resolve(this.postService.findById(index).getImageName());
         File img = imgPath.toFile();
         img.delete();
-        this.postService.deleteById(this.postService.findById(index).getId());
+        Post post = this.postService.findById(index);
+        this.postService.deleteById(post.getId());
         this.postService.deleteById(index);
 
         model.addAttribute("posts",  this.postService.findAll());
+
+        this.user.deletePost(post);
 
         return "redirect:/";
     }
 
     @PostMapping("/updatePost/{index}")
-    public String updatePost(Model model, @PathVariable int index, @RequestParam MultipartFile image,
-            @RequestParam String imageCategory, @RequestParam String imageDesc, @RequestParam String postTitle)
+    public String updatePost(Model model, @PathVariable int index, @RequestParam String imageDesc, @RequestParam String postTitle)
             throws IOException {
         Post post = this.postService.findById(index);
-        if (!image.isEmpty()) {
-            Files.createDirectories(IMAGES_FOLDER);
-            Path imagePath = IMAGES_FOLDER.resolve(post.getImageName());
-            image.transferTo(imagePath);
-        }
-        post.setCategories(imageCategory);
         post.setDescription(imageDesc);
         post.setTitle(postTitle);
 
@@ -183,6 +180,7 @@ public class WebController {
         model.addAttribute("index", 1);
         model.addAttribute("username", this.user.getUsername());
         model.addAttribute("description", this.user.getDescription());
+        model.addAttribute("posts", this.user.getUserPosts());
 
         return "user_template";
     }
@@ -211,10 +209,7 @@ public class WebController {
         this.user.updateUsername(username);
         this.user.updateDescription(description);
 
-        model.addAttribute("username", this.user.getUsername());
-        model.addAttribute("description", this.user.getDescription());
-        model.addAttribute("index", 1);
-        return "user_template";
+        return "redirect:/user";
     }
 
     @GetMapping("/updated_profile/{index}")

@@ -69,7 +69,7 @@ public class User
         
     }
 
-    public List getUserPosts(){
+    public List<Post> getUserPosts(){
         return this.userPosts;
     }
 
