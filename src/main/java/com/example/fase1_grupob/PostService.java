@@ -12,6 +12,7 @@ public class PostService {
     private ConcurrentMap<Long, Post> posts = new ConcurrentHashMap<>();
     private AtomicLong nextId = new AtomicLong(1);
 
+
     public Collection<Post> findAll() {
         return posts.values();
     }

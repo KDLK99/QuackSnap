@@ -23,14 +23,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 public class WebController {
     private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images");
-    private List<Post> posts = new ArrayList<>();
+    /*private List<Post> posts = new ArrayList<>();*/
     private int nImages = 0;
 
     private User user = new User();
     private List<User> userlist = new ArrayList<>();
-
-
-
     private int nProfilePhoto = 0;
 
     @Autowired
@@ -44,16 +41,17 @@ public class WebController {
     @GetMapping("/")
     public String showPosts(Model model) {
 
-        model.addAttribute("posts", posts);
+        model.addAttribute("posts", this.postService.findAll());
 
         return "index";
     }
+
 
     @PostMapping("/upload_image")
     public String uploadImages(Post post, @RequestParam MultipartFile image, Model model,
             @RequestParam String imageCategory, @RequestParam String imageDesc, @RequestParam String postTitle) throws IOException {
 
-        model.addAttribute("posts", posts);
+        model.addAttribute("posts", this.postService.findAll());
 
         Files.createDirectories(IMAGES_FOLDER);
 
@@ -63,10 +61,10 @@ public class WebController {
         post.setDescription(imageDesc);
         post.setImageName("image" + this.nImages + ".jpg");
         post.setCategories(imageCategory);
+        post.setId((long) this.nImages);
 
         Path imagePath = IMAGES_FOLDER.resolve(post.getImageName());
 
-        posts.add(post);
         this.postService.save(post);
 
         image.transferTo(imagePath);
@@ -78,11 +76,11 @@ public class WebController {
 
     @GetMapping("/viewPost/{index}")
     public String showPost(@PathVariable int index, Model model) throws MalformedURLException {
-        model.addAttribute("description", posts.get(index - 1).getDescription());
-        model.addAttribute("title", posts.get(index - 1).getTitle());
+        model.addAttribute("description", this.postService.findById(index).getDescription());
+        model.addAttribute("title", this.postService.findById(index).getTitle());
         model.addAttribute("index", index);
 
-        Post post = posts.get(index - 1);
+        Post post = this.postService.findById(index);
         model.addAttribute("comments", post.getComments());
 
         model.addAttribute("likes", post.getLikes());
@@ -94,7 +92,7 @@ public class WebController {
     @GetMapping("/download_image/{index}")
     public ResponseEntity<Object> downloadImage(Model model, @PathVariable int index) throws MalformedURLException {
 
-        Path imagePath = IMAGES_FOLDER.resolve(posts.get(index - 1).getImageName());
+        Path imagePath = IMAGES_FOLDER.resolve(this.postService.findById(index).getImageName());
 
 
         Resource image = new UrlResource(imagePath.toUri());
@@ -105,12 +103,12 @@ public class WebController {
     @PostMapping("/viewPost/{index}")
     public String comment(Model model, @PathVariable int index, @RequestParam String userName, @RequestParam String comment){
         Comment comment1 = new Comment(userName, comment);
-        Post post = posts.get(index - 1);
+        Post post = this.postService.findById(index);
         post.addComment(comment1);
         model.addAttribute("comments", post.getComments());
 
-        model.addAttribute("description", posts.get(index - 1).getDescription());
-        model.addAttribute("title", posts.get(index - 1).getTitle());
+        model.addAttribute("description", post.getDescription());
+        model.addAttribute("title", post.getTitle());
         model.addAttribute("index", index);
 
         model.addAttribute("likes", post.getLikes());
@@ -119,8 +117,8 @@ public class WebController {
     }
 
     @PostMapping("/viewPost/{index}/increaseLikes")
-    public String comment(@PathVariable int index){
-        Post post = posts.get(index - 1);
+    public String likes(@PathVariable int index){
+        Post post = this.postService.findById(index);
         post.addLike();
 
         return "redirect:/viewPost/{index}";
@@ -129,12 +127,13 @@ public class WebController {
 
     @GetMapping("/deletePost/{index}")
     public String deletePost(Model model, @PathVariable int index) throws MalformedURLException {
-        Path imgPath = IMAGES_FOLDER.resolve(posts.get(index - 1).getImageName());
+        Path imgPath = IMAGES_FOLDER.resolve(this.postService.findById(index).getImageName());
         File img = imgPath.toFile();
         img.delete();
-        posts.remove(index - 1);
+        this.postService.deleteById(this.postService.findById(index).getId());
+        this.postService.deleteById(index);
 
-        model.addAttribute("posts", posts);
+        model.addAttribute("posts",  this.postService.findAll());
 
         return "redirect:/";
     }
@@ -142,7 +141,7 @@ public class WebController {
     @GetMapping("/search")
     public String searchByCategory(@RequestParam String category, Model model) {
         List<Post> postAux = new ArrayList<>();
-        for (Post post : posts) {
+        for (Post post :  this.postService.findAll()) {
             if (post.checkCategory(category)) {
                 postAux.add(post);
             }
