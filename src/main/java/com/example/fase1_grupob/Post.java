@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import java.io.PipedInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,12 +15,14 @@ public class Post {
     @JsonView(Basic.class)
     private String description;
     @JsonView(Basic.class)
-    private String[] categories;
+    private List<String> categories = new ArrayList<>();
     @JsonView(Basic.class)
     private String postTitle;
     private List<Comment> comments = new ArrayList<>();
     @JsonView(Basic.class)
     private int likes;
+    @JsonView(Basic.class)
+    private Long id;
 
 
     public Post(String imageName, String description, String title){
@@ -27,10 +30,14 @@ public class Post {
         this.description = description;
         this.postTitle = title;
         this.categories = null;
+
     }
 
     public void setCategories(String categories){
-        this.categories = categories.split(" ");
+        this.categories = Arrays.stream(categories.split(" ")).toList();
+    }
+    public void setCategoriesAPI(String[] categories){
+        this.categories = Arrays.stream(categories).toList();
     }
 
     public void setTitle(String title){
@@ -68,6 +75,11 @@ public class Post {
         return this.comments;
     }
 
+    public void setComments(Comment[] comments){
+        this.comments = Arrays.stream(comments).toList();
+    }
+
+
     public void addLike(){
         this.likes++;
     }
@@ -76,13 +88,27 @@ public class Post {
         return this.likes;
     }
 
+    public void setLikes(int likes){
+        this.likes = likes;
+    }
+
+
+
     public boolean checkCategory(String category){
-        for(int i = 0; i < this.categories.length;i++){
-            if(this.categories[i].equals(category)){
+        for(int i = 0; i < this.categories.size();i++){
+            if(this.categories.get(i).equals(category)){
                 return true;
             }
         }
         return false;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
