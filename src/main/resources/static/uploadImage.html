@@ -10,12 +10,12 @@
 <div class="container">
     <form action="/upload_image" method="post" enctype="multipart/form-data">
         <p>Post title:</p>
-        <input type='text' name='postTitle'/>
+        <input type='text' name='postTitle' required/>
         <p>Image category:</p>
-        <input type='text' name='imageCategory'/>
+        <input type='text' name='imageCategory'required/>
         <p>Image description:</p>
-        <textarea type='text' name='imageDesc'></textarea>
-        <p>Image file:</p><input type='file' name='image' accept=".jpg, .jpeg"/>
+        <textarea type='text' name='imageDesc' required></textarea>
+        <p>Image file:</p><input type='file' name='image' accept=".jpg, .jpeg" required/>
 		
 		  <input type='submit' value='Save'/>
           

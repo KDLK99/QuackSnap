@@ -4,12 +4,14 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #FDC362;
 }
 
 .container {
     width: 400px;
     padding: 20px;
     border: 1px solid #ccc;
+    background-color: #fff;
     border-radius: 8px;
 }
 

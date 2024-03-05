@@ -3,9 +3,9 @@
     box-sizing: border-box;
 }
 
-.fila {
-    display: flex;
-    justify-content: center;
+.color
+{
+  background-color: #FDC362;
 }
 
 img {
@@ -13,7 +13,7 @@ img {
     width: 90%;
 }
 
-.tituloPrincipal
+.mainTitle
 {
   text-align: center;
   margin-left: 5%;
@@ -25,12 +25,12 @@ img {
   width: 15%; /* Reducir el tamaño al 15% del contenedor */
 }
 
-.logoaux {
+.profilePhoto {
   float: right;
   margin-right: -20%; 
   width: 15%; /* Reducir el tamaño al 15% del contenedor */
 }
-.contenedor1
+.headContainer
 {
   width: 75%;
   margin: 0 auto;
@@ -41,51 +41,9 @@ img {
     margin-left: 15px;
 }
 
-.tabla1 {
-    width: 100%;
-    border-collapse: collapse;
-}
-.columna {
-    text-align: center;
-    width: 33.33%; /* Distribuir el ancho de las celdas */
-}
-
-.contenedor {
+.container {
     width: 75%;
     margin: 0 auto; /* Centrar el contenedor */
-}
-
-.tabla2 {
-    width: 100%;
-}
-
-.columna1 {
-    text-align: center;
-    ; /* Espacio entre las imágenes */
-}
-
-.botonIzquierdo {
-  float: left;
-  margin-left: 10%;
-  width: 15%; 
-}
-
-.botonCentral{
-  float: left;
-  margin-left: 19%;
-  width: 15%; 
-}
-
-.botonDerecho{
-  float: right;
-  margin-right: 8%; /* PARA CENTRAR TOCAR ESTOS VALORES */
-  width: 15%; 
-}
-
-
-.imagenError {
-    text-align: center;
-     /* Espacio entre las imágenes */
 }
 
 .search {
@@ -120,51 +78,8 @@ img {
     color: rgb(255, 255, 255);
     background-color: blue;
   }
-  .contactButton {
-    background: #3cb371;
-    color: white;
-    font-family: inherit;
-    padding: 0.5em;
-    padding-left: 1.2em;
-    font-size: 18px;
-    font-weight: 600;
-    border-radius: 1em;
-    border: none;
-    letter-spacing: 0.05em;
-    display: flex;
-    align-items: center;
-    box-shadow: inset 0 0 1.8em -0.7em #2e8b57;
-    overflow: hidden;
-    position: relative;
-    height: 3em;
-    padding-right: 3.5em;
-  }
-  
-  .iconButton {
-    margin-left: 1.2em;
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 2.4em;
-    width: 2.4em;
-    border-radius: 1.2em;
-    box-shadow: 0.15em 0.15em 0.8em 0.3em #32cd32;
-    right: 0.4em;
-    transition: all 0.3s;
-  }
-  
-  .contactButton:hover {
-    transform: translate(-0.05em, -0.05em);
-    box-shadow: 0.2em 0.2em #228b22;
-  }
-  
-  .contactButton:active {
-    transform: translate(0.05em, 0.05em);
-    box-shadow: 0.1em 0.1em #228b22;
-  }
 
-  .input 
+.input 
   {
     position: absolute;
     float: right;
@@ -252,10 +167,6 @@ img {
   
   .button:hover {
     transform: translateY(-3px);
-  }
-  
-  .icon {
-    font-size: 20px;
   }
 
   a
