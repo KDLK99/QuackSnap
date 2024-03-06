@@ -74,7 +74,10 @@ public class Post {
         this.comments.remove(comment);
     }
 
-    public List getComments(){
+    public List getComments(UserService u){
+        for (Comment comment : this.comments) {
+            comment.setUsername(u.findById(comment.getUserId()).getUsername());
+        }
         return this.comments;
     }
 
@@ -87,6 +90,9 @@ public class Post {
         if (!this.likedUsers.contains(u)) {
             this.likedUsers.add(u);
             this.likes++;
+        } else{
+            this.likedUsers.remove(u);
+            this.likes--;
         }
     }
 
@@ -102,8 +108,10 @@ public class Post {
 
     public boolean checkCategory(String category){
         for(int i = 0; i < this.categories.size();i++){
-            if(this.categories.get(i).equals(category)){
-                return true;
+            for (String c : category.split(" ")) {
+                if(this.categories.contains(c)){
+                    return true;
+                }
             }
         }
         return false;

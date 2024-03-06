@@ -22,9 +22,11 @@ public class APIController {
 
 
     private final PostService postService;
+    private final UserService userService;
 
-    public APIController(PostService postService){
+    public APIController(PostService postService, UserService userService){
         this.postService = postService;
+        this.userService = userService;
     }
 
     @GetMapping("/posts")
@@ -109,17 +111,17 @@ public class APIController {
 
     }
 
-    @PostMapping(value = "/post/{id}")
-    public ResponseEntity<Post> writeComment( @PathVariable long id, )throws IOException {
+    @PostMapping(value = "/commentpost/{id}")
+    public ResponseEntity<Post> writeComment( @PathVariable long id, String comment)throws IOException {
         Post post = this.postService.findById(id);
-
+        
         if (post != null) {
-            post.setLikes(post.getLikes() + 1);
+            Comment comment1 = new Comment((long) 1, comment, this.userService.findById(1).getUsername());
+            post.addComment(comment1);
             return ResponseEntity.ok(post);
-        }else{
+        } else {
             return ResponseEntity.notFound().build();
         }
-
     }
 
 

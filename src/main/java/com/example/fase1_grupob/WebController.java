@@ -25,16 +25,12 @@ public class WebController {
     /*private List<Post> posts = new ArrayList<>();*/
     private int nImages = 0;
 
-    private User user = new User();
-    private List<User> userlist = new ArrayList<>();
-    private int nProfilePhoto = 0;
-
     private final PostService postService;
+    private final UserService userService;
 
-    public WebController(PostService postService){
+    public WebController(PostService postService, UserService userService){
         this.postService = postService;
-        this.userlist.add(user);
-
+        this.userService = userService;
     }
 
 
@@ -42,6 +38,7 @@ public class WebController {
     public String showPosts(Model model) {
 
         model.addAttribute("posts", this.postService.findAll());
+        model.addAttribute("errormsg", "Todavía no hay posts.");
 
         return "index";
     }
@@ -58,7 +55,7 @@ public class WebController {
         post.setTitle(postTitle);
         post.setDescription(imageDesc);
         post.setImageName("image" + this.nImages + ".jpg");
-        post.setCategories(imageCategory);
+        post.setCategories(imageCategory.toLowerCase());
         post.setId((long) this.nImages);
 
         Path imagePath = IMAGES_FOLDER.resolve(post.getImageName());
@@ -68,7 +65,7 @@ public class WebController {
         image.transferTo(imagePath);
 
         model.addAttribute("imageName", post.getImageName());
-        this.user.addPost(post);
+        this.userService.findById(1).addPost(post);
 
         return "redirect:/";
     }
@@ -80,7 +77,7 @@ public class WebController {
         model.addAttribute("index", index);
 
         Post post = this.postService.findById(index);
-        model.addAttribute("comments", post.getComments());
+        model.addAttribute("comments", post.getComments(this.userService));
 
         model.addAttribute("likes", post.getLikes());
 
@@ -100,10 +97,10 @@ public class WebController {
 
     @PostMapping("/viewPost/{index}")
     public String comment(Model model, @PathVariable int index, @RequestParam String comment){
-        Comment comment1 = new Comment(this.user.getUsername(), comment);
+        Comment comment1 = new Comment((long) 1, comment, this.userService.findById(1).getUsername());
         Post post = this.postService.findById(index);
         post.addComment(comment1);
-        model.addAttribute("comments", post.getComments());
+        model.addAttribute("comments", post.getComments(this.userService));
 
         model.addAttribute("description", post.getDescription());
         model.addAttribute("title", post.getTitle());
@@ -117,7 +114,7 @@ public class WebController {
     @PostMapping("/viewPost/{index}/increaseLikes")
     public String likes(@PathVariable int index){
         Post post = this.postService.findById(index);
-        post.addLike(this.user);
+        post.addLike(this.userService.findById(1));
 
         return "redirect:/viewPost/{index}";
     }
@@ -134,7 +131,7 @@ public class WebController {
 
         model.addAttribute("posts",  this.postService.findAll());
 
-        this.user.deletePost(post);
+        this.userService.findById(1).deletePost(post);
 
         return "redirect:/";
     }
@@ -155,15 +152,10 @@ public class WebController {
         return "edit_post";
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     public String searchByCategory(@RequestParam String category, Model model) {
-        List<Post> postAux = new ArrayList<>();
-        for (Post post :  this.postService.findAll()) {
-            if (post.checkCategory(category)) {
-                postAux.add(post);
-            }
-        }
-        model.addAttribute("posts", postAux);
+        model.addAttribute("posts", this.postService.filteredPosts(category.toLowerCase()));
+        model.addAttribute("errormsg", "Ningún post coincide con ese criterio de búsqueda.");
         return "index";
     }
 
@@ -177,9 +169,9 @@ public class WebController {
     public String user(Model model)
     {
         model.addAttribute("index", 1);
-        model.addAttribute("username", this.user.getUsername());
-        model.addAttribute("description", this.user.getDescription());
-        model.addAttribute("posts", this.user.getUserPosts());
+        model.addAttribute("username", this.userService.findById(1).getUsername());
+        model.addAttribute("description", this.userService.findById(1).getDescription());
+        model.addAttribute("posts", this.userService.findById(1).getUserPosts());
 
         return "user_template";
     }
@@ -197,16 +189,15 @@ public class WebController {
         {
             Files.createDirectories(IMAGES_FOLDER);
 
-            this.user.setProfilePhotoName("profphoto" + 1 + ".jpg");
+            this.userService.findById(1).setProfilePhotoName("profphoto" + 1 + ".jpg");
 
-            Path imagePath = IMAGES_FOLDER.resolve(user.getProfilePhotoName());
-            userlist.add(user);
+            Path imagePath = IMAGES_FOLDER.resolve(this.userService.findById(1).getProfilePhotoName());
             image.transferTo(imagePath);
-            model.addAttribute("profile", user.getProfilePhotoName());
+            model.addAttribute("profile", this.userService.findById(1).getProfilePhotoName());
         }
 
-        this.user.updateUsername(username);
-        this.user.updateDescription(description);
+        this.userService.findById(1).updateUsername(username);
+        this.userService.findById(1).updateDescription(description);
 
         return "redirect:/user";
     }
@@ -214,7 +205,7 @@ public class WebController {
     @GetMapping("/updated_profile/{index}")
     public ResponseEntity<Object> downloadImageUSer(Model model, @PathVariable int index) throws MalformedURLException {
 
-        Path imagePath = IMAGES_FOLDER.resolve(userlist.get(index - 1).getProfilePhotoName());
+        Path imagePath = IMAGES_FOLDER.resolve(this.userService.findById(1).getProfilePhotoName());
 
         Resource image = new UrlResource(imagePath.toUri());
 

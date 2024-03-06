@@ -12,6 +12,7 @@ public class User
     private String profilePhoto;
     private String username;
     private String description;
+    private long id;
     @JsonIgnore
 
     private List<Post> userPosts = new ArrayList<>();
@@ -79,6 +80,14 @@ public class User
 
     public void deletePost(Post post){
         this.userPosts.remove(post);
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
     
 }

@@ -78,14 +78,12 @@
 
     <div class="center">
       <div class="search">
-        <input placeholder="Search..." type="text">
-        <button type="submit">Go</button>
+        <form class="search" action="/search" method="post" enctype="multipart/form-data">
+          <input placeholder="Search..." type="text" name="category">
+          <button type="submit">Go</button>
+        </form>
       </div>
     </div>
-
-
-
-
 </head>
 
 <body class = "color">
@@ -97,7 +95,7 @@
       </div>
       {{/posts}}
       {{^posts}}
-      <p>No posts yet.</p>
+      <p>{{errormsg}}</p>
       {{/posts}}
     </div>
   </div>
