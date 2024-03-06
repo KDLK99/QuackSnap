@@ -57,7 +57,7 @@ public class APIController {
     }
 
     @PutMapping("/posts/{id}")
-    public ResponseEntity<Post> replacePost(@PathVariable long id, @RequestBody Post newPost) {
+    public ResponseEntity<Post> replacePost(@PathVariable long id, Post newPost) {
 
         Post post = this.postService.findById(id);
 
@@ -92,37 +92,5 @@ public class APIController {
         }
     }
 
-    /*@PostMapping(value = "/posts/{id}", consumes = {"application/json"})
-    public ResponseEntity<Object> uploadPost(@PathVariable long id, @RequestParam MultipartFile image, @RequestBody String[] imageCategory,
-    @RequestBody String imageDesc, @RequestBody String postTitle, @RequestBody int likes, @RequestBody Comment[] comments) throws IOException {
-
-        //Post post = this.postService.findById(id);
-        Post post;
-
-        //if (post != null) {
-
-            URI location = fromCurrentRequest().build().toUri();
-
-            post.setImageName(location.toString()); // ?
-
-            post.setId(id);
-            post.setDescription(imageDesc);
-            post.setTitle(postTitle);
-            post.setCategoriesAPI(imageCategory);
-            post.setLikes(likes);
-            post.setComments(comments);
-            this.postService.save(post);
-
-            Files.createDirectories(IMAGES_FOLDER);
-            Path imagePath = IMAGES_FOLDER.resolve(post.getImageName());
-            image.transferTo(imagePath);
-
-
-            return ResponseEntity.created(location).build();
-
-        //} else {
-            //return ResponseEntity.notFound().build();
-        //}
-    }*/
 
 }

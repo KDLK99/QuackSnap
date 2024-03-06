@@ -4,7 +4,12 @@
     padding: 20px;
     text-align: center;
     border: 1px solid #ccc;
+    background-color: #fff;
     border-radius: 10px;
+}
+
+body{
+    background-color: #FDC362;
 }
 
 h1 {
