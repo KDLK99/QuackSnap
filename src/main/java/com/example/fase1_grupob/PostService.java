@@ -1,7 +1,10 @@
 package com.example.fase1_grupob;
 
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -35,5 +38,13 @@ public class PostService {
         this.posts.remove(id);
     }
 
-
+    public List<Post> filteredPosts(String category){
+        List<Post> aux = new ArrayList<>();
+        for (Post post :  this.findAll()) {
+            if (post.checkCategory(category)) {
+                aux.add(post);
+            }
+        }
+        return aux;
+    }
 }
