@@ -20,8 +20,12 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 public class APIController {
     private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images");
 
-    @Autowired
-    private PostService postService;
+
+    private final PostService postService;
+
+    public APIController(PostService postService){
+        this.postService = postService;
+    }
 
     @GetMapping("/posts")
     public Collection<Post> getAllPosts(){
@@ -91,6 +95,33 @@ public class APIController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping(value = "/post/{id}")
+    public ResponseEntity<Post> giveLike( @PathVariable long id)throws IOException {
+        Post post = this.postService.findById(id);
+
+        if (post != null) {
+            post.setLikes(post.getLikes() + 1);
+            return ResponseEntity.ok(post);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
+    @PostMapping(value = "/post/{id}")
+    public ResponseEntity<Post> writeComment( @PathVariable long id, )throws IOException {
+        Post post = this.postService.findById(id);
+
+        if (post != null) {
+            post.setLikes(post.getLikes() + 1);
+            return ResponseEntity.ok(post);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
 
 
 }

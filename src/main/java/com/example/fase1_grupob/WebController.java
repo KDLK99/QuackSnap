@@ -4,13 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
@@ -31,11 +29,12 @@ public class WebController {
     private List<User> userlist = new ArrayList<>();
     private int nProfilePhoto = 0;
 
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
 
-    public WebController(){
+    public WebController(PostService postService){
+        this.postService = postService;
         this.userlist.add(user);
+
     }
 
 
