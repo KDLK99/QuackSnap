@@ -36,6 +36,8 @@ body {
 }
 .comment-form {
     margin-top: 20px;
+    position:relative;
+    right:4%;
 }
 .comment-form input[type="text"] {
     width: calc(100% - 100px);
@@ -60,8 +62,8 @@ body {
     border-radius: 3%;
     scale: 1.25;
     width: 10%;
-    top: 10%;
-    left: 1600%;
+    bottom:45%;
+    left: 2400%;
 }
 
 .comment-react button {
@@ -138,5 +140,22 @@ body {
         transform: scale(2);
         opacity: 0;
     }
+
 }
+
+.comment-section {
+    display: flex;
+    align-items: center;
+}
+
+
+
+.comment-form {
+    flex: 1; /* Allow form to fill remaining space */
+}
+
+form{
+    display: inline;
+}
+
 
