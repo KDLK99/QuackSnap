@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class WebController {
     private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images");
     /*private List<Post> posts = new ArrayList<>();*/
-    private int nImages = 0;
+    //private int nImages = 0;
 
     private final PostService postService;
     private final UserService userService;
@@ -50,13 +50,13 @@ public class WebController {
 
         Files.createDirectories(IMAGES_FOLDER);
 
-        this.nImages++;
+
 
         post.setTitle(postTitle);
         post.setDescription(imageDesc);
-        post.setImageName("image" + this.nImages + ".jpg");
+        post.setImageName("image" + this.postService.getNextId() + ".jpg");
         post.setCategories(imageCategory.toLowerCase());
-        post.setId((long) this.nImages);
+        post.setId(this.postService.getNextId().get());
 
         Path imagePath = IMAGES_FOLDER.resolve(post.getImageName());
 
@@ -154,6 +154,9 @@ public class WebController {
 
     @PostMapping("/search")
     public String searchByCategory(@RequestParam String category, Model model) {
+        if(category.isEmpty()){
+            return "redirect:/";
+        }
         model.addAttribute("posts", this.postService.filteredPosts(category.toLowerCase()));
         model.addAttribute("errormsg", "Ningún post coincide con ese criterio de búsqueda.");
         return "index";
@@ -203,7 +206,7 @@ public class WebController {
     }
 
     @GetMapping("/updated_profile/{index}")
-    public ResponseEntity<Object> downloadImageUSer(Model model, @PathVariable int index) throws MalformedURLException {
+    public ResponseEntity<Object> updateImageUSer(Model model, @PathVariable int index) throws MalformedURLException {
 
         Path imagePath = IMAGES_FOLDER.resolve(this.userService.findById(1).getProfilePhotoName());
 
@@ -212,9 +215,13 @@ public class WebController {
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(image);
     }
 
-    @GetMapping("/user/posts")
-    public String userPosts(Model model, User user){
-        model.addAttribute("posts", user.getUserPosts());
-        return "userPosts_Template";
+    @GetMapping("/userposts")
+
+    public String showUserPosts(Model model) {
+
+        model.addAttribute("posts",  this.postService.findAll());
+
+        return "user_post";
+
     }
 }

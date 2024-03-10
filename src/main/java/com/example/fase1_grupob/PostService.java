@@ -30,6 +30,7 @@ public class PostService {
             long id = nextId.getAndIncrement();
             post.setId(id);
         }
+        this.nextId.getAndIncrement();
 
         this.posts.put(post.getId(), post);
     }
@@ -47,4 +48,9 @@ public class PostService {
         }
         return aux;
     }
+
+    public AtomicLong getNextId(){
+        return this.nextId;
+    }
+
 }

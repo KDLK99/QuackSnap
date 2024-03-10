@@ -18,18 +18,19 @@ public class Post {
     private List<String> categories;
     @JsonView(Basic.class)
     private String postTitle;
+    @JsonView(Basic.class)
     private List<Comment> comments;
     @JsonView(Basic.class)
     private int likes;
     @JsonView(Basic.class)
     private Long id;
+    @JsonView(Basic.class)
     private List<User> likedUsers;
 
 
-    public Post(String imageName, String description, String title){
-        this.imageName = imageName;
+    public Post(String description, String postTitle){
         this.description = description;
-        this.postTitle = title;
+        this.postTitle = postTitle;
         this.categories = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.likedUsers = new ArrayList<>();
@@ -39,9 +40,11 @@ public class Post {
     public void setCategories(String categories){
         this.categories = Arrays.stream(categories.split(" ")).toList();
     }
-    public void setCategoriesAPI(String[] categories){
-        this.categories = Arrays.stream(categories).toList();
+
+    public List<String> getCategories(){
+        return this.categories;
     }
+
 
     public void setTitle(String title){
         this.postTitle = title;

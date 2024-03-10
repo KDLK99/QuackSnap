@@ -11,18 +11,19 @@
 <body>
     <div class="container">
         <h1>Contacto</h1>
-        <form action="#" method="POST">
+        <form action="https://formsubmit.co/quacksnap8@gmail.com" method="POST">
             <div class="form-group">
                 <label for="email">Correo electrónico:</label>
                 <input type="email" id="email" name="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.(com|es)$">
             </div>
             <div class="form-group">
-                <label for="incidencia">Tipo de incidencia:</label>
-                <select id="incidencia" name="incidencia" required>
+                <label for="incident">Tipo de incidencia:</label>
+                <select id="incident" name="incident" required>
                     <option value="">Seleccione una opción</option>
-                    <option value="opción1">Opción 1</option>
-                    <option value="opción2">Opción 2</option>
-                    <option value="opción3">Opción 3</option>
+                    <option value="PaginaCaida">Página Caída</option>
+                    <option value="FalloImagenes">Fallo de imágenes</option>
+                    <option value="Feedback">Feedback</option>
+                    <option value="Otros">Otros</option>
                 </select>
             </div>
             <div class="form-group">
@@ -30,8 +31,8 @@
                 <textarea id="comentario" name="comentario" rows="4" required></textarea>
             </div>
             <div class="form-group">
-                <input type="checkbox" id="terminos" name="terminos" required>
-                <label for="terminos">Acepto los términos y condiciones</label>
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">Acepto los términos y condiciones</label>
             </div>
             <button type="submit">Enviar</button>
         </form>
