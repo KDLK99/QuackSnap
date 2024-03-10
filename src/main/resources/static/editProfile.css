@@ -18,8 +18,19 @@ body, html {
 .buttonContainer
 {
     float:left;
-    margin-left: -188%;
-    margin-top: -160%;
+    margin-left: -140%;
+    margin-top: -140%;
+    
+    
+}
+
+.mainLogo
+{
+    float: left;
+    margin-left: -2%;
+    margin-top: -40%;
+    width: 20%;
+    position: absolute;
 }
 
 input[type='text'],
