@@ -70,6 +70,10 @@ public class WebController {
 
     @GetMapping("/viewPost/{index}")
     public String showPost(@PathVariable int index, Model model) throws MalformedURLException {
+        if(this.postService.findById(index) == null){
+            return "/templates/error/404.html";
+        }
+        
         model.addAttribute("description", this.postService.findById(index).getDescription());
         model.addAttribute("title", this.postService.findById(index).getTitle());
         model.addAttribute("index", index);
