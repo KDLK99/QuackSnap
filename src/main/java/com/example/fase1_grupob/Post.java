@@ -108,7 +108,6 @@ public class Post {
     }
 
 
-
     public boolean checkCategory(String category){
         for(int i = 0; i < this.categories.size();i++){
             for (String c : category.split(" ")) {

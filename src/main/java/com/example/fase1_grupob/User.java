@@ -20,8 +20,8 @@ public class User
     public User() 
     {
         this.profilePhoto= "profphoto1.jpg";
-        this.username = "Default User";
-        this.description = "Default Description";
+        this.username = "Pepe";
+        this.description = "Pepe the Duck: Nature lover and conservationist. Shares educational content about waterfowl and wildlife. Adventurous and creative, he shares his own illustrations and photographs of ducks and other wildlife.";
     }
 
     public User(String description) 
