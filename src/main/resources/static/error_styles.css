@@ -1,48 +1,27 @@
-body, html {
-    height: 100%;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #FDC362;
+body {
+    background-color: #2AA0A4;
+
 }
 
-.container {
-    width: 400px;
-    padding: 20px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    border-radius: 8px;
+.logo
+{
+    width: 10%;
+    float: left;
+    margin-left: 44%
 }
 
 .buttonContainer
 {
     float:left;
-    margin-left: -188%;
-    margin-top: -160%;
+    margin-left: -67%;
+    margin-top: -10%;
 }
-
-input[type='text'],
-textarea,
-input[type='file'],
-input[type='submit'] {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 8px;
-    box-sizing: border-box;
+.error{
+    width: 35%;
+    float: left;
+    margin-top: 0%;
+    margin-left: 32%;
 }
-
-input[type='submit'] {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-input[type='submit']:hover {
-    background-color: #0056b3;
-}
-
 
 .button {
     display: block;

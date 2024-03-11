@@ -159,12 +159,4 @@ public class APIController {
 
         return ResponseEntity.ok(this.postService.filteredPosts(category));
     }
-
-
-
-
-
-
-
-
 }

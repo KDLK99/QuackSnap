@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit Post</title>
-    <link rel="stylesheet" href="styles_upload.css">
+    <link type="text/css" rel="stylesheet" href="/editPosts.css">
 </head>
+
 <body>
-<div class="container">
+    <div class="container">
     <form action="/updatePost/{{index}}" method="post" enctype="multipart/form-data">
-        <p>Change post tittle:</p>
+        <p>Change post title:</p>
         <input type='text' name='postTitle'/>
         <p>Change post description:</p>
         <textarea type='text' name="imageDesc"></textarea>

@@ -26,15 +26,15 @@ body {
 .photo-container img {
     max-width: 100%;
     height: auto;
-    object-fit: cover; /* Ajusta la imagen dentro del contenedor manteniendo su relación de aspecto */
+    object-fit: cover;
 }
 .photo {
     max-width: 200px;
     margin-right: 20px;
 }
 .photo-details {
-    flex-grow: 1; /* Permite que la parte de detalles del contenedor se expanda para ocupar el espacio restante */
-    padding: 0 17px; /* Añade un poco de espacio entre la imagen y los detalles */
+    flex-grow: 1; 
+    padding: 0 17px;
 }
 .photo-name {
     font-size: 24px;
@@ -44,11 +44,161 @@ body {
     margin-bottom: 20px;
 }
 .buttons {
-    margin-top: 20%; /* Agrega un espacio entre la foto y los botones */
-    display: flex; /* Utiliza un modelo de caja flexible para los botones */
-    gap: 10%; /* Agrega un espacio entre los botones */
+    margin-top: 20%;
+    display: flex; 
+    gap: 10%;
 }
 
 .buttons button {
-    flex: 1; /* Hace que los botones se expandan para ocupar el espacio disponible */
+    flex: 1;
+}
+
+
+
+.edit-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgb(20, 20, 20);
+    border: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+    cursor: pointer;
+    transition-duration: 0.3s;
+    overflow: hidden;
+    position: relative;
+    text-decoration: none !important;
+  }
+  
+  .edit-svgIcon {
+    width: 17px;
+    transition-duration: 0.3s;
+  }
+  
+  .edit-svgIcon path {
+    fill: white;
+  }
+  
+  .edit-button:hover {
+    width: 120px;
+    border-radius: 50px;
+    transition-duration: 0.3s;
+    background-color: rgb(255, 69, 69);
+    align-items: center;
+  }
+  
+  .edit-button:hover .edit-svgIcon {
+    width: 20px;
+    transition-duration: 0.3s;
+    transform: translateY(60%);
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+  
+  .edit-button::before {
+    display: none;
+    content: "Edit";
+    color: white;
+    transition-duration: 0.3s;
+    font-size: 2px;
+  }
+  
+  .edit-button:hover::before {
+    display: block;
+    padding-right: 10px;
+    font-size: 13px;
+    opacity: 1;
+    transform: translateY(0px);
+    transition-duration: 0.3s;
+  }
+
+
+
+
+
+  .buttonContainer
+{
+    float:left;
+    margin-left: 0%;
+    margin-top: 0%;
+    
+}
+
+.buttonArrow {
+    display: block;
+    position: relative;
+    width: 56px;
+    height: 56px;
+    margin: 0;
+overflow: hidden;
+outline: none;
+background-color: transparent;
+cursor: pointer;
+border: 0;
+}
+
+.buttonArrow:before,
+.buttonArrow:after {
+content: "";
+position: absolute;
+border-radius: 50%;
+inset: 7px;
+}
+
+.buttonArrow:before {
+border: 4px solid #f0eeef;
+transition: opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1) 80ms,
+transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 80ms;
+}
+
+.buttonArrow:after {
+border: 4px solid #96daf0;
+transform: scale(1.3);
+transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+opacity: 0;
+}
+
+.buttonArrow:hover:before,
+.buttonArrow:focus:before {
+opacity: 0;
+transform: scale(0.7);
+transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.buttonArrow:hover:after,
+.buttonArrow:focus:after {
+opacity: 1;
+transform: scale(1);
+transition: opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1) 80ms,
+transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 80ms;
+}
+
+.buttonArrow-box {
+display: flex;
+position: absolute;
+top: 0;
+left: 0;
+}
+
+.buttonArrow-elem {
+display: block;
+width: 20px;
+height: 20px;
+margin: 17px 18px 0 18px;
+transform: rotate(180deg);
+fill: #f0eeef;
+}
+
+.buttonArrow:hover .button-box,
+.buttonArrow:focus .button-box {
+transition: 0.4s;
+transform: translateX(-56px);
 }
