@@ -66,6 +66,7 @@ outline: none;
 background-color: transparent;
 cursor: pointer;
 border: 0;
+top:80%;
 }
 
 .buttonArrow:before,

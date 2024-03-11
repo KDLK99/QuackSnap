@@ -142,8 +142,12 @@ public class WebController {
     public String updatePost(Model model, @PathVariable int index, @RequestParam String imageDesc, @RequestParam String postTitle)
             throws IOException {
         Post post = this.postService.findById(index);
-        post.setDescription(imageDesc);
-        post.setTitle(postTitle);
+        if(!imageDesc.isEmpty()){
+            post.setDescription(imageDesc);
+        }
+        if(!postTitle.isEmpty()){
+            post.setTitle(postTitle);
+        }
 
         return "redirect:/viewPost/{index}";
     }
