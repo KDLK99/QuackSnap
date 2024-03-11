@@ -22,8 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 public class WebController {
     private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images");
-    /*private List<Post> posts = new ArrayList<>();*/
-    //private int nImages = 0;
 
     private final PostService postService;
     private final UserService userService;
@@ -38,7 +36,7 @@ public class WebController {
     public String showPosts(Model model) {
 
         model.addAttribute("posts", this.postService.findAll());
-        model.addAttribute("errormsg", "Todavía no hay posts.");
+        model.addAttribute("errormsg", "No posts yet.");
 
         return "index";
     }

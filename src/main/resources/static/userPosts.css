@@ -8,7 +8,6 @@
 }
 
 img {
-    /* Para que sea responsiva */
     width: 90%;
 }
 
@@ -21,7 +20,7 @@ img {
 .logo {
   float: left;
   margin-left: -20%;
-  width: 15%; /* Reducir el tamaño al 15% del contenedor */
+  width: 15%;
 }
 .mainPhoto
 {
@@ -36,7 +35,7 @@ img {
 .profilePhoto {
   float: right;
   margin-right: -20%; 
-  width: 15%; /* Reducir el tamaño al 15% del contenedor */
+  width: 15%;
 }
 .headContainer
 {
@@ -51,7 +50,7 @@ img {
 
 .container {
     width: 75%;
-    margin: 0 auto; /* Centrar el contenedor */
+    margin: 0 auto;
 }
 
 .search {
@@ -92,7 +91,6 @@ img {
     position: absolute;
     float: right;
     margin-left: 30%;
-    /*margin-right: 200000%;*/
     margin-top: 3%;
     display: flex;
     flex-direction: column;

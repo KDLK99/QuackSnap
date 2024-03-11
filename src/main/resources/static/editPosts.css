@@ -1,98 +1,58 @@
-.container {
-    max-width: 800px;
-    margin: 100px auto;
-    padding: 20px;
-    text-align: center;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    border-radius: 10px;
-}
-
-.logoMenu
-{
-    float: left;
-    margin-top: -5%;
-    margin-left: 45%;
-    width: 10%;
-}
-
-body{
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #FDC362;
 }
 
-h1 {
-    font-size: 36px;
+.container {
+    width: 400px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 8px;
+    
 }
 
-.form-group {
-    margin-bottom: 30px;
-    text-align: left;
-}
-
-label {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 20px;
-}
-
-
-
-input[type="email"]
+.mainLogo
 {
-    width: 96%;
-    padding: 15px;
-    font-size: 20px;
-    border-radius: 10px;
-    border: 2px solid #ccc;
+    float: left;
+    margin-left: 0%;
+    margin-top: -40%;
+    width: 15%;
+    position: absolute;
 }
 
-select
-{
+input[type='text'],
+textarea,
+input[type='file'],
+input[type='submit'] {
     width: 100%;
-    padding: 15px;
-    font-size: 20px;
-    border-radius: 10px;
-    border: 2px solid #ccc;
+    margin-bottom: 10px;
+    padding: 8px;
+    box-sizing: border-box;
 }
 
-textarea
-{
-    width: 96%;
-    padding: 15px;
-    font-size: 20px;
-    border-radius: 10px;
-    border: 2px solid #ccc;
-}
-
-input[type="checkbox"] {
-    width: 50%;
-    padding: 10px;
-    font-size: 20px;
-    border-radius: 10px;
-    border: 2px solid #ccc;
-}
-
-.sendButton
-{
-    padding: 15px 30px;
-    font-size: 20px;
+input[type='submit'] {
     background-color: #007bff;
-    color: #fff;
+    color: white;
     border: none;
-    border-radius: 10px;
     cursor: pointer;
 }
 
-.sendButton:hover
-{
+input[type='submit']:hover {
     background-color: #0056b3;
 }
+
 
 .buttonContainer
 {
     float:left;
-    margin-left: 0%;
-    margin-top: -46%;
+    margin-left: -96%;
+    margin-top: -45%;
+    position: absolute;
 }
 
 .buttonArrow {
