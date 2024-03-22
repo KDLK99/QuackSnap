@@ -11,11 +11,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,8 +50,11 @@ public class WebController {
 
         Files.createDirectories(IMAGES_FOLDER);
 
-
-
+        if(postTitle.isEmpty() || imageDesc.isEmpty() || imageCategory.isEmpty() || image.isEmpty())
+        {
+            return "redirect:/uploadImage.html";
+        }
+        
         post.setTitle(postTitle);
         post.setDescription(imageDesc);
         post.setImageName("image" + this.postService.getNextId() + ".jpg");
