@@ -2,6 +2,9 @@ package com.example.fase1_grupob;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import io.micrometer.common.lang.NonNull;
+
+import java.io.IOError;
 import java.io.PipedInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +20,7 @@ public class Post {
     @JsonView(Basic.class)
     private List<String> categories;
     @JsonView(Basic.class)
+    
     private String postTitle;
     @JsonView(Basic.class)
     private List<Comment> comments;
@@ -46,7 +50,9 @@ public class Post {
     }
 
 
-    public void setTitle(String title){
+    public void setTitle(String title)
+    {
+        
         this.postTitle = title;
     }
 
