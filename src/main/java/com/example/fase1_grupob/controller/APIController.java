@@ -1,14 +1,14 @@
-package controller;
+package com.example.fase1_grupob.controller;
 
 
-import model.Comment;
-import model.Post;
-import model.User;
+import com.example.fase1_grupob.model.Comment;
+import com.example.fase1_grupob.model.Post;
+import com.example.fase1_grupob.model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import service.PostService;
-import service.UserService;
+import com.example.fase1_grupob.service.PostService;
+import com.example.fase1_grupob.service.UserService;
 
 import java.io.File;
 import java.io.IOException;

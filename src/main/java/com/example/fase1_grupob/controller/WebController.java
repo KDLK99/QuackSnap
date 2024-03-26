@@ -1,11 +1,11 @@
-package controller;
+package com.example.fase1_grupob.controller;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import model.Comment;
-import model.Post;
+import com.example.fase1_grupob.model.Comment;
+import com.example.fase1_grupob.model.Post;
 import org.springframework.http.HttpHeaders;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,8 +19,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import service.PostService;
-import service.UserService;
+import com.example.fase1_grupob.service.PostService;
+import com.example.fase1_grupob.service.UserService;
 
 @Controller
 public class WebController {

@@ -1,4 +1,4 @@
-package model;
+package com.example.fase1_grupob.model;
 
 public class Comment {
 
