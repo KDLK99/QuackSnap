@@ -1,6 +1,6 @@
-package service;
+package com.example.fase1_grupob.service;
 
-import model.User;
+import com.example.fase1_grupob.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;

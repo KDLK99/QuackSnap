@@ -1,6 +1,6 @@
-package model;
+package com.example.fase1_grupob.model;
 
-import service.UserService;
+import com.example.fase1_grupob.service.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import java.util.ArrayList;
