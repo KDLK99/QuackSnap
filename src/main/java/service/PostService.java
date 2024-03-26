@@ -1,5 +1,6 @@
-package com.example.fase1_grupob;
+package service;
 
+import model.Post;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
