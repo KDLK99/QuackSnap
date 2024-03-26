@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Edit Profile</title>
     <link rel="stylesheet" href="editProfile.css">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.snow.css" rel="stylesheet">
 </head>
 <body>
     <img class="mainLogo" src = "/images/logoprincipal.png">
@@ -12,8 +13,17 @@
     <form action="/upload_info" method="post" enctype="multipart/form-data">
         <p>Change Username:</p>
         <input type='text' name='username'/>
-        <p>Change Description:</p>
-        <textarea type='text' name="description"></textarea>
+
+        <div class="comentarioEnriquecido">
+          <div class="mb-3">
+              <label class="form-label">Description:</label>
+              <!-- Real description -->
+              <textarea style="display: none;" id="description-textarea" name="description"></textarea>
+              <!-- Create the editor container -->
+              <div id="editor"></div>
+          </div>
+      </div>
+
         <p>Image file:</p><input type='file' name='image' accept=".jpg, .jpeg"/>
           <input type='submit' value='Save'/>
 
@@ -46,5 +56,18 @@
     </div>
 
 </div>
+
+<!-- Include the Quill library -->
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.js"></script>
+<!-- Initialize Quill editor -->
+<script>
+    const quill = new Quill('#editor', {
+        theme: 'snow'
+    });
+    quill.on('text-change', function () {
+        document.getElementById('description-textarea').value = quill.root.innerHTML;
+    });
+</script>
+
 </body>
 </html>
