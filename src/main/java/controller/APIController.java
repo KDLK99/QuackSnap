@@ -1,9 +1,15 @@
-package com.example.fase1_grupob;
+package controller;
 
 
+import model.Comment;
+import model.Post;
+import model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import service.PostService;
+import service.UserService;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;

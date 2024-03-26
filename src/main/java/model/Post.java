@@ -1,14 +1,10 @@
-package com.example.fase1_grupob;
+package model;
 
+import service.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
 
-import io.micrometer.common.lang.NonNull;
-
-import java.io.IOError;
-import java.io.PipedInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 public class Post {

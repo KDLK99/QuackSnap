@@ -1,15 +1,15 @@
-package com.example.fase1_grupob;
+package controller;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import model.Comment;
+import model.Post;
 import org.springframework.http.HttpHeaders;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 
 import org.springframework.core.io.Resource;
@@ -17,9 +17,10 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import service.PostService;
+import service.UserService;
 
 @Controller
 public class WebController {
@@ -46,7 +47,7 @@ public class WebController {
 
     @PostMapping("/upload_image")
     public String uploadImages(Post post, @RequestParam MultipartFile image, Model model,
-            @RequestParam String imageCategory, @RequestParam String imageDesc, @RequestParam String postTitle) throws IOException {
+                               @RequestParam String imageCategory, @RequestParam String imageDesc, @RequestParam String postTitle) throws IOException {
 
         Files.createDirectories(IMAGES_FOLDER);
 

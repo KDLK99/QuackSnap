@@ -1,8 +1,7 @@
-package com.example.fase1_grupob;
+package model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jdk.dynalink.linker.LinkerServices;
 
 import java.util.ArrayList;
 import java.util.List;
