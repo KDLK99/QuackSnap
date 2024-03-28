@@ -6,10 +6,12 @@ import java.net.MalformedURLException;
 
 import com.example.fase1_grupob.model.Comment;
 import com.example.fase1_grupob.model.Post;
+import com.example.fase1_grupob.service.ImageService;
 import org.springframework.http.HttpHeaders;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.*;
 
 
 import org.springframework.core.io.Resource;
@@ -28,10 +30,12 @@ public class WebController {
 
     private final PostService postService;
     private final UserService userService;
+    private final ImageService imageService;
 
-    public WebController(PostService postService, UserService userService){
+    public WebController(PostService postService, UserService userService, ImageService imageService){
         this.postService = postService;
         this.userService = userService;
+        this.imageService = imageService;
     }
 
 
@@ -46,7 +50,7 @@ public class WebController {
 
 
     @PostMapping("/upload_image")
-    public String uploadImages(Post post, @RequestParam MultipartFile image, Model model,
+    public String uploadPost(Post post, @RequestParam MultipartFile image, Model model,
                                @RequestParam String imageCategory, @RequestParam String imageDesc, @RequestParam String postTitle) throws IOException {
 
         Files.createDirectories(IMAGES_FOLDER);
@@ -55,39 +59,40 @@ public class WebController {
         {
             return "redirect:/uploadImage.html";
         }
-        
-        post.setTitle(postTitle);
-        post.setDescription(imageDesc);
-        post.setImageName("image" + this.postService.getNextId() + ".jpg");
-        post.setCategories(imageCategory.toLowerCase());
-        post.setId(this.postService.getNextId().get());
 
+
+        this.postService.save(post, 1L,image, imageCategory, imageDesc, postTitle);
         Path imagePath = IMAGES_FOLDER.resolve(post.getImageName());
-
-        this.postService.save(post);
 
         image.transferTo(imagePath);
 
         model.addAttribute("imageName", post.getImageName());
-        this.userService.findById(1).addPost(post);
+        if(this.userService.findById(1).isEmpty()){
+            this.userService.findById(1).get().addPost(post);
+        }
 
         return "redirect:/";
     }
 
     @GetMapping("/viewPost/{index}")
     public String showPost(@PathVariable int index, Model model) throws MalformedURLException {
-        if(this.postService.findById(index) == null){
+        if(this.postService.findById(index).isEmpty()){
             return "/templates/error/404.html";
         }
-        
-        model.addAttribute("description", this.postService.findById(index).getDescription());
-        model.addAttribute("title", this.postService.findById(index).getTitle());
+
+        model.addAttribute("description", this.postService.findById(index).get().getDescription());
+
+
+        model.addAttribute("title", this.postService.findById(index).get().getTitle());
+
         model.addAttribute("index", index);
 
-        Post post = this.postService.findById(index);
-        model.addAttribute("comments", post.getComments(this.userService));
+        Optional<Post> post = this.postService.findById(index);
+        if(post.isPresent()){
+            model.addAttribute("comments", post.get().getComments(this.userService));
 
-        model.addAttribute("likes", post.getLikes());
+            model.addAttribute("likes", post.get().getLikes());
+        }
 
         return "viewPost_template";
     }
@@ -95,34 +100,46 @@ public class WebController {
 
     @GetMapping("/download_image/{index}")
     public ResponseEntity<Object> downloadImage(Model model, @PathVariable int index) throws MalformedURLException {
+        if(this.postService.findById(index).isPresent()) {
+            Path imagePath = IMAGES_FOLDER.resolve(this.postService.findById(index).get().getImageName());
 
-        Path imagePath = IMAGES_FOLDER.resolve(this.postService.findById(index).getImageName());
+            Resource image = new UrlResource(imagePath.toUri());
 
-        Resource image = new UrlResource(imagePath.toUri());
-
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(image);
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(image);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/viewPost/{index}")
     public String comment(Model model, @PathVariable int index, @RequestParam String comment){
-        Comment comment1 = new Comment((long) 1, comment, this.userService.findById(1).getUsername());
-        Post post = this.postService.findById(index);
-        post.addComment(comment1);
-        model.addAttribute("comments", post.getComments(this.userService));
+        if(this.userService.findById(1).isPresent()){
+            Comment comment1 = new Comment((long) 1, comment, this.userService.findById(1).get().getUsername());
 
-        model.addAttribute("description", post.getDescription());
-        model.addAttribute("title", post.getTitle());
-        model.addAttribute("index", index);
+            Optional<Post> post = this.postService.findById(index);
+            if(post.isPresent()){
+                post.get().addComment(comment1);
+                model.addAttribute("comments", post.get().getComments(this.userService));
 
-        model.addAttribute("likes", post.getLikes());
+                model.addAttribute("description", post.get().getDescription());
+                model.addAttribute("title", post.get().getTitle());
+                model.addAttribute("index", index);
+
+                model.addAttribute("likes", post.get().getLikes());
+            }
+
+        }
 
         return "viewPost_template";
     }
 
     @PostMapping("/viewPost/{index}/increaseLikes")
     public String likes(@PathVariable int index){
-        Post post = this.postService.findById(index);
-        post.addLike(this.userService.findById(1));
+
+        Optional<Post> post = this.postService.findById(index);
+        if(post.isPresent() && this.userService.findById(1).isPresent()){
+            post.get().addLike(this.userService.findById(1).get());
+        }
 
         return "redirect:/viewPost/{index}";
     }
@@ -130,29 +147,36 @@ public class WebController {
 
     @GetMapping("/deletePost/{index}")
     public String deletePost(Model model, @PathVariable int index) throws MalformedURLException {
-        Path imgPath = IMAGES_FOLDER.resolve(this.postService.findById(index).getImageName());
-        File img = imgPath.toFile();
-        img.delete();
-        Post post = this.postService.findById(index);
-        this.postService.deleteById(post.getId());
-        this.postService.deleteById(index);
+        if(this.postService.findById(index).isPresent()) {
+            Path imgPath = IMAGES_FOLDER.resolve(this.postService.findById(index).get().getImageName());
+            File img = imgPath.toFile();
+            img.delete();
+            Optional<Post> post = this.postService.findById(index);
+            if(post.isPresent() && this.userService.findById(1).isPresent()) {
+                this.postService.deleteById(post.get().getId());
+                this.postService.deleteById(index);
 
-        model.addAttribute("posts",  this.postService.findAll());
+                model.addAttribute("posts", this.postService.findAll());
 
-        this.userService.findById(1).deletePost(post);
+                this.userService.findById(1).get().deletePost(post.get());
+            }
+        }
 
         return "redirect:/";
     }
 
     @PostMapping("/updatePost/{index}")
-    public String updatePost(Model model, @PathVariable int index, @RequestParam String imageDesc, @RequestParam String postTitle)
-            throws IOException {
-        Post post = this.postService.findById(index);
-        if(!imageDesc.isEmpty()){
-            post.setDescription(imageDesc);
-        }
-        if(!postTitle.isEmpty()){
-            post.setTitle(postTitle);
+    public String updatePost(@PathVariable int index, @RequestParam String imageDesc, @RequestParam String postTitle) {
+
+        Optional<Post> post = this.postService.findById(index);
+        if(post.isPresent()) {
+            if (!imageDesc.isEmpty()) {
+                post.get().setDescription(imageDesc);
+            }
+
+            if (!postTitle.isEmpty()) {
+                post.get().setTitle(postTitle);
+            }
         }
 
         return "redirect:/viewPost/{index}";
@@ -169,7 +193,8 @@ public class WebController {
         if(category.isEmpty()){
             return "redirect:/";
         }
-        model.addAttribute("posts", this.postService.filteredPosts(category.toLowerCase()));
+
+        model.addAttribute("posts", this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList()));
         model.addAttribute("errormsg", "Ningún post coincide con ese criterio de búsqueda.");
         return "index";
     }
@@ -183,10 +208,12 @@ public class WebController {
     @GetMapping("/user")
     public String user(Model model)
     {
-        model.addAttribute("index", 1);
-        model.addAttribute("username", this.userService.findById(1).getUsername());
-        model.addAttribute("description", this.userService.findById(1).getDescription());
-        model.addAttribute("posts", this.userService.findById(1).getUserPosts());
+        if(this.userService.findById(1).isPresent()) {
+            model.addAttribute("index", 1);
+            model.addAttribute("username", this.userService.findById(1).get().getUsername());
+            model.addAttribute("description", this.userService.findById(1).get().getDescription());
+            model.addAttribute("posts", this.userService.findById(1).get().getUserPosts());
+        }
 
         return "user_template";
     }
@@ -200,31 +227,34 @@ public class WebController {
     @PostMapping("/upload_info")
     public String uploadInfo(@RequestParam String username, @RequestParam String description, @RequestParam MultipartFile image, Model model) throws IOException
     {
-        if(!image.isEmpty())
+        if(!image.isEmpty() && this.userService.findById(1).isPresent())
         {
             Files.createDirectories(IMAGES_FOLDER);
 
-            this.userService.findById(1).setProfilePhotoName("profphoto" + 1 + ".jpg");
+            this.userService.findById(1).get().setProfilePhotoName(Objects.requireNonNull(image.getOriginalFilename()));
 
-            Path imagePath = IMAGES_FOLDER.resolve(this.userService.findById(1).getProfilePhotoName());
+            Path imagePath = IMAGES_FOLDER.resolve(this.userService.findById(1).get().getProfilePhotoName());
             image.transferTo(imagePath);
-            model.addAttribute("profile", this.userService.findById(1).getProfilePhotoName());
+            model.addAttribute("profile", this.userService.findById(1).get().getProfilePhotoName());
         }
 
-        this.userService.findById(1).updateUsername(username);
-        this.userService.findById(1).updateDescription(description);
+        this.userService.findById(1).get().updateUsername(username);
+        this.userService.findById(1).get().updateDescription(description);
 
         return "redirect:/user";
     }
 
     @GetMapping("/updated_profile/{index}")
     public ResponseEntity<Object> updateImageUSer(Model model, @PathVariable int index) throws MalformedURLException {
+        if(this.userService.findById(1).isPresent()) {
+            Path imagePath = IMAGES_FOLDER.resolve(this.userService.findById(1).get().getProfilePhotoName());
 
-        Path imagePath = IMAGES_FOLDER.resolve(this.userService.findById(1).getProfilePhotoName());
+            Resource image = new UrlResource(imagePath.toUri());
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(image);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
 
-        Resource image = new UrlResource(imagePath.toUri());
-
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(image);
     }
 
     @GetMapping("/userposts")

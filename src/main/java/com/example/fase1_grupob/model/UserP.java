@@ -2,28 +2,35 @@ package com.example.fase1_grupob.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class User
+@Entity
+public class UserP
 {
     private String profilePhoto;
     private String username;
     private String description;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @JsonIgnore
-
+    @OneToMany
     private List<Post> userPosts = new ArrayList<>();
 
-    public User() 
+
+    public UserP()
     {
+        super();
         this.profilePhoto= "profphoto1.jpg";
         this.username = "Pepe";
         this.description = "Pepe the Duck: Nature lover and conservationist. Shares educational content about waterfowl and wildlife. Adventurous and creative, he shares his own illustrations and photographs of ducks and other wildlife.";
     }
 
-    public User(String description) 
+    public UserP(String description)
     {
         this.description = description;
     }

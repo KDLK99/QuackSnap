@@ -127,3 +127,16 @@ fill: #f0eeef;
 transition: 0.4s;
 transform: translateX(-56px);
 }
+
+.ql-editor {
+    min-height: 10em;
+    background-color: white;
+}
+
+.comentarioEnriquecido
+{
+    position: relative;
+    margin-bottom: 5%;
+    margin-top: 5%;
+    
+}
