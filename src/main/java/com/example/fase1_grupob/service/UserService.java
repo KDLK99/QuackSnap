@@ -1,41 +1,41 @@
 package com.example.fase1_grupob.service;
 
-import com.example.fase1_grupob.model.User;
+import com.example.fase1_grupob.model.UserP;
+import com.example.fase1_grupob.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
-    private ConcurrentMap<Long, User> users = new ConcurrentHashMap<>();
-    private AtomicLong nextId = new AtomicLong(1);
 
-    public UserService(){
-        this.addUser(new User());
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository){
+        this.userRepository = userRepository;
+        UserP user = new UserP();
+        this.addUser(user);
     }
 
-    public Collection<User> getAllUsers() {
-        return users.values();
+    public Collection<UserP> getAllUsers() {
+        return userRepository.findAll();
     }
 
-    public User findById(long id) {
-        return users.get(id);
+    public Optional<UserP> findById(long id) {
+        return userRepository.findById(id);
     }
 
-    public void addUser(User user) {
-
-        if(user.getId() == null || user.getId() == 0) {
-            long id = nextId.getAndIncrement();
-            user.setId(id);
-        }
-
-        this.users.put(user.getId(), user);
+    public void addUser(UserP user) {
+        userRepository.save(user);
     }
 
     public void deleteById(long id) {
-        this.users.remove(id);
+        this.userRepository.deleteById(id);
+    }
+
+    public List<UserP> findByIds(List<Long> ids){
+        return userRepository.findAllById(ids);
     }
 }

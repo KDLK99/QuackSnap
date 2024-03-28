@@ -1,57 +1,96 @@
 package com.example.fase1_grupob.service;
 
+import com.example.fase1_grupob.model.Category;
 import com.example.fase1_grupob.model.Post;
+import com.example.fase1_grupob.repository.PostRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Optional;
+
 
 @Service
 public class PostService {
+    private PostRepository postRepository;
+    private ImageService imageService;
+    private UserService userService;
 
-    private ConcurrentMap<Long, Post> posts = new ConcurrentHashMap<>();
-    private AtomicLong nextId = new AtomicLong(1);
 
-
+    public PostService(PostRepository postRepository, ImageService imageService, UserService userService){
+        this.postRepository = postRepository;
+        this.imageService = imageService;
+        this.userService = userService;
+    }
     public Collection<Post> findAll() {
-        return posts.values();
+        return postRepository.findAll();
     }
 
-    public Post findById(long id) {
-        return posts.get(id);
+    public Optional<Post> findById(long id) {
+        return postRepository.findById(id);
     }
 
-    public void save(Post post) {
 
-        if(post.getId() == null || post.getId() == 0) {
-            long id = nextId.getAndIncrement();
-            post.setId(id);
+    public Post save(Post post, Long id, MultipartFile imageField, String imageCategory, String imageDesc, String postTitle) {
+
+        if (imageField != null && !imageField.isEmpty()){
+            String path = imageService.createImage(imageField);
+            post.setImageName(path);
         }
-        this.nextId.getAndIncrement();
+        if(!imageCategory.isEmpty()){
+            post.setCategories(imageCategory);
+        }
 
-        this.posts.put(post.getId(), post);
+        if(!imageDesc.isEmpty()){
+            post.setDescription(imageDesc);
+        }
+
+        if(!postTitle.isEmpty()){
+            post.setTitle(postTitle);
+        }
+        //post.setCreatorID(id);
+
+
+        if(post.getImageName() == null || post.getImageName().isEmpty()) post.setImageName("no-image.png");
+
+        return postRepository.save(post);
+    }
+
+
+    public Post save(Post post, Long id, MultipartFile imageField){
+        if (imageField != null && !imageField.isEmpty()){
+            String path = imageService.createImage(imageField);
+            post.setImageName(path);
+        }
+        //post.setCreatorID(id);
+        if(post.getImageName() == null || post.getImageName().isEmpty()) post.setImageName("no-image.png");
+        return postRepository.save(post);
+    }
+
+    public Post save(Post post, Long id){
+        //post.setCreatorID(id);
+        return this.postRepository.save(post);
     }
 
     public void deleteById(long id) {
-        this.posts.remove(id);
+        this.postRepository.deleteById(id);
     }
 
-    public List<Post> filteredPosts(String category){
-        List<Post> aux = new ArrayList<>();
-        for (Post post :  this.findAll()) {
-            if (post.checkCategory(category)) {
-                aux.add(post);
-            }
+    public List<Post> filteredPosts(List<String> categories){
+        List<Category> categoryList = new ArrayList<>();
+        for(String category: categories){
+            category.toLowerCase();
+            Category category1 = new Category(category);
+            categoryList.add(category1);
         }
-        return aux;
+
+
+
+        return this.postRepository.findAllByCategories(categoryList);
     }
 
-    public AtomicLong getNextId(){
-        return this.nextId;
-    }
 
 }

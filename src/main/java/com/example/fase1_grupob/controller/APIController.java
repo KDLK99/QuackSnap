@@ -3,7 +3,8 @@ package com.example.fase1_grupob.controller;
 
 import com.example.fase1_grupob.model.Comment;
 import com.example.fase1_grupob.model.Post;
-import com.example.fase1_grupob.model.User;
+import com.example.fase1_grupob.model.UserP;
+import com.example.fase1_grupob.service.ImageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
@@ -29,10 +32,12 @@ public class APIController {
 
     private final PostService postService;
     private final UserService userService;
+    private final ImageService imageService;
 
-    public APIController(PostService postService, UserService userService){
+    public APIController(PostService postService, UserService userService, ImageService imageService){
         this.postService = postService;
         this.userService = userService;
+        this.imageService = imageService;
     }
 
     @GetMapping("/posts")
@@ -47,12 +52,10 @@ public class APIController {
 
     @GetMapping("/posts/{id}")
     public ResponseEntity<Post> getPost(@PathVariable long id) {
-
-        Post post = this.postService.findById(id);
-
-        if (post != null) {
+        if(this.postService.findById(id).isPresent()) {
+            Post post = this.postService.findById(id).get();
             return ResponseEntity.ok(post);
-        } else {
+        }else{
             return ResponseEntity.notFound().build();
         }
     }
@@ -61,8 +64,7 @@ public class APIController {
     @PostMapping(value = "/posts")
     public ResponseEntity<Post> createPost( Post post,  MultipartFile image)throws IOException {
 
-        post.setImageName("image" + this.postService.getNextId() + ".jpg");
-        this.postService.save(post);
+        this.postService.save(post, 1L, image);
 
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(post.getId()).toUri();
 
@@ -75,49 +77,46 @@ public class APIController {
 
     @PutMapping("/posts/{id}")
     public ResponseEntity<Post> replacePost(@PathVariable long id, Post newPost) {
+        if (this.postService.findById(id).isPresent()) {
+            Post post = this.postService.findById(id).get();
 
-        Post post = this.postService.findById(id);
-
-        if (post != null) {
-            newPost.setImageName("image" + post.getId() + ".jpg");
-            newPost.setCategories(post.getCategories().get(0));
+            newPost.setImageName(post.getImageName());
+            newPost.setCategories(post.getCategories());
             newPost.setId(id);
-            this.postService.save(newPost);
+            this.postService.save(newPost, 1L);
 
             return ResponseEntity.ok(post);
-        } else {
+        }else{
             return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/posts/{id}")
     public ResponseEntity<Post> deletePost(@PathVariable long id) throws IOException {
+        if(this.postService.findById(id).isPresent()) {
+            Post post = this.postService.findById(id).get();
 
-        Post post = this.postService.findById(id);
-
-        if (post != null) {
             this.postService.deleteById(id);
 
-            if(post.getImageName() != null) {
+            if (post.getImageName() != null) {
                 Path imgPath = IMAGES_FOLDER.resolve(post.getImageName());
                 File img = imgPath.toFile();
                 img.delete();
             }
 
             return ResponseEntity.ok(post);
-        } else {
+        }else {
             return ResponseEntity.notFound().build();
         }
     }
 
     @PostMapping(value = "/posts/{id}/like")
     public ResponseEntity<Post> giveLike( @PathVariable long id)throws IOException {
-        Post post = this.postService.findById(id);
-
-        if (post != null) {
+        if(this.postService.findById(id).isPresent()) {
+            Post post = this.postService.findById(id).get();
             post.setLikes(post.getLikes() + 1);
             return ResponseEntity.ok(post);
-        }else{
+        }else {
             return ResponseEntity.notFound().build();
         }
 
@@ -125,36 +124,43 @@ public class APIController {
 
     @PostMapping( "/posts/{id}/comment")
     public ResponseEntity<Post> writeComment( @PathVariable long id, Comment comment)throws IOException {
-        Post post = this.postService.findById(id);
-        
-        if (post != null) {
-            comment.setUsername(this.userService.findById(1).getUsername());
-            comment.setUserId((long) 1);
-            post.addComment(comment);
+        if(this.postService.findById(id).isPresent()) {
+            Post post = this.postService.findById(id).get();
+
+            if(this.userService.findById(1).isPresent()) {
+                comment.setUsername(this.userService.findById(1).get().getUsername());
+                comment.setUserId((long) 1);
+                post.addComment(comment);
+            }
             return ResponseEntity.ok(post);
-        } else {
+
+        }else {
             return ResponseEntity.notFound().build();
         }
     }
 
     @PutMapping( "/user")
-    public ResponseEntity<User> updateUserData (String username, String description, MultipartFile image)throws IOException {
+    public ResponseEntity<UserP> updateUserData (String username, String description, MultipartFile image)throws IOException {
+        if (this.userService.findById(1).isPresent()) {
+            if (image != null && !image.isEmpty()) {
+                Files.createDirectories(IMAGES_FOLDER);
 
-        if(image != null && !image.isEmpty()) {
-            Files.createDirectories(IMAGES_FOLDER);
+                this.userService.findById(1).get().setProfilePhotoName(Objects.requireNonNull(image.getOriginalFilename()));
 
-            this.userService.findById(1).setProfilePhotoName("profphoto" + 1 + ".jpg");
 
-            Path imagePath = IMAGES_FOLDER.resolve(this.userService.findById(1).getProfilePhotoName());
-            image.transferTo(imagePath);
+                Path imagePath = IMAGES_FOLDER.resolve(this.userService.findById(1).get().getProfilePhotoName());
+                image.transferTo(imagePath);
+            }
+            this.userService.findById(1).get().updateUsername(username);
+            this.userService.findById(1).get().updateDescription(description);
+            return ResponseEntity.ok(this.userService.findById(1).get());
+        }else {
+            return ResponseEntity.notFound().build();
         }
-            this.userService.findById(1).updateUsername(username);
-            this.userService.findById(1).updateDescription(description);
-            return ResponseEntity.ok(this.userService.findById(1));
-}
+    }
 
     @PostMapping( "/searchBar")
-    public ResponseEntity<Collection<Post>> searchAPI (String category)throws IOException {
+    public ResponseEntity<Collection<Post>> searchAPI (List<String> category)throws IOException {
 
         if(this.postService.filteredPosts(category).isEmpty()){
             return ResponseEntity.notFound().build();

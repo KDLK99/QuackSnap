@@ -2,31 +2,42 @@ package com.example.fase1_grupob.model;
 
 import com.example.fase1_grupob.service.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
+@Entity
 public class Post {
+
     interface Basic{}
     @JsonView(Basic.class)
     private String imageName;
     @JsonView(Basic.class)
     private String description;
     @JsonView(Basic.class)
-    private List<String> categories;
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private List<Category> categories;
     @JsonView(Basic.class)
     
     private String postTitle;
     @JsonView(Basic.class)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Comment> comments;
     @JsonView(Basic.class)
     private int likes;
     @JsonView(Basic.class)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @JsonView(Basic.class)
-    private List<User> likedUsers;
+    @ManyToMany
+    private List<UserP> likedUsers;
+    /*@ManyToOne*/
+    /*private Long CreatorID;*/
 
+    public Post() {
+
+    }
 
     public Post(String description, String postTitle){
         this.description = description;
@@ -38,10 +49,21 @@ public class Post {
     }
 
     public void setCategories(String categories){
-        this.categories = Arrays.stream(categories.split(" ")).toList();
+        List<String> stringList = Arrays.stream(categories.split(" ")).toList();
+        Set<Category> categoryList = new HashSet<>();
+        for(String element: stringList){
+            Category category = new Category(element);
+            category.addPosts(this);
+            categoryList.add(category);
+        }
+        this.categories = categoryList.stream().toList();
     }
 
-    public List<String> getCategories(){
+    public void setCategories(List<Category> categories){
+        this.categories = categories;
+    }
+
+    public List<Category> getCategories(){
         return this.categories;
     }
 
@@ -81,7 +103,9 @@ public class Post {
 
     public List getComments(UserService u){
         for (Comment comment : this.comments) {
-            comment.setUsername(u.findById(comment.getUserId()).getUsername());
+            if(u.findById(comment.getUserId()).isPresent()){
+                comment.setUsername(u.findById(comment.getUserId()).get().getUsername());
+            }
         }
         return this.comments;
     }
@@ -91,7 +115,7 @@ public class Post {
     }
 
 
-    public void addLike(User u){
+    public void addLike(UserP u){
         if (!this.likedUsers.contains(u)) {
             this.likedUsers.add(u);
             this.likes++;
@@ -133,4 +157,12 @@ public class Post {
     public String toString() {
         return "Post [imageName=" + imageName + ", description=" + description + ", categories=" + categories + "]";
     }
+
+    /*public Long getCreatorID(){
+        return this.CreatorID;
+    }
+
+    public Long setCreatorID(Long id){
+        this.CreatorID = id;
+    }*/
 }
