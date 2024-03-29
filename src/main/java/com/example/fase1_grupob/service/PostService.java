@@ -2,9 +2,9 @@ package com.example.fase1_grupob.service;
 
 import com.example.fase1_grupob.model.Category;
 import com.example.fase1_grupob.model.Post;
+import com.example.fase1_grupob.repository.CategoryRepository;
 import com.example.fase1_grupob.repository.PostRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -18,12 +18,14 @@ public class PostService {
     private PostRepository postRepository;
     private ImageService imageService;
     private UserService userService;
+    private CategoryRepository categoryRepository;
 
 
-    public PostService(PostRepository postRepository, ImageService imageService, UserService userService){
+    public PostService(PostRepository postRepository, ImageService imageService, UserService userService, CategoryRepository categoryRepository){
         this.postRepository = postRepository;
         this.imageService = imageService;
         this.userService = userService;
+        this.categoryRepository = categoryRepository;
     }
     public Collection<Post> findAll() {
         return postRepository.findAll();
@@ -41,7 +43,7 @@ public class PostService {
             post.setImageName(path);
         }
         if(!imageCategory.isEmpty()){
-            post.setCategories(imageCategory);
+            post.setCategories(imageCategory,this.categoryRepository.findAll());
         }
 
         if(!imageDesc.isEmpty()){
@@ -87,10 +89,16 @@ public class PostService {
             categoryList.add(category1);
         }
 
+        List<Post> posts = new ArrayList<>();
+        for(Category category: categoryList){
+            posts.addAll(this.postRepository.findPostsByCategoryID(category.getId()));
+
+        }
 
 
-        return this.postRepository.findAllByCategories(categoryList);
+        return posts;
     }
+
 
 
 }

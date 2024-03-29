@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class Post {
@@ -30,7 +31,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @JsonView(Basic.class)
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<UserP> likedUsers;
     /*@ManyToOne*/
     /*private Long CreatorID;*/
@@ -48,13 +49,31 @@ public class Post {
 
     }
 
-    public void setCategories(String categories){
+    public Post(String description, String postTitle, List<Category> categories, List<Comment> comments, List<UserP> userPS){
+        this.description = description;
+        this.postTitle = postTitle;
+        this.categories = categories;
+        this.comments = comments;
+        this.likedUsers = userPS;
+
+    }
+
+    public void setCategories(String categories, List<Category> allCategories){
         List<String> stringList = Arrays.stream(categories.split(" ")).toList();
         Set<Category> categoryList = new HashSet<>();
+        if(!(this.categories == null)){
+            categoryList = new HashSet<>(this.categories);
+        }
+
         for(String element: stringList){
             Category category = new Category(element);
-            category.addPosts(this);
-            categoryList.add(category);
+            if(allCategories.contains(category)){
+                allCategories.get(allCategories.indexOf(category)).addPosts(this);
+                categoryList.add(allCategories.get(allCategories.indexOf(category)));
+            }else {
+                category.addPosts(this);
+                categoryList.add(category);
+            }
         }
         this.categories = categoryList.stream().toList();
     }
@@ -156,6 +175,14 @@ public class Post {
     @Override
     public String toString() {
         return "Post [imageName=" + imageName + ", description=" + description + ", categories=" + categories + "]";
+    }
+
+    public void addLikeUser(UserP userP){
+        this.likedUsers.add(userP);
+    }
+
+    public void deleteLikeUser(UserP userP){
+        this.likedUsers.remove(userP);
     }
 
     /*public Long getCreatorID(){

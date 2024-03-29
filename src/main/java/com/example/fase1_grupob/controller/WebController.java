@@ -119,6 +119,7 @@ public class WebController {
             Optional<Post> post = this.postService.findById(index);
             if(post.isPresent()){
                 post.get().addComment(comment1);
+                this.postService.save(post.get(), post.get().getId());
                 model.addAttribute("comments", post.get().getComments(this.userService));
 
                 model.addAttribute("description", post.get().getDescription());
@@ -139,6 +140,8 @@ public class WebController {
         Optional<Post> post = this.postService.findById(index);
         if(post.isPresent() && this.userService.findById(1).isPresent()){
             post.get().addLike(this.userService.findById(1).get());
+            this.userService.findById(1).get().addLikedPost(post);
+            this.postService.save(post.get(), post.get().getId());
         }
 
         return "redirect:/viewPost/{index}";
