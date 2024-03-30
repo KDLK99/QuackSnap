@@ -382,5 +382,40 @@ form{
     transform: translateX(-56px);
 }
 
-
+.deleteButton2 {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background-color: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .deleteButton2 svg {
+    width: 44%;
+  }
+  .deleteButton2:hover {
+    background-color: rgb(237, 56, 56);
+    overflow: visible;
+  }
+  .bin path {
+    transition: all 0.2s;
+  }
+  .deleteButton2:hover .bin path {
+    fill: #fff;
+  }
+  .deleteButton2:active {
+    transform: scale(0.98);
+  }
+  .tooltip {
+    --tooltip-color: rgb(41, 41, 41);
+    position: absolute;
+  }
 

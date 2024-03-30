@@ -3,6 +3,7 @@ package com.example.fase1_grupob.service;
 import com.example.fase1_grupob.model.Category;
 import com.example.fase1_grupob.model.Post;
 import com.example.fase1_grupob.repository.CategoryRepository;
+import com.example.fase1_grupob.repository.CommentRepository;
 import com.example.fase1_grupob.repository.PostRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,13 +20,15 @@ public class PostService {
     private ImageService imageService;
     private UserService userService;
     private CategoryRepository categoryRepository;
+    private CommentRepository commentRepository;
 
 
-    public PostService(PostRepository postRepository, ImageService imageService, UserService userService, CategoryRepository categoryRepository){
+    public PostService(PostRepository postRepository, ImageService imageService, UserService userService, CategoryRepository categoryRepository, CommentRepository commentRepository){
         this.postRepository = postRepository;
         this.imageService = imageService;
         this.userService = userService;
         this.categoryRepository = categoryRepository;
+        this.commentRepository = commentRepository;
     }
     public Collection<Post> findAll() {
         return postRepository.findAll();
@@ -97,6 +100,11 @@ public class PostService {
 
 
         return posts;
+    }
+
+    public void deleteComment(int postId, int commentId){
+        this.findById(postId).get().deleteComment(commentId);
+        this.commentRepository.deleteById((long) commentId);
     }
 
 

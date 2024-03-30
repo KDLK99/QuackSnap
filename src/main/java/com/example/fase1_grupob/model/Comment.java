@@ -34,6 +34,14 @@ public class Comment {
         this.userId = userId;
     }
 
+    public Long getId(){
+        return this.id;
+    }
+
+    public void setId(Long id){
+        this.id = id;
+    }
+
     public String getText() {
         return this.text;
     }
