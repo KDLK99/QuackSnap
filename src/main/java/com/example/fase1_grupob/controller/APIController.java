@@ -83,6 +83,7 @@ public class APIController {
             newPost.setImageName(post.getImageName());
             newPost.setCategories(post.getCategories());
             newPost.setId(id);
+            newPost.setDescription(post.getDescription());
             this.postService.save(newPost, 1L);
 
             return ResponseEntity.ok(post);

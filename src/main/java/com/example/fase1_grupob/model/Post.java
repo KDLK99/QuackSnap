@@ -1,6 +1,7 @@
 package com.example.fase1_grupob.model;
 
 import com.example.fase1_grupob.service.UserService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
@@ -15,7 +16,7 @@ public class Post {
     private String imageName;
     @JsonView(Basic.class)
     private String description;
-    @JsonView(Basic.class)
+    @JsonIgnore
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<Category> categories;
     @JsonView(Basic.class)
@@ -30,7 +31,7 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @JsonView(Basic.class)
+    @JsonIgnore
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<UserP> likedUsers;
     /*@ManyToOne*/

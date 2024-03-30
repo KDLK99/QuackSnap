@@ -94,11 +94,15 @@ public class PostService {
 
         List<Post> posts = new ArrayList<>();
         for(Category category: categoryList){
-            posts.addAll(this.postRepository.findPostsByCategoryID(category.getId()));
+            if(this.categoryRepository.findAll().contains(category)){
+                category.setId(this.categoryRepository.findAll().get(this.categoryRepository.findAll().indexOf(category)).getId());
 
+            }
+            else if(category.getId() == null){
+                category.setId(0L);
+            }
+            posts.addAll(this.postRepository.findPostsByCategoryID(Math.toIntExact(category.getId())));
         }
-
-
         return posts;
     }
 
