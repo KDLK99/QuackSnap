@@ -1,6 +1,7 @@
 package com.example.fase1_grupob.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.Objects;
 @Entity
 public class Category {
     private String category;
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
     private List<Post> posts;
 
     @Id
@@ -40,6 +41,14 @@ public class Category {
 
     public void deletePost(Post post){
         this.posts.remove(post);
+    }
+
+    public List<Post> getPosts(){
+        return this.posts;
+    }
+
+    public Long getId(){
+        return this.id;
     }
 
     @Override

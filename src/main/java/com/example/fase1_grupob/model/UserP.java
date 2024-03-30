@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 public class UserP
@@ -20,6 +21,10 @@ public class UserP
     @JsonIgnore
     @OneToMany
     private List<Post> userPosts = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private List<Post> likedPosts = new ArrayList<>();
 
 
     public UserP()
@@ -94,6 +99,14 @@ public class UserP
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void addLikedPost(Optional<Post> post){
+        post.ifPresent(value -> this.likedPosts.add(value));
+    }
+
+    public void deleteLikedPost(Optional<Post> post){
+        post.ifPresent(value -> this.likedPosts.remove(value));
     }
     
 }
