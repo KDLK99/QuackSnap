@@ -185,6 +185,10 @@ public class Post {
         this.likedUsers.remove(userP);
     }
 
+    public void deleteComment(int id){
+        this.comments.remove(this.comments.get(--id));
+    }
+
     /*public Long getCreatorID(){
         return this.CreatorID;
     }

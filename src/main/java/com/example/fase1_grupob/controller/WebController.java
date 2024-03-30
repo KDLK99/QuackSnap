@@ -269,4 +269,11 @@ public class WebController {
         return "user_post";
 
     }
+
+    @GetMapping("/deleteComment/{indexPost}/{indexComment}")
+    public String deleteComment(@PathVariable int indexComment, @PathVariable int indexPost){
+        this.postService.deleteComment(indexPost, indexComment);
+        
+        return "redirect:/viewPost/{indexPost}";
+    }
 }
