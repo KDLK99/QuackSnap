@@ -16,7 +16,6 @@ public class Post {
     private String imageName;
     @JsonView(Basic.class)
     private String description;
-    @JsonIgnore
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.PERSIST})
 
@@ -50,6 +49,21 @@ public class Post {
         this.comments = new ArrayList<>();
         this.likedUsers = new ArrayList<>();
 
+    }
+
+    public Post(String description, String postTitle, String categories){
+        this.description = description;
+        this.postTitle = postTitle;
+        List<String> stringCategories = Arrays.stream(categories.split(" ")).toList();
+        List<Category> categoryList = new ArrayList<>();
+        for(String category: stringCategories){
+            categoryList.add(new Category(category));
+        }
+        this.categories = categoryList;
+
+
+        this.comments = new ArrayList<>();
+        this.likedUsers = new ArrayList<>();
     }
 
     public Post(String description, String postTitle, List<Category> categories, List<Comment> comments, List<UserP> userPS){
