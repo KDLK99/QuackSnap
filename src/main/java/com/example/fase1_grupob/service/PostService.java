@@ -81,6 +81,18 @@ public class PostService {
     }
 
     public void deleteById(long id) {
+        Optional<Post> post = this.postRepository.findById(id);
+        List<Category>categories = post.get().getCategories();
+
+        for(Category category: categories)
+        {
+            if(this.categoryRepository.findAll().contains(category))
+            {
+                category.deletePost(post.get());
+                this.categoryRepository.save(category);
+            }
+        }
+
         this.postRepository.deleteById(id);
     }
 

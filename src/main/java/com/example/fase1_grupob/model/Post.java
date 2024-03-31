@@ -17,7 +17,9 @@ public class Post {
     @JsonView(Basic.class)
     private String description;
     @JsonIgnore
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.PERSIST})
+
     private List<Category> categories;
     @JsonView(Basic.class)
     
