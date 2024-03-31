@@ -9,7 +9,7 @@ import java.util.Objects;
 @Entity
 public class Category {
     private String category;
-    @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.PERSIST})
     private List<Post> posts;
 
     @Id
@@ -49,6 +49,10 @@ public class Category {
 
     public Long getId(){
         return this.id;
+    }
+
+    public void setId(Long id){
+        this.id = id;
     }
 
     @Override

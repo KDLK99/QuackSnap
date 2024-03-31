@@ -81,6 +81,18 @@ public class PostService {
     }
 
     public void deleteById(long id) {
+        Optional<Post> post = this.postRepository.findById(id);
+        List<Category>categories = post.get().getCategories();
+
+        for(Category category: categories)
+        {
+            if(this.categoryRepository.findAll().contains(category))
+            {
+                category.deletePost(post.get());
+                this.categoryRepository.save(category);
+            }
+        }
+
         this.postRepository.deleteById(id);
     }
 
@@ -94,11 +106,15 @@ public class PostService {
 
         List<Post> posts = new ArrayList<>();
         for(Category category: categoryList){
-            posts.addAll(this.postRepository.findPostsByCategoryID(category.getId()));
+            if(this.categoryRepository.findAll().contains(category)){
+                category.setId(this.categoryRepository.findAll().get(this.categoryRepository.findAll().indexOf(category)).getId());
 
+            }
+            else if(category.getId() == null){
+                category.setId(0L);
+            }
+            posts.addAll(this.postRepository.findPostsByCategoryID(Math.toIntExact(category.getId())));
         }
-
-
         return posts;
     }
 

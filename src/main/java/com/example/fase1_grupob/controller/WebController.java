@@ -157,7 +157,7 @@ public class WebController {
             Optional<Post> post = this.postService.findById(index);
             if(post.isPresent() && this.userService.findById(1).isPresent()) {
                 this.postService.deleteById(post.get().getId());
-                this.postService.deleteById(index);
+                
 
                 model.addAttribute("posts", this.postService.findAll());
 
