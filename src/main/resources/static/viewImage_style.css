@@ -382,6 +382,13 @@ form{
     transform: translateX(-56px);
 }
 
+.deleteButtonContainer
+{
+  position: relative;
+  margin-left: 88%;
+  margin-top: -3.5%;
+}
+
 .deleteButton2 {
     width: 40px;
     height: 40px;
