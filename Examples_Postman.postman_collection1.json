@@ -88,7 +88,8 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -100,7 +101,7 @@
 					"formdata": [
 						{
 							"key": "description",
-							"value": "A serene landscape unfolds before your eyes as you gaze upon a tranquil lake nestled amidst towering mountains and a lush forest. The crystal-clear waters mirror the majestic peaks, while the verdant trees offer a haven for wildlife. Nature's symphony echoes through the air, inviting you to immerse yourself in the beauty of this pristine wilderness.",
+							"value": "aaa",
 							"type": "text"
 						},
 						{
@@ -148,7 +149,8 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -230,6 +232,55 @@
 			"response": []
 		},
 		{
+			"name": "Post /api/posts/{id}/comment/{idComment}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "text",
+							"value": "Amazing lanscape. What camera do you use?",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/posts/1/comment/0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"posts",
+						"1",
+						"comment",
+						"0"
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		},
+		{
 			"name": "Post /api/searchBar",
 			"event": [
 				{
@@ -286,7 +337,8 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -298,17 +350,12 @@
 					"formdata": [
 						{
 							"key": "description",
-							"value": "A serene photograph captures the tranquil beauty of nature, with a crystal-clear lake nestled amidst towering mountains. The lush greenery of the surrounding forest adds depth to the scenic panorama, while the still waters mirror the majestic peaks, creating a captivating reflection. ",
+							"value": "hola",
 							"type": "text"
 						},
 						{
 							"key": "title",
 							"value": "Mountain Majesty: A Reflection of Serenity",
-							"type": "text"
-						},
-						{
-							"key": "categories",
-							"value": "forest mountains lake",
 							"type": "text"
 						}
 					]
