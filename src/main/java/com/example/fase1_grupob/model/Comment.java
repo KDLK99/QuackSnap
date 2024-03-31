@@ -14,6 +14,7 @@ public class Comment {
     private Long userId;
     private String username;
     private String text;
+    private int position;
 
     public Comment() {
 
@@ -56,6 +57,14 @@ public class Comment {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public int getPosition(){
+        return this.position;
     }
 
     public String toString(){

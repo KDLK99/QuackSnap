@@ -178,4 +178,19 @@ public class APIController {
 
         return ResponseEntity.ok(this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList()));
     }
+
+    @PostMapping("/posts/{index}/comment/{position}")
+    public ResponseEntity<Comment> deleteComment(@PathVariable int index, @PathVariable int position){
+
+        if(this.postService.findById(index).isEmpty() || this.postService.findById(index).get().getCounter() == 0){
+            return ResponseEntity.notFound().build();
+        }else if(position < 0 || position > this.postService.findById(index).get().getCounter()){
+            return ResponseEntity.notFound().build();
+        }else {
+            Comment comment = this.postService.findById(index).get().getComments().get(position);
+            this.postService.deleteComment(index, position);
+            return ResponseEntity.ok(comment);
+        }
+
+    }
 }

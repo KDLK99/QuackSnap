@@ -1,6 +1,7 @@
 package com.example.fase1_grupob.service;
 
 import com.example.fase1_grupob.model.Category;
+import com.example.fase1_grupob.model.Comment;
 import com.example.fase1_grupob.model.Post;
 import com.example.fase1_grupob.repository.CategoryRepository;
 import com.example.fase1_grupob.repository.CommentRepository;
@@ -64,7 +65,7 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    
+
 
     public Post save(Post post, Long id){
         //post.setCreatorID(id);
@@ -109,9 +110,14 @@ public class PostService {
         return posts;
     }
 
-    public void deleteComment(int postId, int commentId){
-        this.findById(postId).get().deleteComment(commentId);
-        this.commentRepository.deleteById((long) commentId);
+    public void deleteComment(int postId, int commentPos){
+        if(this.findById(postId).isPresent()) {
+            Comment comment = this.findById(postId).get().getComments().get(commentPos);
+            this.findById(postId).get().deleteComment(commentPos);
+
+            this.commentRepository.delete(comment);
+
+        }
     }
 
 

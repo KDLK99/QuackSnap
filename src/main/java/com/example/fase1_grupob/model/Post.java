@@ -37,6 +37,8 @@ public class Post {
     private List<UserP> likedUsers;
     /*@ManyToOne*/
     /*private Long CreatorID;*/
+    @JsonView(Basic.class)
+    private int counter = 0;
 
     public Post() {
 
@@ -130,6 +132,8 @@ public class Post {
     }
 
     public void addComment(Comment comment){
+        comment.setPosition(this.counter);
+        this.counter++;
         this.comments.add(comment);
     }
 
@@ -143,6 +147,10 @@ public class Post {
                 comment.setUsername(u.findById(comment.getUserId()).get().getUsername());
             }
         }
+        return this.comments;
+    }
+
+    public List<Comment> getComments(){
         return this.comments;
     }
 
@@ -202,8 +210,19 @@ public class Post {
         this.likedUsers.remove(userP);
     }
 
-    public void deleteComment(int id){
-        this.comments.remove(this.comments.get(--id));
+    public void deleteComment(int pos){
+        this.comments.remove(this.comments.get(pos));
+
+        if(!this.comments.isEmpty()) {
+            for (int i = pos; i < this.comments.size(); i++) {
+                this.comments.get(i).setPosition(this.comments.get(i).getPosition() - 1);
+            }
+        }
+        this.counter--;
+    }
+
+    public int getCounter(){
+        return this.counter;
     }
 
     /*public Long getCreatorID(){
