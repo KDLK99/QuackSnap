@@ -17,6 +17,7 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -62,9 +63,10 @@ public class APIController {
 
 
     @PostMapping(value = "/posts")
-    public ResponseEntity<Post> createPost( Post post,  MultipartFile image)throws IOException {
+    public ResponseEntity<Post> createPost(String description,  MultipartFile image, String title, String categories)throws IOException {
+        Post post = new Post();
+        this.postService.save(post, 1L, image, categories, description, title);
 
-        this.postService.save(post, 1L, image);
 
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(post.getId()).toUri();
 
@@ -76,14 +78,16 @@ public class APIController {
     }
 
     @PutMapping("/posts/{id}")
-    public ResponseEntity<Post> replacePost(@PathVariable long id, Post newPost) {
+    public ResponseEntity<Post> replacePost(@PathVariable long id, String description, String title) {
         if (this.postService.findById(id).isPresent()) {
             Post post = this.postService.findById(id).get();
+            Post newPost = new Post();
 
             newPost.setImageName(post.getImageName());
             newPost.setCategories(post.getCategories());
             newPost.setId(id);
-            newPost.setDescription(post.getDescription());
+            newPost.setDescription(description);
+            newPost.setTitle(title);
             this.postService.save(newPost, 1L);
 
             return ResponseEntity.ok(post);
@@ -116,6 +120,7 @@ public class APIController {
         if(this.postService.findById(id).isPresent()) {
             Post post = this.postService.findById(id).get();
             post.setLikes(post.getLikes() + 1);
+            this.postService.save(post, id);
             return ResponseEntity.ok(post);
         }else {
             return ResponseEntity.notFound().build();
@@ -132,6 +137,7 @@ public class APIController {
                 comment.setUsername(this.userService.findById(1).get().getUsername());
                 comment.setUserId((long) 1);
                 post.addComment(comment);
+                this.postService.save(post, id);
             }
             return ResponseEntity.ok(post);
 
@@ -161,15 +167,15 @@ public class APIController {
     }
 
     @PostMapping( "/searchBar")
-    public ResponseEntity<Collection<Post>> searchAPI (List<String> category)throws IOException {
+    public ResponseEntity<Collection<Post>> searchAPI (String category){
 
-        if(this.postService.filteredPosts(category).isEmpty()){
+        if(this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList()).isEmpty()){
             return ResponseEntity.notFound().build();
         }
         else if(category.isEmpty()){
             return ResponseEntity.ok(this.postService.findAll());
         }
 
-        return ResponseEntity.ok(this.postService.filteredPosts(category));
+        return ResponseEntity.ok(this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList()));
     }
 }

@@ -1,5 +1,6 @@
 package com.example.fase1_grupob.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
 
@@ -9,6 +10,7 @@ import java.util.Objects;
 @Entity
 public class Category {
     private String category;
+    @JsonIgnore
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.PERSIST})
     private List<Post> posts;
 

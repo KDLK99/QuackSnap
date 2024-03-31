@@ -64,16 +64,7 @@ public class PostService {
         return postRepository.save(post);
     }
 
-
-    public Post save(Post post, Long id, MultipartFile imageField){
-        if (imageField != null && !imageField.isEmpty()){
-            String path = imageService.createImage(imageField);
-            post.setImageName(path);
-        }
-        //post.setCreatorID(id);
-        if(post.getImageName() == null || post.getImageName().isEmpty()) post.setImageName("no-image.png");
-        return postRepository.save(post);
-    }
+    
 
     public Post save(Post post, Long id){
         //post.setCreatorID(id);
