@@ -13,15 +13,17 @@ public class Post {
 
     interface Basic{}
     @JsonView(Basic.class)
+    @Lob
     private String imageName;
     @JsonView(Basic.class)
+    @Lob
     private String description;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.PERSIST})
 
     private List<Category> categories;
     @JsonView(Basic.class)
-    
+    @Lob
     private String postTitle;
     @JsonView(Basic.class)
     @OneToMany(cascade = CascadeType.ALL)
@@ -35,8 +37,6 @@ public class Post {
     @JsonIgnore
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<UserP> likedUsers;
-    /*@ManyToOne*/
-    /*private Long CreatorID;*/
     @JsonView(Basic.class)
     private int counter = 0;
 

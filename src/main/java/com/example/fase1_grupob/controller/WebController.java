@@ -170,7 +170,6 @@ public class WebController {
 
     @PostMapping("/updatePost/{index}")
     public String updatePost(@PathVariable int index, @RequestParam String imageDesc, @RequestParam String postTitle) {
-
         Optional<Post> post = this.postService.findById(index);
         if(post.isPresent()) {
             if (!imageDesc.isEmpty()) {
@@ -180,10 +179,13 @@ public class WebController {
             if (!postTitle.isEmpty()) {
                 post.get().setTitle(postTitle);
             }
+
+            this.postService.save(post.get(), post.get().getId());
         }
 
         return "redirect:/viewPost/{index}";
     }
+
 
     @GetMapping("/editPost/{index}")
     public String updatePost(Model model, @PathVariable int index){
