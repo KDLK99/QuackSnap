@@ -1,9 +1,6 @@
 package com.example.fase1_grupob.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Comment {
@@ -12,7 +9,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Long userId;
+    @Lob
     private String username;
+    @Lob
     private String text;
     private int position;
 

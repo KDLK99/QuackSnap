@@ -12,7 +12,9 @@ import java.util.Optional;
 public class UserP
 {
     private String profilePhoto;
+    @Lob
     private String username;
+    @Lob
     private String description;
 
     @Id
