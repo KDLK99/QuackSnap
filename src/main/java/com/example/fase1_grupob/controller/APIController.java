@@ -13,6 +13,7 @@ import com.example.fase1_grupob.service.UserService;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -179,7 +180,7 @@ public class APIController {
         return ResponseEntity.ok(this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList()));
     }
 
-    @PostMapping("/posts/{index}/comment/{position}")
+    @DeleteMapping("/posts/{index}/comment/{position}")
     public ResponseEntity<Comment> deleteComment(@PathVariable int index, @PathVariable int position){
 
         if(this.postService.findById(index).isEmpty() || this.postService.findById(index).get().getCounter() == 0){
@@ -193,4 +194,25 @@ public class APIController {
         }
 
     }
+
+    @PostMapping("/posts/{index}/file")
+    public ResponseEntity<MultipartFile> uploadFile(@PathVariable int index, MultipartFile file){
+        if(this.postService.findById(index).isPresent()) {
+            this.postService.uploadFile(index, file);
+            return ResponseEntity.ok(file);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/posts/{index}/file")
+    public ResponseEntity<Object> downloadFile(@PathVariable int index) throws MalformedURLException {
+
+        if(this.postService.findById(index).isPresent() && this.postService.findById(index).get().getAdditionalInformationFile() != null) {
+            return this.postService.downloadFile(index);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
