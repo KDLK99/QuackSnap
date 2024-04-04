@@ -46,7 +46,11 @@ public class Post {
 
 
     public Post() {
-
+        this.description = null;
+        this.postTitle = null;
+        this.categories = new ArrayList<>();
+        this.comments = new ArrayList<>();
+        this.likedUsers = new ArrayList<>();
     }
 
     public Post(String description, String postTitle){
