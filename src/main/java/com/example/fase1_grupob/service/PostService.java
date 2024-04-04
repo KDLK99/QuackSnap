@@ -6,17 +6,26 @@ import com.example.fase1_grupob.model.Post;
 import com.example.fase1_grupob.repository.CategoryRepository;
 import com.example.fase1_grupob.repository.CommentRepository;
 import com.example.fase1_grupob.repository.PostRepository;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 
 @Service
 public class PostService {
+
+    private static final Path FILES_FOLDER = Paths.get(System.getProperty("user.dir"), "files");
     private PostRepository postRepository;
     private ImageService imageService;
     private UserService userService;
@@ -117,6 +126,50 @@ public class PostService {
 
             this.commentRepository.delete(comment);
 
+        }
+    }
+
+    public String uploadFile(int index, MultipartFile file){
+        Optional<Post> post = this.postRepository.findById((long) index);
+        post.get().setAdditionalInformationFile(file.getOriginalFilename());
+
+
+        String fileName = file.getOriginalFilename();
+
+        if(!fileName.matches(".*\\.(pdf)")){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The url is not a file resource");
+        }
+
+        this.save(post.get(), post.get().getId());
+
+        Path filePath = FILES_FOLDER.resolve(fileName);
+        try {
+            file.transferTo(filePath);
+        } catch (Exception ex) {
+            System.err.println(ex);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't save file locally", ex);
+        }
+
+        return fileName;
+
+    }
+
+    public ResponseEntity<Object> downloadFile(int index) throws MalformedURLException {
+        if(this.postRepository.findById((long)index).isPresent()) {
+
+            Path filePath = FILES_FOLDER.resolve(this.postRepository.findById((long) index).get().getAdditionalInformationFile());
+
+            if(!Files.exists(filePath)){
+                return ResponseEntity.notFound().build();
+            }
+
+            Resource file = new UrlResource(filePath.toUri());
+
+
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "application/pdf").body(file);
+
+        }else{
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Can't get local file");
         }
     }
 

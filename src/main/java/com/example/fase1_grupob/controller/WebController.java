@@ -1,13 +1,19 @@
 package com.example.fase1_grupob.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
 import com.example.fase1_grupob.model.Comment;
 import com.example.fase1_grupob.model.Post;
 import com.example.fase1_grupob.service.ImageService;
+import org.apache.catalina.connector.Response;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,6 +22,7 @@ import java.util.*;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -92,6 +99,8 @@ public class WebController {
             model.addAttribute("comments", post.get().getComments(this.userService));
 
             model.addAttribute("likes", post.get().getLikes());
+
+            model.addAttribute("additionalInformationFile", post.get().getAdditionalInformationFile());
         }
 
         return "viewPost_template";
@@ -127,6 +136,7 @@ public class WebController {
                 model.addAttribute("index", index);
 
                 model.addAttribute("likes", post.get().getLikes());
+
             }
 
         }
@@ -277,5 +287,16 @@ public class WebController {
         this.postService.deleteComment(indexPost, indexComment);
         
         return "redirect:/viewPost/{indexPost}";
+    }
+
+    @PostMapping("/viewPost/{index}/uploadFile")
+    public String uploadFile(Model model, @RequestParam MultipartFile file, @PathVariable int index){
+        this.postService.uploadFile(index, file);
+        return "redirect:/viewPost/{index}";
+    }
+
+    @GetMapping("/viewPost/{index}/downloadFile")
+    public ResponseEntity<Object> downloadFile(@PathVariable int index) throws MalformedURLException {
+        return this.postService.downloadFile(index);
     }
 }

@@ -2,6 +2,7 @@ package com.example.fase1_grupob.model;
 
 import com.example.fase1_grupob.service.UserService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
@@ -30,6 +31,7 @@ public class Post {
     private List<Comment> comments;
     @JsonView(Basic.class)
     private int likes;
+
     @JsonView(Basic.class)
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,6 +41,9 @@ public class Post {
     private List<UserP> likedUsers;
     @JsonView(Basic.class)
     private int counter = 0;
+    @JsonView(Basic.class)
+    private String additionalInformationFile;
+
 
     public Post() {
 
@@ -225,11 +230,12 @@ public class Post {
         return this.counter;
     }
 
-    /*public Long getCreatorID(){
-        return this.CreatorID;
+    public void setAdditionalInformationFile(String name){
+        this.additionalInformationFile = name;
     }
 
-    public Long setCreatorID(Long id){
-        this.CreatorID = id;
-    }*/
+    public String getAdditionalInformationFile(){
+        return this.additionalInformationFile;
+    }
+
 }
