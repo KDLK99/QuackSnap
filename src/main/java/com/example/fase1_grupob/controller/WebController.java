@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 
 import com.example.fase1_grupob.model.Comment;
 import com.example.fase1_grupob.model.Post;
+import com.example.fase1_grupob.model.UserP;
 import com.example.fase1_grupob.service.ImageService;
 import org.apache.catalina.connector.Response;
 import org.springframework.core.io.InputStreamResource;
@@ -253,8 +254,11 @@ public class WebController {
             model.addAttribute("profile", this.userService.findById(1).get().getProfilePhotoName());
         }
 
-        this.userService.findById(1).get().updateUsername(username);
-        this.userService.findById(1).get().updateDescription(description);
+        UserP user = this.userService.findById(1).get();
+        user.updateUsername(username);
+        user.updateDescription(description);
+
+        this.userService.save(user);
 
         return "redirect:/user";
     }

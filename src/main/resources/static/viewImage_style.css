@@ -35,9 +35,11 @@ body {
     margin-bottom: 20px;
 }
 .comment-form {
-    margin-top: 1%;
-    position:relative;
-    right:3.9%;
+    margin-top: 10%;
+    position: relative;
+    right:5%;
+    margin-left: -40%
+    
 }
 .comment-form input[type="text"] {
     width: calc(100% - 100px);
@@ -62,8 +64,9 @@ body {
     border-radius: 3%;
     scale: 1.25;
     width: 10%;
-    bottom:40%;
-    left: 150%;
+    bottom:0%;
+    left: 100%;
+  
 }
 
 .comment-react button {
@@ -426,3 +429,15 @@ form{
     position: absolute;
   }
 
+  .additionalInfoContainer
+  {
+    position: relative;
+    margin-top: -10%;
+    left: -5%;
+
+  }
+  .likeButton
+  {
+    position: absolute;
+    margin-top: 80%;
+  }

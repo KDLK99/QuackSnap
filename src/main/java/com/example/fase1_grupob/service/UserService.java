@@ -2,6 +2,8 @@ package com.example.fase1_grupob.service;
 
 import com.example.fase1_grupob.model.UserP;
 import com.example.fase1_grupob.repository.UserRepository;
+
+import org.h2.engine.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -29,6 +31,11 @@ public class UserService {
 
     public void addUser(UserP user) {
         userRepository.save(user);
+    }
+
+    public void save (UserP user)
+    {
+        this.userRepository.save(user);
     }
 
     public void deleteById(long id) {
