@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -130,27 +131,39 @@ public class PostService {
     }
 
     public String uploadFile(int index, MultipartFile file){
-        Optional<Post> post = this.postRepository.findById((long) index);
-        post.get().setAdditionalInformationFile(file.getOriginalFilename());
+
+        if(this.postRepository.findById((long) index).isPresent()) {
+            Optional<Post> post = this.postRepository.findById((long) index);
+            if(post.get().getAdditionalInformationFile() != null) {
+                Path file1Path = FILES_FOLDER.resolve(post.get().getAdditionalInformationFile());
+                File file1 = file1Path.toFile();
+                file1.delete();
+            }
+
+            post.get().setAdditionalInformationFile(file.getOriginalFilename());
 
 
-        String fileName = file.getOriginalFilename();
+            String fileName = file.getOriginalFilename();
 
-        if(!fileName.matches(".*\\.(pdf)")){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The url is not a file resource");
+            if (!fileName.matches(".*\\.(pdf)")) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The url is not a file resource");
+            }
+
+            this.save(post.get(), post.get().getId());
+
+            Path filePath = FILES_FOLDER.resolve(fileName);
+            try {
+                file.transferTo(filePath);
+            } catch (Exception ex) {
+                System.err.println(ex);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't save file locally", ex);
+            }
+            return fileName;
+        }else{
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't save file locally");
         }
 
-        this.save(post.get(), post.get().getId());
 
-        Path filePath = FILES_FOLDER.resolve(fileName);
-        try {
-            file.transferTo(filePath);
-        } catch (Exception ex) {
-            System.err.println(ex);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't save file locally", ex);
-        }
-
-        return fileName;
 
     }
 
