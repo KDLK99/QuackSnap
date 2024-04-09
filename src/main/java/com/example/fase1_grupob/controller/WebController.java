@@ -123,6 +123,9 @@ public class WebController {
 
     @PostMapping("/viewPost/{index}")
     public String comment(Model model, @PathVariable int index, @RequestParam String comment){
+        if(comment.isEmpty()){
+            return "redirect:/viewPost/{index}";
+        }
         if(this.userService.findById(1).isPresent()){
             Comment comment1 = new Comment((long) 1, comment, this.userService.findById(1).get().getUsername());
 
@@ -211,7 +214,7 @@ public class WebController {
         }
 
         model.addAttribute("posts", this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList()));
-        model.addAttribute("errormsg", "Ningún post coincide con ese criterio de búsqueda.");
+        model.addAttribute("errormsg", "No posts match that seacrh criteria.");
         return "index";
     }
 
