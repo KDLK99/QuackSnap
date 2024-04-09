@@ -1,19 +1,23 @@
 package com.example.fase1_grupob.service;
 
-import java.io.IOException;
-
-//import org.h2.engine.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.example.fase1_grupob.model.Comment;
 import com.example.fase1_grupob.model.Post;
 import com.example.fase1_grupob.model.UserP;
-
 import jakarta.annotation.PostConstruct;
+import org.apache.tomcat.util.http.fileupload.FileItem;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
+
+import java.io.*;
+import java.nio.file.Files;
 
 @Component
 public class DatabaseInitializer {
+    /*
     @Autowired
     private PostService postService;
     @Autowired
@@ -28,10 +32,12 @@ public class DatabaseInitializer {
         Post p1 = new Post();
         Post p2 = new Post();
 
+
+
         postService.save(p1, null, null, "testing", "This is the first post", "Hello!!");
-        p1.setImageName("image_88f7214b-fa78-4bae-8be5-ed43af8b9ad4_test1.jpg");
+        File f = new File("image_88f7214b-fa78-4bae-8be5-ed43af8b9ad4_test1.jpg");
         postService.save(p2, null, null, "testing2", "This is a test post", "Example title");
-        p2.setImageName("image_0df5d1a8-360c-43a4-8670-8700cdd2f106_test2.jpg");
+        p2.setImage("image_0df5d1a8-360c-43a4-8670-8700cdd2f106_test2.jpg");
         
 
         //Create some comments
@@ -44,5 +50,5 @@ public class DatabaseInitializer {
 
         postService.save(p1, null);
         postService.save(p2, null); 
-    }
+    }*/
 }

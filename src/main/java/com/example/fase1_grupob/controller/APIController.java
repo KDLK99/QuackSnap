@@ -71,9 +71,6 @@ public class APIController {
 
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(post.getId()).toUri();
 
-        Files.createDirectories(IMAGES_FOLDER);
-        Path imagePath = IMAGES_FOLDER.resolve(post.getImageName());
-        image.transferTo(imagePath);
 
         return ResponseEntity.created(location).body(post);
     }
@@ -84,7 +81,7 @@ public class APIController {
             Post post = this.postService.findById(id).get();
             Post newPost = new Post();
 
-            newPost.setImageName(post.getImageName());
+            newPost.setImage(post.getImage());
             newPost.setCategories(post.getCategories());
             newPost.setId(id);
             newPost.setDescription(description);
@@ -104,11 +101,6 @@ public class APIController {
 
             this.postService.deleteById(id);
 
-            if (post.getImageName() != null) {
-                Path imgPath = IMAGES_FOLDER.resolve(post.getImageName());
-                File img = imgPath.toFile();
-                img.delete();
-            }
 
             return ResponseEntity.ok(post);
         }else {

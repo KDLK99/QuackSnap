@@ -1,10 +1,14 @@
 package com.example.fase1_grupob.service;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Blob;
 import java.util.UUID;
 
+import com.example.fase1_grupob.model.Post;
+import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
@@ -17,7 +21,7 @@ public class ImageService {
 
     private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images");
 
-    public String createImage(MultipartFile multiPartFile) {
+    public Post createImage(MultipartFile multiPartFile, Post post) throws IOException {
 
         String originalName = multiPartFile.getOriginalFilename();
 
@@ -27,15 +31,10 @@ public class ImageService {
 
         String fileName = "image_" + UUID.randomUUID() + "_" +originalName;
 
-        Path imagePath = IMAGES_FOLDER.resolve(fileName);
-        try {
-            multiPartFile.transferTo(imagePath);
-        } catch (Exception ex) {
-            System.err.println(ex);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't save image locally", ex);
-        }
+        post.setImage(BlobProxy.generateProxy(multiPartFile.getInputStream(), multiPartFile.getSize()));
 
-        return fileName;
+
+        return post;
     }
 
     public Resource getImage(String imageName) {
