@@ -18,6 +18,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.*;
 
 
@@ -58,11 +59,11 @@ public class WebController {
 
 
     @PostMapping("/upload_image")
-    public String uploadPost(Post post, @RequestParam MultipartFile image, Model model,
+    public String uploadPost(@RequestParam MultipartFile image, Model model,
                                @RequestParam String imageCategory, @RequestParam String imageDesc, @RequestParam String postTitle) throws IOException {
 
         Files.createDirectories(IMAGES_FOLDER);
-
+        Post post = new Post();
         if(postTitle.isEmpty() || imageDesc.isEmpty() || imageCategory.isEmpty() || image.isEmpty())
         {
             return "redirect:/uploadImage.html";
@@ -70,11 +71,9 @@ public class WebController {
 
 
         this.postService.save(post, 1L,image, imageCategory, imageDesc, postTitle);
-        Path imagePath = IMAGES_FOLDER.resolve(post.getImageName());
 
-        image.transferTo(imagePath);
 
-        model.addAttribute("imageName", post.getImageName());
+
         if(this.userService.findById(1).isEmpty()){
             this.userService.findById(1).get().addPost(post);
         }
@@ -109,13 +108,15 @@ public class WebController {
     
 
     @GetMapping("/download_image/{index}")
-    public ResponseEntity<Object> downloadImage(Model model, @PathVariable int index) throws MalformedURLException {
+    public ResponseEntity<Object> downloadImage(Model model, @PathVariable int index) throws MalformedURLException, SQLException {
         if(this.postService.findById(index).isPresent()) {
-            Path imagePath = IMAGES_FOLDER.resolve(this.postService.findById(index).get().getImageName());
 
-            Resource image = new UrlResource(imagePath.toUri());
 
-            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(image);
+            Resource file = new InputStreamResource(this.postService.findById(index).get().getImage().getBinaryStream());
+
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
+                    .contentLength(this.postService.findById(index).get().getImage().length()).body(file);
+
         }else{
             return ResponseEntity.notFound().build();
         }
@@ -165,9 +166,6 @@ public class WebController {
     @GetMapping("/deletePost/{index}")
     public String deletePost(Model model, @PathVariable int index) throws MalformedURLException {
         if(this.postService.findById(index).isPresent()) {
-            Path imgPath = IMAGES_FOLDER.resolve(this.postService.findById(index).get().getImageName());
-            File img = imgPath.toFile();
-            img.delete();
             Optional<Post> post = this.postService.findById(index);
             if(post.isPresent() && this.userService.findById(1).isPresent()) {
                 this.postService.deleteById(post.get().getId());
@@ -214,7 +212,7 @@ public class WebController {
         }
 
         model.addAttribute("posts", this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList()));
-        model.addAttribute("errormsg", "No posts match that seacrh criteria.");
+        model.addAttribute("errormsg", "No posts match that search criteria.");
         return "index";
     }
 

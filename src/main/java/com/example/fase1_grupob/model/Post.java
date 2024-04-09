@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
+import java.sql.Blob;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -15,7 +16,7 @@ public class Post {
     interface Basic{}
     @JsonView(Basic.class)
     @Lob
-    private String imageName;
+    private Blob image;
     @JsonView(Basic.class)
     @Lob
     private String description;
@@ -129,12 +130,12 @@ public class Post {
         this.description = description;
     }
 
-    public String getImageName(){
-        return this.imageName;
+    public Blob getImage(){
+        return this.image;
     }
 
-    public void setImageName(String name){
-        this.imageName = name;
+    public void setImage(Blob image){
+        this.image = image;
     }
     public String getDescription(){
         return this.description;
@@ -208,7 +209,7 @@ public class Post {
 
     @Override
     public String toString() {
-        return "Post [imageName=" + imageName + ", description=" + description + ", categories=" + categories + "]";
+        return "Post [ description=" + description + ", categories=" + categories + "]";
     }
 
     public void addLikeUser(UserP userP){

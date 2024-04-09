@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,11 +51,10 @@ public class PostService {
     }
 
 
-    public Post save(Post post, Long id, MultipartFile imageField, String imageCategory, String imageDesc, String postTitle) {
+    public Post save(Post post, Long id, MultipartFile imageField, String imageCategory, String imageDesc, String postTitle) throws IOException {
 
         if (imageField != null && !imageField.isEmpty()){
-            String path = imageService.createImage(imageField);
-            post.setImageName(path);
+            post = imageService.createImage(imageField, post);
         }
         if(!imageCategory.isEmpty()){
             post.setCategories(imageCategory,this.categoryRepository.findAll());
@@ -70,7 +70,6 @@ public class PostService {
         //post.setCreatorID(id);
 
 
-        if(post.getImageName() == null || post.getImageName().isEmpty()) post.setImageName("no-image.png");
 
         return postRepository.save(post);
     }
@@ -117,7 +116,9 @@ public class PostService {
             }
             posts.addAll(this.postRepository.findPostsByCategoryID(Math.toIntExact(category.getId())));
         }
-        return posts;
+
+        List<Post> posts1 = new ArrayList<>(new HashSet<>(posts));
+        return posts1;
     }
 
     public void deleteComment(int postId, int commentPos){
@@ -134,11 +135,20 @@ public class PostService {
 
         if(this.postRepository.findById((long) index).isPresent()) {
             Optional<Post> post = this.postRepository.findById((long) index);
+
+            for(Post post1:this.postRepository.findAll()){
+                if(post1.getAdditionalInformationFile() != null && post1.getAdditionalInformationFile().equals(file.getOriginalFilename())){
+                    throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "File already exists");
+                }
+            }
+
             if(post.get().getAdditionalInformationFile() != null) {
                 Path file1Path = FILES_FOLDER.resolve(post.get().getAdditionalInformationFile());
                 File file1 = file1Path.toFile();
                 file1.delete();
             }
+
+
 
             post.get().setAdditionalInformationFile(file.getOriginalFilename());
 
