@@ -35,10 +35,10 @@ body {
     margin-bottom: 20px;
 }
 .comment-form {
-    margin-top: 10%;
-    position: relative;
-    right:5%;
-    margin-left: -40%
+    margin-top: 9%;
+    position: fixed;
+    /*right:5%;
+    margin-left: -40%*/
     
 }
 .comment-form input[type="text"] {
@@ -174,6 +174,7 @@ form{
     flex: left;
     margin-left: 0%;
     margin-top: 0%;
+    width:5%;
 }
 
 .editButton
@@ -181,6 +182,7 @@ form{
     flex: left;
     margin-left: 0%;
     margin-top: 0%;
+    width: 5%;
 }
 
 .deleteButton {
@@ -390,6 +392,7 @@ form{
   position: relative;
   margin-left: 88%;
   margin-top: -3.5%;
+  width: 5%;
 }
 
 .deleteButton2 {
@@ -432,7 +435,7 @@ form{
   .additionalInfoContainer
   {
     position: relative;
-    margin-top: -10%;
+    margin-top: -2%;
     left: -5%;
 
   }

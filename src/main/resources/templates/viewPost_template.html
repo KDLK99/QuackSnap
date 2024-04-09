@@ -110,12 +110,17 @@
     </form>
     </div>
     <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <div class="comments-container">
 
         {{#comments}}
         <strong>{{username}}:</strong>{{text}}
-        <a href="/deleteComment/{{index}}/{{position}}">
+
           <div class = "deleteButtonContainer">
+          <a href="/deleteComment/{{index}}/{{position}}">
           <button class="deleteButton2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
