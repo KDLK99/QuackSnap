@@ -4,6 +4,7 @@ package com.example.fase1_grupob.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,10 +12,11 @@ import java.util.Optional;
 @Entity
 public class UserP
 {
-    private String profilePhoto;
     @Lob
+    private Blob imageFile;
+    @Column(columnDefinition = "LONGBLOB")
     private String username;
-    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private String description;
 
     @Id
@@ -32,7 +34,7 @@ public class UserP
     public UserP()
     {
         super();
-        this.profilePhoto= "profphoto1.jpg";
+        this.imageFile= null;
         this.username = "Pepe";
         this.description = "Pepe the Duck: Nature lover and conservationist. Shares educational content about waterfowl and wildlife. Adventurous and creative, he shares his own illustrations and photographs of ducks and other wildlife.";
     }
@@ -48,19 +50,6 @@ public class UserP
 
     public String getUsername() {
         return username;
-    }
-
-    public String getProfilePhotoName()
-    {
-        return this.profilePhoto;
-    }
-
-    public void setProfilePhotoName(String name)
-    {
-        if(!name.isEmpty())
-        {
-          this.profilePhoto = name;  
-        }
     }
 
     public void updateDescription(String newDescription) 
@@ -81,6 +70,14 @@ public class UserP
             this.username = newUsername;
         }
         
+    }
+
+    public Blob getImage(){
+        return this.imageFile;
+    }
+
+    public void setImage(Blob image){
+        this.imageFile = image;
     }
 
     public List<Post> getUserPosts(){

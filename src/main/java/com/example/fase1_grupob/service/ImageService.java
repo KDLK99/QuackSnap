@@ -19,8 +19,6 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class ImageService {
 
-    private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images");
-
     public Post createImage(MultipartFile multiPartFile, Post post) throws IOException {
 
         String originalName = multiPartFile.getOriginalFilename();
@@ -35,26 +33,6 @@ public class ImageService {
 
 
         return post;
-    }
-
-    public Resource getImage(String imageName) {
-        Path imagePath = IMAGES_FOLDER.resolve(imageName);
-        try {
-            return new UrlResource(imagePath.toUri());
-        } catch (MalformedURLException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Can't get local image");
-        }
-    }
-
-    public void deleteImage(String image_url) {
-        String[] tokens = image_url.split("/");
-        String image_name = tokens[tokens.length -1 ];
-
-        try {
-            IMAGES_FOLDER.resolve(image_name).toFile().delete();
-        } catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Can't delete local image");
-        }
     }
 
 }

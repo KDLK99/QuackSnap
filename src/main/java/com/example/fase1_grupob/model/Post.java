@@ -18,14 +18,14 @@ public class Post {
     @Lob
     private Blob image;
     @JsonView(Basic.class)
-    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private String description;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.PERSIST})
 
     private List<Category> categories;
     @JsonView(Basic.class)
-    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private String postTitle;
     @JsonView(Basic.class)
     @OneToMany(cascade = CascadeType.ALL)

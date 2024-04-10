@@ -11,6 +11,7 @@ import com.example.fase1_grupob.model.Post;
 import com.example.fase1_grupob.model.UserP;
 import com.example.fase1_grupob.service.ImageService;
 import org.apache.catalina.connector.Response;
+import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 
@@ -69,10 +70,7 @@ public class WebController {
             return "redirect:/uploadImage.html";
         }
 
-
         this.postService.save(post, 1L,image, imageCategory, imageDesc, postTitle);
-
-
 
         if(this.userService.findById(1).isEmpty()){
             this.userService.findById(1).get().addPost(post);
@@ -110,8 +108,6 @@ public class WebController {
     @GetMapping("/download_image/{index}")
     public ResponseEntity<Object> downloadImage(Model model, @PathVariable int index) throws MalformedURLException, SQLException {
         if(this.postService.findById(index).isPresent()) {
-
-
             Resource file = new InputStreamResource(this.postService.findById(index).get().getImage().getBinaryStream());
 
             return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
@@ -248,11 +244,9 @@ public class WebController {
         {
             Files.createDirectories(IMAGES_FOLDER);
 
-            this.userService.findById(1).get().setProfilePhotoName(Objects.requireNonNull(image.getOriginalFilename()));
+            this.userService.findById(1).get().setImage(BlobProxy.generateProxy(image.getInputStream(), image.getSize()));
 
-            Path imagePath = IMAGES_FOLDER.resolve(this.userService.findById(1).get().getProfilePhotoName());
-            image.transferTo(imagePath);
-            model.addAttribute("profile", this.userService.findById(1).get().getProfilePhotoName());
+            //model.addAttribute("profile", this.userService.findById(1).get().getProfilePhotoName());
         }
 
         UserP user = this.userService.findById(1).get();
@@ -265,12 +259,12 @@ public class WebController {
     }
 
     @GetMapping("/updated_profile/{index}")
-    public ResponseEntity<Object> updateImageUSer(Model model, @PathVariable int index) throws MalformedURLException {
+    public ResponseEntity<Object> updateImageUSer(Model model, @PathVariable int index) throws MalformedURLException, SQLException {
         if(this.userService.findById(1).isPresent()) {
-            Path imagePath = IMAGES_FOLDER.resolve(this.userService.findById(1).get().getProfilePhotoName());
+            Resource file = new InputStreamResource(this.userService.findById(1).get().getImage().getBinaryStream());
 
-            Resource image = new UrlResource(imagePath.toUri());
-            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(image);
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
+                    .contentLength(this.userService.findById(1).get().getImage().length()).body(file);
         }else{
             return ResponseEntity.notFound().build();
         }
@@ -296,7 +290,9 @@ public class WebController {
 
     @PostMapping("/viewPost/{index}/uploadFile")
     public String uploadFile(Model model, @RequestParam MultipartFile file, @PathVariable int index){
-        this.postService.uploadFile(index, file);
+        if (!file.isEmpty()){
+            this.postService.uploadFile(index, file);
+        }
         return "redirect:/viewPost/{index}";
     }
 

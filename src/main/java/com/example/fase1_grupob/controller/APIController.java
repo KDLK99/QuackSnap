@@ -5,6 +5,7 @@ import com.example.fase1_grupob.model.Comment;
 import com.example.fase1_grupob.model.Post;
 import com.example.fase1_grupob.model.UserP;
 import com.example.fase1_grupob.service.ImageService;
+import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -145,11 +146,11 @@ public class APIController {
             if (image != null && !image.isEmpty()) {
                 Files.createDirectories(IMAGES_FOLDER);
 
-                this.userService.findById(1).get().setProfilePhotoName(Objects.requireNonNull(image.getOriginalFilename()));
+                this.userService.findById(1).get().setImage(BlobProxy.generateProxy(image.getInputStream(), image.getSize()));
 
 
-                Path imagePath = IMAGES_FOLDER.resolve(this.userService.findById(1).get().getProfilePhotoName());
-                image.transferTo(imagePath);
+                /*Path imagePath = IMAGES_FOLDER.resolve(this.userService.findById(1).get().getImage());
+                image.transferTo(imagePath);*/
             }
             this.userService.findById(1).get().updateUsername(username);
             this.userService.findById(1).get().updateDescription(description);

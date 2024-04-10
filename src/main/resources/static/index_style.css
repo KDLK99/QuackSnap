@@ -37,7 +37,7 @@ img {
 .center
 {
     text-align: center;
-    margin-left: 15px;
+    margin-right: 19%;
 }
 
 .container {
@@ -185,3 +185,9 @@ img {
     margin-left: 90%;
     width: 60%; 
   }
+
+  .form-group {
+    position:relative;
+    left:52%;
+    bottom:35px;
+}
