@@ -7,17 +7,23 @@ import jakarta.annotation.PostConstruct;
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
+import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Component
 public class DatabaseInitializer {
-    /*
+    private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images");
+
     @Autowired
     private PostService postService;
     @Autowired
@@ -25,8 +31,11 @@ public class DatabaseInitializer {
 
     @PostConstruct
     public void init() throws IOException{
+
+
         //Create Users
         UserP u1 = userService.findById(1).get();
+
         
         //Create posts
         Post p1 = new Post();
@@ -35,9 +44,13 @@ public class DatabaseInitializer {
 
 
         postService.save(p1, null, null, "testing", "This is the first post", "Hello!!");
-        File f = new File("image_88f7214b-fa78-4bae-8be5-ed43af8b9ad4_test1.jpg");
+        Path imagePath = IMAGES_FOLDER.resolve("image_88f7214b-fa78-4bae-8be5-ed43af8b9ad4_test1.jpg");
+        Resource image = new UrlResource(imagePath.toUri());
+        p1.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getFile().length()));
         postService.save(p2, null, null, "testing2", "This is a test post", "Example title");
-        p2.setImage("image_0df5d1a8-360c-43a4-8670-8700cdd2f106_test2.jpg");
+        imagePath = IMAGES_FOLDER.resolve("image_0df5d1a8-360c-43a4-8670-8700cdd2f106_test2.jpg");
+        image = new UrlResource(imagePath.toUri());
+        p2.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getFile().length()));
         
 
         //Create some comments
@@ -49,6 +62,6 @@ public class DatabaseInitializer {
         p1.setAdditionalInformationFile("test.pdf");
 
         postService.save(p1, null);
-        postService.save(p2, null); 
-    }*/
+        postService.save(p2, null);
+    }
 }
