@@ -154,7 +154,7 @@ public class PostService {
 
             for(Post post1:this.postRepository.findAll()){
                 if(post1.getAdditionalInformationFile() != null && post1.getAdditionalInformationFile().equals(file.getOriginalFilename())){
-                    throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "File already exists");
+                    throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "File already exists");
                 }
             }
 
