@@ -161,16 +161,16 @@ public class APIController {
     }
 
     @PostMapping( "/searchBar")
-    public ResponseEntity<Collection<Post>> searchAPI (String category){
+    public ResponseEntity<Collection<Post>> searchAPI (String category, String order){
 
-        if(this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList()).isEmpty()){
+        if(this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList(), order).isEmpty()){
             return ResponseEntity.notFound().build();
         }
         else if(category.isEmpty()){
             return ResponseEntity.ok(this.postService.findAll());
         }
 
-        return ResponseEntity.ok(this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList()));
+        return ResponseEntity.ok(this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList(), order));
     }
 
     @DeleteMapping("/posts/{index}/comment/{position}")

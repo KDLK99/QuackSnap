@@ -79,20 +79,20 @@
     <div class="center">
       <div class="search">
         <form class="search" action="/search" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+        <label for="order">Order By:</label>
+        <select id="order" name="order" required>
+          <option value="Default" selected>Select an option:</option>
+          <option value="Likes">Likes</option>
+          <option value="Comments">Comments</option>
+        </select>
+      </div>
+        <!--form class="search" action="/search" method="post" enctype="multipart/form-data"-->
           <input placeholder="Search..." type="text" name="category">
           <button type="submit">Go</button>
         </form>
       </div>
     </div>
-    <div class="form-group">
-      <label for="incident">Order By:</label>
-      <select id="incident" name="incident" required>
-          <option value="">Select an option:</option>
-          <option value="PaginaCaida">Likes</option>
-          <option value="FalloImagenes">Comments</option>
-          
-      </select>
-  </div>
 </head>
 
 <body class = "color">

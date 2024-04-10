@@ -10,12 +10,14 @@ import com.example.fase1_grupob.model.Comment;
 import com.example.fase1_grupob.model.Post;
 import com.example.fase1_grupob.model.UserP;
 import com.example.fase1_grupob.service.ImageService;
-import org.apache.catalina.connector.Response;
+
+
 import org.hibernate.engine.jdbc.BlobProxy;
+
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 
-import java.net.URISyntaxException;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,8 +26,6 @@ import java.util.*;
 
 
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -202,12 +202,12 @@ public class WebController {
     }
 
     @PostMapping("/search")
-    public String searchByCategory(@RequestParam String category, Model model) {
-        if(category.isEmpty()){
+    public String searchByCategory(@RequestParam String category, Model model, @RequestParam String order) {
+        if((category.isEmpty() && (order == null || order.isEmpty())) || category.isEmpty() && order.equals("Default")){
             return "redirect:/";
         }
 
-        model.addAttribute("posts", this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList()));
+        model.addAttribute("posts", this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList(), order));
         model.addAttribute("errormsg", "No posts match that search criteria.");
         return "index";
     }
