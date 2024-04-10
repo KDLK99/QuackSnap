@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 @Entity
 public class Category {
-    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private String category;
     @JsonIgnore
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.PERSIST})

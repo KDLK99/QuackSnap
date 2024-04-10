@@ -9,9 +9,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Long userId;
-    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private String username;
-    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private String text;
     private int position;
 

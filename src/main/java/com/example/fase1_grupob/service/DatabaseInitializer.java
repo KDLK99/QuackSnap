@@ -35,6 +35,10 @@ public class DatabaseInitializer {
 
         //Create Users
         UserP u1 = userService.findById(1).get();
+        //Set profile photo
+        Path imagePath = IMAGES_FOLDER.resolve("profphoto1.jpg");
+        Resource image = new UrlResource(imagePath.toUri());
+        u1.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getFile().length()));
 
         
         //Create posts
@@ -44,8 +48,8 @@ public class DatabaseInitializer {
 
 
         postService.save(p1, null, null, "testing", "This is the first post", "Hello!!");
-        Path imagePath = IMAGES_FOLDER.resolve("image_88f7214b-fa78-4bae-8be5-ed43af8b9ad4_test1.jpg");
-        Resource image = new UrlResource(imagePath.toUri());
+        imagePath = IMAGES_FOLDER.resolve("image_88f7214b-fa78-4bae-8be5-ed43af8b9ad4_test1.jpg");
+        image = new UrlResource(imagePath.toUri());
         p1.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getFile().length()));
         postService.save(p2, null, null, "testing2", "This is a test post", "Example title");
         imagePath = IMAGES_FOLDER.resolve("image_0df5d1a8-360c-43a4-8670-8700cdd2f106_test2.jpg");
