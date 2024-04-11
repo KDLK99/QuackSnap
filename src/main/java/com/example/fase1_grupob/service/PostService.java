@@ -117,14 +117,7 @@ public class PostService {
                 category.setId(0L);
             }
 
-
-            if(order.equals("Likes")) {
-                posts.addAll(this.postRepository.findPostsByCategoryIDOrderByLikesDesc(Math.toIntExact(category.getId())));
-            }else if(order.equals("Comments")) {
-                posts.addAll(this.postRepository.findPostsByCategoryIDOrderByCommentsDesc(Math.toIntExact(category.getId())));
-            }else{
-                posts.addAll(this.postRepository.findPostsByCategoryID(Math.toIntExact(category.getId())));
-            }
+            posts.addAll(this.postRepository.findPostsByCategoryIDOrdered(Math.toIntExact(category.getId()), order));
         }
 
         return new ArrayList<>(new LinkedHashSet<>(posts));
