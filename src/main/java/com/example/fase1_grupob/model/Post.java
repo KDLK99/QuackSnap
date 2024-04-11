@@ -118,8 +118,9 @@ public class Post {
 
     public void setTitle(String title)
     {
-        
-        this.postTitle = title;
+        if(!title.isEmpty()){
+            this.postTitle = title;
+        }
     }
 
     public String getTitle(){
@@ -127,7 +128,9 @@ public class Post {
     }
 
     public void setDescription(String description){
-        this.description = description;
+        if(!description.isEmpty()){
+            this.description = description;
+        }
     }
 
     public Blob getImage(){

@@ -32,7 +32,6 @@ public class DatabaseInitializer {
     @PostConstruct
     public void init() throws IOException{
 
-
         //Create Users
         UserP u1 = userService.findById(1).get();
         //Set profile photo
@@ -40,12 +39,9 @@ public class DatabaseInitializer {
         Resource image = new UrlResource(imagePath.toUri());
         u1.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getFile().length()));
 
-        
         //Create posts
         Post p1 = new Post();
         Post p2 = new Post();
-
-
 
         postService.save(p1, null, null, "testing", "This is the first post", "Hello!!");
         imagePath = IMAGES_FOLDER.resolve("image_88f7214b-fa78-4bae-8be5-ed43af8b9ad4_test1.jpg");
@@ -55,7 +51,6 @@ public class DatabaseInitializer {
         imagePath = IMAGES_FOLDER.resolve("image_0df5d1a8-360c-43a4-8670-8700cdd2f106_test2.jpg");
         image = new UrlResource(imagePath.toUri());
         p2.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getFile().length()));
-        
 
         //Create some comments
         p1.addComment(new Comment((long) 1, "This is the first message", "Pepe"));

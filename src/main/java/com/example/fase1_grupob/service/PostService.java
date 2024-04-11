@@ -60,16 +60,9 @@ public class PostService {
             post.setCategories(imageCategory,this.categoryRepository.findAll());
         }
 
-        if(!imageDesc.isEmpty()){
-            post.setDescription(imageDesc);
-        }
-
-        if(!postTitle.isEmpty()){
-            post.setTitle(postTitle);
-        }
+        post.setDescription(imageDesc);
+        post.setTitle(postTitle);
         //post.setCreatorID(id);
-
-
 
         return postRepository.save(post);
     }
