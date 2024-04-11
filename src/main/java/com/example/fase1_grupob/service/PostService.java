@@ -78,6 +78,10 @@ public class PostService {
         Optional<Post> post = this.postRepository.findById(id);
         List<Category>categories = post.get().getCategories();
 
+        Path file1Path = FILES_FOLDER.resolve(post.get().getAdditionalInformationFile());
+        File file1 = file1Path.toFile();
+        file1.delete();
+
         for(Category category: categories)
         {
             if(this.categoryRepository.findAll().contains(category))
@@ -117,7 +121,7 @@ public class PostService {
                 category.setId(0L);
             }
 
-            posts.addAll(this.postRepository.findPostsByCategoryIDOrdered(Math.toIntExact(category.getId()), order));
+            posts.addAll(this.postRepository.findPostsByCategoryIDOrdered(Math.toIntExact(category.getId()), order.toLowerCase()));
         }
 
         return new ArrayList<>(new LinkedHashSet<>(posts));
