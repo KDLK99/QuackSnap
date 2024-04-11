@@ -11,4 +11,16 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query(value = "SELECT * FROM post p NATURAL JOIN (SELECT DISTINCT cp.posts_id FROM category c NATURAL JOIN category_posts cp WHERE cp.category_id=:Category_id) as ccpi WHERE p.id=posts_id", nativeQuery = true)
     List<Post> findPostsByCategoryID(int Category_id);
 
+    @Query(value = "SELECT * FROM post p NATURAL JOIN (SELECT DISTINCT cp.posts_id FROM category c NATURAL JOIN category_posts cp WHERE cp.category_id=:Category_id) as ccpi WHERE p.id=posts_id ORDER BY p.likes DESC", nativeQuery = true)
+    List<Post> findPostsByCategoryIDOrderByLikesDesc(int Category_id);
+
+    @Query(value = "SELECT * FROM post p NATURAL JOIN (SELECT DISTINCT cp.posts_id FROM category c NATURAL JOIN category_posts cp WHERE cp.category_id=:Category_id) as ccpi WHERE p.id=posts_id ORDER BY p.counter DESC", nativeQuery = true)
+    List<Post> findPostsByCategoryIDOrderByCommentsDesc(int Category_id);
+
+    @Query(value = "SELECT * FROM post p ORDER BY p.likes DESC", nativeQuery = true)
+    List<Post> findPostsOrderByLikes();
+
+    @Query(value = "SELECT * FROM post p ORDER BY p.counter DESC", nativeQuery = true)
+    List<Post> findPostsOrderByComments();
+
 }

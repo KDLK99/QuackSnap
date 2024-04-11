@@ -97,7 +97,17 @@ public class PostService {
         this.postRepository.deleteById(id);
     }
 
-    public List<Post> filteredPosts(List<String> categories){
+    public List<Post> filteredPosts(List<String> categories, String order){
+
+        if(categories.get(0).isEmpty()){
+            if(order.equals("Likes")){
+                return this.postRepository.findPostsOrderByLikes();
+            }else if(order.equals("Comments")){
+                return this.postRepository.findPostsOrderByComments();
+            }
+        }
+
+
         List<Category> categoryList = new ArrayList<>();
         for(String category: categories){
             category.toLowerCase();
@@ -109,16 +119,22 @@ public class PostService {
         for(Category category: categoryList){
             if(this.categoryRepository.findAll().contains(category)){
                 category.setId(this.categoryRepository.findAll().get(this.categoryRepository.findAll().indexOf(category)).getId());
-
             }
             else if(category.getId() == null){
                 category.setId(0L);
             }
-            posts.addAll(this.postRepository.findPostsByCategoryID(Math.toIntExact(category.getId())));
+
+
+            if(order.equals("Likes")) {
+                posts.addAll(this.postRepository.findPostsByCategoryIDOrderByLikesDesc(Math.toIntExact(category.getId())));
+            }else if(order.equals("Comments")) {
+                posts.addAll(this.postRepository.findPostsByCategoryIDOrderByCommentsDesc(Math.toIntExact(category.getId())));
+            }else{
+                posts.addAll(this.postRepository.findPostsByCategoryID(Math.toIntExact(category.getId())));
+            }
         }
 
-        List<Post> posts1 = new ArrayList<>(new HashSet<>(posts));
-        return posts1;
+        return new ArrayList<>(new LinkedHashSet<>(posts));
     }
 
     public void deleteComment(int postId, int commentPos){
@@ -138,7 +154,7 @@ public class PostService {
 
             for(Post post1:this.postRepository.findAll()){
                 if(post1.getAdditionalInformationFile() != null && post1.getAdditionalInformationFile().equals(file.getOriginalFilename())){
-                    throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "File already exists");
+                    throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "File already exists");
                 }
             }
 
