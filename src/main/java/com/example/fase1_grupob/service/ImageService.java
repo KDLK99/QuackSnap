@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import com.example.fase1_grupob.model.Post;
 import com.example.fase1_grupob.model.UserP;
+import com.mysql.cj.util.SaslPrep;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -20,11 +21,21 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class ImageService {
 
+    private boolean isValid(MultipartFile file){
+        String originalName = file.getOriginalFilename();
+
+        String type = file.getContentType();
+        if(!file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg") && !file.getContentType().equals("image/png") && !file.getContentType().equals("image/gif") && !originalName.matches(".*\\.(jpg|jpeg|gif|png)")){
+            return false;
+        }
+        return true;
+    }
+
     public Post createImage(MultipartFile multiPartFile, Post post) throws IOException {
 
         String originalName = multiPartFile.getOriginalFilename();
 
-        if(!originalName.matches(".*\\.(jpg|jpeg|gif|png)")){
+        if(!this.isValid(multiPartFile)){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The url is not an image resource");
         }
 
@@ -37,7 +48,7 @@ public class ImageService {
 
         String originalName = multiPartFile.getOriginalFilename();
 
-        if(!originalName.matches(".*\\.(jpg|jpeg|gif|png)")){
+        if(!this.isValid(multiPartFile)){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The url is not an image resource");
         }
 
