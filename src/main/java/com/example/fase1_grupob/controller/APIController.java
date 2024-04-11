@@ -5,6 +5,7 @@ import com.example.fase1_grupob.model.Comment;
 import com.example.fase1_grupob.model.Post;
 import com.example.fase1_grupob.model.UserP;
 import com.example.fase1_grupob.service.ImageService;
+import com.sun.jdi.request.ExceptionRequest;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -143,17 +144,10 @@ public class APIController {
     @PutMapping( "/user")
     public ResponseEntity<UserP> updateUserData (String username, String description, MultipartFile image)throws IOException {
         if (this.userService.findById(1).isPresent()) {
-            if (image != null && !image.isEmpty()) {
-                Files.createDirectories(IMAGES_FOLDER);
+            UserP user = this.userService.findById(1).get();
 
-                this.userService.findById(1).get().setImage(BlobProxy.generateProxy(image.getInputStream(), image.getSize()));
+            this.userService.save(user, username, description, image);
 
-
-                /*Path imagePath = IMAGES_FOLDER.resolve(this.userService.findById(1).get().getImage());
-                image.transferTo(imagePath);*/
-            }
-            this.userService.findById(1).get().updateUsername(username);
-            this.userService.findById(1).get().updateDescription(description);
             return ResponseEntity.ok(this.userService.findById(1).get());
         }else {
             return ResponseEntity.notFound().build();
@@ -191,8 +185,15 @@ public class APIController {
     @PostMapping("/posts/{index}/file")
     public ResponseEntity<MultipartFile> uploadFile(@PathVariable int index, MultipartFile file){
         if(this.postService.findById(index).isPresent()) {
-            this.postService.uploadFile(index, file);
-            return ResponseEntity.ok(file);
+            if(file == null || file.isEmpty()){
+                return ResponseEntity.badRequest().build();
+            }
+            try {
+                this.postService.uploadFile(index, file);
+            }catch (Exception e){
+                return ResponseEntity.unprocessableEntity().build();
+            }
+            return ResponseEntity.ok().build();
         }else{
             return ResponseEntity.notFound().build();
         }

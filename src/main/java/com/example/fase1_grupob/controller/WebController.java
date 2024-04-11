@@ -240,20 +240,9 @@ public class WebController {
     @PostMapping("/upload_info")
     public String uploadInfo(@RequestParam String username, @RequestParam String description, @RequestParam MultipartFile image, Model model) throws IOException
     {
-        if(!image.isEmpty() && this.userService.findById(1).isPresent())
-        {
-            Files.createDirectories(IMAGES_FOLDER);
-
-            this.userService.findById(1).get().setImage(BlobProxy.generateProxy(image.getInputStream(), image.getSize()));
-
-            //model.addAttribute("profile", this.userService.findById(1).get().getProfilePhotoName());
-        }
-
         UserP user = this.userService.findById(1).get();
-        user.updateUsername(username);
-        user.updateDescription(description);
 
-        this.userService.save(user);
+        this.userService.save(user, username, description, image);
 
         return "redirect:/user";
     }

@@ -8,6 +8,7 @@ import java.sql.Blob;
 import java.util.UUID;
 
 import com.example.fase1_grupob.model.Post;
+import com.example.fase1_grupob.model.UserP;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -27,12 +28,22 @@ public class ImageService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The url is not an image resource");
         }
 
-        String fileName = "image_" + UUID.randomUUID() + "_" +originalName;
-
         post.setImage(BlobProxy.generateProxy(multiPartFile.getInputStream(), multiPartFile.getSize()));
 
-
         return post;
+    }
+
+    public UserP createImage(MultipartFile multiPartFile, UserP user) throws IOException {
+
+        String originalName = multiPartFile.getOriginalFilename();
+
+        if(!originalName.matches(".*\\.(jpg|jpeg|gif|png)")){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The url is not an image resource");
+        }
+
+        user.setImage(BlobProxy.generateProxy(multiPartFile.getInputStream(), multiPartFile.getSize()));
+
+        return user;
     }
 
 }

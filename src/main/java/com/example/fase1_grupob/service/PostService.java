@@ -60,16 +60,9 @@ public class PostService {
             post.setCategories(imageCategory,this.categoryRepository.findAll());
         }
 
-        if(!imageDesc.isEmpty()){
-            post.setDescription(imageDesc);
-        }
-
-        if(!postTitle.isEmpty()){
-            post.setTitle(postTitle);
-        }
+        post.setDescription(imageDesc);
+        post.setTitle(postTitle);
         //post.setCreatorID(id);
-
-
 
         return postRepository.save(post);
     }
@@ -84,6 +77,10 @@ public class PostService {
     public void deleteById(long id) {
         Optional<Post> post = this.postRepository.findById(id);
         List<Category>categories = post.get().getCategories();
+
+        Path file1Path = FILES_FOLDER.resolve(post.get().getAdditionalInformationFile());
+        File file1 = file1Path.toFile();
+        file1.delete();
 
         for(Category category: categories)
         {
@@ -124,14 +121,7 @@ public class PostService {
                 category.setId(0L);
             }
 
-
-            if(order.equals("Likes")) {
-                posts.addAll(this.postRepository.findPostsByCategoryIDOrderByLikesDesc(Math.toIntExact(category.getId())));
-            }else if(order.equals("Comments")) {
-                posts.addAll(this.postRepository.findPostsByCategoryIDOrderByCommentsDesc(Math.toIntExact(category.getId())));
-            }else{
-                posts.addAll(this.postRepository.findPostsByCategoryID(Math.toIntExact(category.getId())));
-            }
+            posts.addAll(this.postRepository.findPostsByCategoryIDOrdered(Math.toIntExact(category.getId()), order.toLowerCase()));
         }
 
         return new ArrayList<>(new LinkedHashSet<>(posts));

@@ -77,6 +77,43 @@
 			"response": []
 		},
 		{
+			"name": "Get /api/posts/{id}/file",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/posts/1/file",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"posts",
+						"1",
+						"file"
+					]
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+			},
+			"response": []
+		},
+		{
 			"name": "Post /api/posts",
 			"event": [
 				{
@@ -101,7 +138,7 @@
 					"formdata": [
 						{
 							"key": "description",
-							"value": "aaa",
+							"value": "Default Description",
 							"type": "text"
 						},
 						{
@@ -232,7 +269,7 @@
 			"response": []
 		},
 		{
-			"name": "Post /api/posts/{id}/comment/{idComment}",
+			"name": "Post /api/posts/{id}/file",
 			"event": [
 				{
 					"listen": "test",
@@ -255,14 +292,14 @@
 					"mode": "formdata",
 					"formdata": [
 						{
-							"key": "text",
-							"value": "Amazing lanscape. What camera do you use?",
-							"type": "text"
+							"key": "file",
+							"type": "file",
+							"src": []
 						}
 					]
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/posts/1/comment/0",
+					"raw": "http://localhost:8080/api/posts/1/file",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -272,8 +309,7 @@
 						"api",
 						"posts",
 						"1",
-						"comment",
-						"0"
+						"file"
 					]
 				},
 				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
@@ -292,7 +328,8 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -304,7 +341,12 @@
 					"formdata": [
 						{
 							"key": "category",
-							"value": "landscape",
+							"value": "testing",
+							"type": "text"
+						},
+						{
+							"key": "order",
+							"value": "Likes",
 							"type": "text"
 						}
 					]
@@ -389,7 +431,8 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -406,7 +449,7 @@
 						},
 						{
 							"key": "description",
-							"value": "Follow the whimsical exploits of this web-footed wanderer as he waddles through life's adventures, spreading joy and laughter one quack at a time.",
+							"value": "Follow the whimsical exploits of this web-footed wanderer as he waddles through.",
 							"type": "text"
 						},
 						{
@@ -471,6 +514,54 @@
 						"api",
 						"posts",
 						"1"
+					]
+				},
+				"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete /api/posts/{id}/comment/{id}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful DELETE request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/posts/1/comment/0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"posts",
+						"1",
+						"comment",
+						"0"
 					]
 				},
 				"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
