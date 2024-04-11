@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.example.fase1_grupob.service.PostService;
 import com.example.fase1_grupob.service.UserService;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.io.IOException;
@@ -190,8 +191,12 @@ public class APIController {
             }
             try {
                 this.postService.uploadFile(index, file);
-            }catch (Exception e){
-                return ResponseEntity.unprocessableEntity().build();
+            }catch (ResponseStatusException e){
+                if(e.getStatusCode().value() == 422) {
+                    return ResponseEntity.unprocessableEntity().build();
+                }else if(e.getStatusCode().value() == 400){
+                    return ResponseEntity.badRequest().build();
+                }
             }
             return ResponseEntity.ok().build();
         }else{

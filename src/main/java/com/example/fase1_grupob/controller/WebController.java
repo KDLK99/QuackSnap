@@ -279,7 +279,7 @@ public class WebController {
 
     @PostMapping("/viewPost/{index}/uploadFile")
     public String uploadFile(Model model, @RequestParam MultipartFile file, @PathVariable int index){
-        if (!file.isEmpty()){
+        if (file == null || !file.isEmpty()){
             this.postService.uploadFile(index, file);
         }
         return "redirect:/viewPost/{index}";

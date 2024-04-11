@@ -78,9 +78,11 @@ public class PostService {
         Optional<Post> post = this.postRepository.findById(id);
         List<Category>categories = post.get().getCategories();
 
-        Path file1Path = FILES_FOLDER.resolve(post.get().getAdditionalInformationFile());
-        File file1 = file1Path.toFile();
-        file1.delete();
+        if(post.get().getAdditionalInformationFile() != null) {
+            Path file1Path = FILES_FOLDER.resolve(post.get().getAdditionalInformationFile());
+            File file1 = file1Path.toFile();
+            file1.delete();
+        }
 
         for(Category category: categories)
         {
@@ -161,7 +163,7 @@ public class PostService {
 
             String fileName = file.getOriginalFilename();
 
-            if (!fileName.matches(".*\\.(pdf)")) {
+            if (!file.getContentType().equals("application/pdf") || !fileName.matches(".*\\.(pdf)") || fileName.contains("/") || fileName.contains("\\")) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The url is not a file resource");
             }
 
