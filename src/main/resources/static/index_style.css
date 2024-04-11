@@ -37,7 +37,9 @@ img {
 .center
 {
     text-align: center;
-    margin-right: 19%;
+    margin-right: 21%;
+    margin-top: -2%;
+    margin-bottom: 1%;
 }
 
 .container {
@@ -51,7 +53,7 @@ img {
   }
   
   .search input[type="text"] {
-    width: 200px;
+    width: 232px;
     padding: 10px;
     border: none;
     border-radius: 20px;
@@ -67,8 +69,8 @@ img {
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 27px;
+    right: -27px;
     transition: .9s ease;
   }
   
@@ -188,6 +190,6 @@ img {
 
   .form-group {
     position:relative;
-    left:52%;
-    bottom:35px;
+    left:129%;
+    bottom:-32px;
 }
