@@ -7,6 +7,7 @@ import com.example.fase1_grupob.model.UserP;
 import com.example.fase1_grupob.service.ImageService;
 import com.sun.jdi.request.ExceptionRequest;
 import org.hibernate.engine.jdbc.BlobProxy;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -146,8 +147,11 @@ public class APIController {
     public ResponseEntity<UserP> updateUserData (String username, String description, MultipartFile image)throws IOException {
         if (this.userService.findById(1).isPresent()) {
             UserP user = this.userService.findById(1).get();
-
-            this.userService.save(user, username, description, image);
+            try {
+                this.userService.save(user, username, description, image);
+            }catch (ResponseStatusException e){
+                return ResponseEntity.badRequest().build();
+            }
 
             return ResponseEntity.ok(this.userService.findById(1).get());
         }else {
@@ -156,16 +160,19 @@ public class APIController {
     }
 
     @PostMapping( "/searchBar")
-    public ResponseEntity<Collection<Post>> searchAPI (String category, String order){
+    public ResponseEntity<Collection<Post>> searchAPI (String category, String order, String title){
+        if(title== null){
+            title= "";
+        }
 
-        if(this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList(), order).isEmpty()){
+        if(this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList(), order, title).isEmpty()){
             return ResponseEntity.notFound().build();
         }
         else if(category.isEmpty()){
             return ResponseEntity.ok(this.postService.findAll());
         }
 
-        return ResponseEntity.ok(this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList(), order));
+        return ResponseEntity.ok(this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList(), order, title));
     }
 
     @DeleteMapping("/posts/{index}/comment/{position}")
