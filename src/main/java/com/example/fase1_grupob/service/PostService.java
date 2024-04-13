@@ -96,13 +96,22 @@ public class PostService {
         this.postRepository.deleteById(id);
     }
 
-    public List<Post> filteredPosts(List<String> categories, String order){
+    public List<Post> filteredPosts(List<String> categories, String order, String title){
 
-        if(categories.get(0).isEmpty()){
+        if(categories.get(0).isEmpty() && title.isEmpty()){
             if(order.equals("Likes")){
                 return this.postRepository.findPostsOrderByLikes();
             }else if(order.equals("Comments")){
                 return this.postRepository.findPostsOrderByComments();
+            }
+        }else if(categories.get(0).isEmpty() && (order==  null || order.equals("Default") || order.isEmpty())){
+            return this.postRepository.findPostsByPostTitle(title);
+        }else if(categories.get(0).isEmpty()){
+
+            if(order.equals("Likes")){
+                return this.postRepository.findPostsByPostTitleOrderedByLikes(title);
+            }else if(order.equals("Comments")){
+                return this.postRepository.findPostsByPostTitleOrderedByComments(title);
             }
         }
 
@@ -123,7 +132,7 @@ public class PostService {
                 category.setId(0L);
             }
 
-            posts.addAll(this.postRepository.findPostsByCategoryIDOrdered(Math.toIntExact(category.getId()), order.toLowerCase()));
+            posts.addAll(this.postRepository.findPostsByCategoryIDOrdered(Math.toIntExact(category.getId()), order.toLowerCase(), title));
         }
 
         return new ArrayList<>(new LinkedHashSet<>(posts));
@@ -140,6 +149,10 @@ public class PostService {
     }
 
     public String uploadFile(int index, MultipartFile file){
+
+        if (!Objects.equals(file.getContentType(), "application/pdf") || !Objects.requireNonNull(file.getOriginalFilename()).matches(".*\\.(pdf)") || file.getOriginalFilename().contains("/") || file.getOriginalFilename().contains("\\")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The url is not a file resource");
+        }
 
         if(this.postRepository.findById((long) index).isPresent()) {
             Optional<Post> post = this.postRepository.findById((long) index);
