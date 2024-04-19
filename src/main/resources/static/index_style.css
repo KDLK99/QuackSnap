@@ -37,7 +37,7 @@ img {
 .center
 {
     text-align: center;
-    margin-right: 21%;
+    margin-right: 16%;
     margin-top: -2%;
     margin-bottom: 1%;
 }
@@ -84,8 +84,8 @@ img {
   {
     position: absolute;
     float: right;
-    margin-left: 30%;
-    margin-top: 3%;
+    margin-left: 39.5%;
+    margin-top: 6%;
     display: flex;
     flex-direction: column;
     width: 10%;
@@ -190,6 +190,6 @@ img {
 
   .form-group {
     position:relative;
-    left:129%;
-    bottom:-32px;
+    left:81%;
+    bottom:-35px;
 }
