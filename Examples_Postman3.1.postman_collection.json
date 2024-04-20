@@ -18,7 +18,8 @@
 							"    pm.response.to.have.status(200);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -26,12 +27,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/posts",
-					"protocol": "http",
+					"raw": "https://localhost:8443/api/posts",
+					"protocol": "https",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8443",
 					"path": [
 						"api",
 						"posts"
@@ -52,7 +53,8 @@
 							"    pm.response.to.have.status(200);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -60,12 +62,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/posts/1",
-					"protocol": "http",
+					"raw": "https://localhost:8443/api/posts/1",
+					"protocol": "https",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8443",
 					"path": [
 						"api",
 						"posts",
@@ -96,12 +98,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/posts/1/file",
-					"protocol": "http",
+					"raw": "https://localhost:8443/api/posts/1/file",
+					"protocol": "https",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8443",
 					"path": [
 						"api",
 						"posts",
@@ -138,7 +140,7 @@
 					"formdata": [
 						{
 							"key": "description",
-							"value": "Default Description",
+							"value": "{{$randomLoremLines}}",
 							"type": "text"
 						},
 						{
@@ -148,7 +150,7 @@
 						},
 						{
 							"key": "title",
-							"value": "Harmony of Nature: A Serene Symphony",
+							"value": "{{$randomLoremWords}}",
 							"type": "text"
 						},
 						{
@@ -159,12 +161,12 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/posts",
-					"protocol": "http",
+					"raw": "https://localhost:8443/api/posts",
+					"protocol": "https",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8443",
 					"path": [
 						"api",
 						"posts"
@@ -204,12 +206,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/posts/1/like",
-					"protocol": "http",
+					"raw": "https://localhost:8443/api/posts/1/like",
+					"protocol": "https",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8443",
 					"path": [
 						"api",
 						"posts",
@@ -233,7 +235,8 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -245,18 +248,18 @@
 					"formdata": [
 						{
 							"key": "text",
-							"value": "Amazing lanscape. What camera do you use?",
+							"value": "{{$randomLoremSentence}}",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/posts/1/comment",
-					"protocol": "http",
+					"raw": "https://localhost:8443/api/posts/1/comment",
+					"protocol": "https",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8443",
 					"path": [
 						"api",
 						"posts",
@@ -299,12 +302,12 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/posts/1/file",
-					"protocol": "http",
+					"raw": "https://localhost:8443/api/posts/1/file",
+					"protocol": "https",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8443",
 					"path": [
 						"api",
 						"posts",
@@ -346,18 +349,23 @@
 						},
 						{
 							"key": "order",
-							"value": "Likes",
+							"value": "Default",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "Hello!!",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/searchBar",
-					"protocol": "http",
+					"raw": "https://localhost:8443/api/searchBar",
+					"protocol": "https",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8443",
 					"path": [
 						"api",
 						"searchBar"
@@ -392,23 +400,23 @@
 					"formdata": [
 						{
 							"key": "description",
-							"value": "hola",
+							"value": "{{$randomLoremLines}}",
 							"type": "text"
 						},
 						{
 							"key": "title",
-							"value": "Mountain Majesty: A Reflection of Serenity",
+							"value": "{{$randomLoremWords}}",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/posts/1",
-					"protocol": "http",
+					"raw": "https://localhost:8443/api/posts/1",
+					"protocol": "https",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8443",
 					"path": [
 						"api",
 						"posts",
@@ -444,12 +452,12 @@
 					"formdata": [
 						{
 							"key": "username",
-							"value": "QuackAdventures",
+							"value": "{{$randomLoremWords}}",
 							"type": "text"
 						},
 						{
 							"key": "description",
-							"value": "Follow the whimsical exploits of this web-footed wanderer as he waddles through.",
+							"value": "{{$randomLoremLines}}",
 							"type": "text"
 						},
 						{
@@ -460,12 +468,12 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/user",
-					"protocol": "http",
+					"raw": "https://localhost:8443/api/user",
+					"protocol": "https",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8443",
 					"path": [
 						"api",
 						"user"
@@ -487,7 +495,8 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -504,12 +513,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/posts/1",
-					"protocol": "http",
+					"raw": "https://localhost:8443/api/posts/1",
+					"protocol": "https",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8443",
 					"path": [
 						"api",
 						"posts",
@@ -550,12 +559,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/posts/1/comment/0",
-					"protocol": "http",
+					"raw": "https://localhost:8443/api/posts/1/comment/0",
+					"protocol": "https",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8443",
 					"path": [
 						"api",
 						"posts",

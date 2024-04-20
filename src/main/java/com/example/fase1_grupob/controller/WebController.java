@@ -203,9 +203,9 @@ public class WebController {
 
     @PostMapping("/search")
     public String searchByCategory(@RequestParam String category, Model model, @RequestParam String order, @RequestParam(required = false) String title) {
-        if(((category.isEmpty() && (order == null || order.isEmpty())) || category.isEmpty() && order.equals("Default")) && (title == null || title.isEmpty())){
+        /*if(((category.isEmpty() && (order == null || order.isEmpty())) || category.isEmpty() && order.equals("Default")) && (title == null || title.isEmpty())){
             return "redirect:/";
-        }
+        }*/
 
         model.addAttribute("posts", this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList(), order, title));
         model.addAttribute("errormsg", "No posts match that search criteria.");

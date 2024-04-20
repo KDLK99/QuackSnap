@@ -97,24 +97,9 @@ public class PostService {
     }
 
     public List<Post> filteredPosts(List<String> categories, String order, String title){
-
-        if(categories.get(0).isEmpty() && title.isEmpty()){
-            if(order.equals("Likes")){
-                return this.postRepository.findPostsOrderByLikes();
-            }else if(order.equals("Comments")){
-                return this.postRepository.findPostsOrderByComments();
-            }
-        }else if(categories.get(0).isEmpty() && (order==  null || order.equals("Default") || order.isEmpty())){
-            return this.postRepository.findPostsByPostTitle(title);
-        }else if(categories.get(0).isEmpty()){
-
-            if(order.equals("Likes")){
-                return this.postRepository.findPostsByPostTitleOrderedByLikes(title);
-            }else if(order.equals("Comments")){
-                return this.postRepository.findPostsByPostTitleOrderedByComments(title);
-            }
+        if(title.isEmpty()){
+            title = null;
         }
-
 
         List<Category> categoryList = new ArrayList<>();
         for(String category: categories){
@@ -132,7 +117,7 @@ public class PostService {
                 category.setId(0L);
             }
 
-            posts.addAll(this.postRepository.findPostsByCategoryIDOrdered(Math.toIntExact(category.getId()), order.toLowerCase(), title));
+            posts.addAll(this.postRepository.findPostsByCategoryIDOrdered(category.getId() == 0 ? null:Math.toIntExact(category.getId()), order.toLowerCase(), title));
         }
 
         return new ArrayList<>(new LinkedHashSet<>(posts));

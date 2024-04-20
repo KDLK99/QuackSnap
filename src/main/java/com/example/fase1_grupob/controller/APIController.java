@@ -22,10 +22,7 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
@@ -128,16 +125,14 @@ public class APIController {
     @PostMapping( "/posts/{id}/comment")
     public ResponseEntity<Post> writeComment( @PathVariable long id, Comment comment)throws IOException {
         if(this.postService.findById(id).isPresent()) {
-            Post post = this.postService.findById(id).get();
 
-            if(this.userService.findById(1).isPresent()) {
-                comment.setUsername(this.userService.findById(1).get().getUsername());
-                comment.setUserId((long) 1);
-                post.addComment(comment);
-                this.postService.save(post, id);
-            }
-            return ResponseEntity.ok(post);
+            Comment comment1 = new Comment((long) 1, comment.getText(), this.userService.findById(1).get().getUsername());
 
+            Optional<Post> post = this.postService.findById(id);
+
+            post.get().addComment(comment1);
+            this.postService.save(post.get(), post.get().getId());
+            return ResponseEntity.ok(post.get());
         }else {
             return ResponseEntity.notFound().build();
         }
@@ -161,17 +156,10 @@ public class APIController {
 
     @PostMapping( "/searchBar")
     public ResponseEntity<Collection<Post>> searchAPI (String category, String order, String title){
-        if(title== null){
-            title= "";
-        }
 
         if(this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList(), order, title).isEmpty()){
             return ResponseEntity.notFound().build();
         }
-        else if(category.isEmpty()){
-            return ResponseEntity.ok(this.postService.findAll());
-        }
-
         return ResponseEntity.ok(this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList(), order, title));
     }
 
