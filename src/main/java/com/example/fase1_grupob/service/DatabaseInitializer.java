@@ -50,7 +50,7 @@ public class DatabaseInitializer {
 
         UserP u2 = userService.findById(2).get();
         //Set profile photo
-        imagePath = IMAGES_FOLDER.resolve("profphoto2.jpeg");
+        imagePath = IMAGES_FOLDER.resolve("profphoto2.jpg");
         image = new UrlResource(imagePath.toUri());
         u2.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getFile().length()));
 

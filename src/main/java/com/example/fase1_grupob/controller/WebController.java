@@ -55,7 +55,7 @@ public class WebController {
     }
     @GetMapping("/loginerror")
     public String loginerror() {
-        return "loginerror";
+        return "login";
     }
 
 
