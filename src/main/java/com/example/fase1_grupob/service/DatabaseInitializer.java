@@ -3,6 +3,7 @@ package com.example.fase1_grupob.service;
 import com.example.fase1_grupob.model.Comment;
 import com.example.fase1_grupob.model.Post;
 import com.example.fase1_grupob.model.UserP;
+import com.example.fase1_grupob.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -11,6 +12,7 @@ import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
@@ -28,9 +30,16 @@ public class DatabaseInitializer {
     private PostService postService;
     @Autowired
     private UserService userService;
+    //private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostConstruct
     public void init() throws IOException{
+        UserP userP = new UserP("user", passwordEncoder.encode("pass"),"Pepe the Duck: Nature lover and conservationist. Shares educational content about waterfowl and wildlife. Adventurous and creative, he shares his own illustrations and photographs of ducks and other wildlife.", "USER");
+        this.userService.save(userP);
+        userP = new UserP("admin", passwordEncoder.encode("adminpass"),"Soy PatAdmin", "USER", "ADMIN");
+        this.userService.save(userP);
 
         //Create Users
         UserP u1 = userService.findById(1).get();
@@ -38,6 +47,12 @@ public class DatabaseInitializer {
         Path imagePath = IMAGES_FOLDER.resolve("profphoto1.jpg");
         Resource image = new UrlResource(imagePath.toUri());
         u1.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getFile().length()));
+
+        UserP u2 = userService.findById(2).get();
+        //Set profile photo
+        imagePath = IMAGES_FOLDER.resolve("profphoto2.jpeg");
+        image = new UrlResource(imagePath.toUri());
+        u2.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getFile().length()));
 
         //Create posts
         Post p1 = new Post();

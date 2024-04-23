@@ -9,7 +9,7 @@
 <body>
 
 <div class="buttonContainer">
-    <a href="http://localhost:8080/">
+    <a href="https://localhost:8443/">
         <button class="buttonArrow">
             <div class="buttonArrow-box">
       <span class="buttonArrow-elem">
@@ -87,6 +87,7 @@
 
                   <span>{{likes}}</span>
               </div>
+              <input type="hidden" name="_csrf" value="{{token}}"/>
           </form>
           
     
@@ -95,10 +96,12 @@
       <form action="/viewPost/{{index}}/uploadFile" method="post" enctype="multipart/form-data">
         <p>Additional Information:</p><input type='file' name='file' accept=".pdf"/>
         <input type='submit'  value='Save'/>
+        <input type="hidden" name="_csrf" value="{{token}}"/>
     </form>
         {{#additionalInformationFile}}
         <form action="/viewPost/{{index}}/downloadFile">
             <input type="submit" value="Download File" />
+            <input type="hidden" name="_csrf" value="{{token}}"/>
         </form>
         {{/additionalInformationFile}}
     </div>
@@ -107,6 +110,7 @@
         <form class="comment-form" action="/viewPost/{{index}}" method="post" enctype="multipart/form-data">
         <input type="text" name="comment" placeholder="Add a comment" required>
         <input type="submit" class="SubmitButton" value="Add Comment">
+            <input type="hidden" name="_csrf" value="{{token}}"/>
     </form>
     </div>
     <br>

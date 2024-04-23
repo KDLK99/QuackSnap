@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.example.fase1_grupob.service.PostService;
 import com.example.fase1_grupob.service.UserService;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 
 @Controller
 public class WebController {
@@ -46,6 +47,15 @@ public class WebController {
         this.postService = postService;
         this.userService = userService;
         this.imageService = imageService;
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+    @GetMapping("/loginerror")
+    public String loginerror() {
+        return "loginerror";
     }
 
 
@@ -203,9 +213,9 @@ public class WebController {
 
     @PostMapping("/search")
     public String searchByCategory(@RequestParam String category, Model model, @RequestParam String order, @RequestParam(required = false) String title) {
-        if(((category.isEmpty() && (order == null || order.isEmpty())) || category.isEmpty() && order.equals("Default")) && (title == null || title.isEmpty())){
+        /*if(((category.isEmpty() && (order == null || order.isEmpty())) || category.isEmpty() && order.equals("Default")) && (title == null || title.isEmpty())){
             return "redirect:/";
-        }
+        }*/
 
         model.addAttribute("posts", this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList(), order, title));
         model.addAttribute("errormsg", "No posts match that search criteria.");

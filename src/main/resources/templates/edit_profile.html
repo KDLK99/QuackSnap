@@ -26,13 +26,14 @@
 
         <p>Image file:</p><input type='file' name='image' accept=".jpg, .jpeg"/>
           <input type='submit' value='Save'/>
+        <input type="hidden" name="_csrf" value="{{token}}"/>
 
         
     </form>
     
 
     <div class="buttonContainer">
-        <a href="http://localhost:8080/user">
+        <a href="https://localhost:8443/user">
             <button class="button">
         <div class="button-box">
           <span class="button-elem">

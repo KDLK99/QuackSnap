@@ -36,11 +36,12 @@
                 <label for="terms">Terms and Conditions</label>
             </div>
             <button class = "sendButton" type="submit">Send</button>
+            <input type="hidden" name="_csrf" value="{{token}}"/>
         </form>
     </div>
 
     <div class="buttonContainer">
-        <a href="http://localhost:8080/">
+        <a href="https://localhost:8443/">
             <button class="buttonArrow">
         <div class="buttonArrow-box">
           <span class="buttonArrow-elem">

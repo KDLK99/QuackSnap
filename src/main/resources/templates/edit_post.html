@@ -9,7 +9,7 @@
 <body>
 
 <div class="buttonContainer">
-    <a href="http://localhost:8080/">
+    <a href="https://localhost:8443/">
         <button class="buttonArrow">
             <div class="buttonArrow-box">
       <span class="buttonArrow-elem">
@@ -38,7 +38,8 @@
         <p>Change post description:</p>
         <textarea type='text' name="imageDesc"></textarea>
         <input type='submit' value='Save'/>
-
+        <input type="hidden" name="_csrf" value="{{token}}"/>
+    </form>
     </div>
 </body>
 </html>
