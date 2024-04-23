@@ -13,7 +13,7 @@ import com.example.fase1_grupob.service.ImageService;
 
 
 import org.hibernate.engine.jdbc.BlobProxy;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 
@@ -27,6 +27,7 @@ import java.util.*;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.fase1_grupob.service.PostService;
 import com.example.fase1_grupob.service.UserService;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+
 
 @Controller
 public class WebController {
@@ -42,6 +48,9 @@ public class WebController {
     private final PostService postService;
     private final UserService userService;
     private final ImageService imageService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public WebController(PostService postService, UserService userService, ImageService imageService){
         this.postService = postService;
@@ -57,6 +66,17 @@ public class WebController {
     public String loginerror() {
         return "login";
     }
+    @PostMapping("/register")
+    public String register(@RequestParam String username, @RequestParam String password, @RequestParam String description, @RequestParam MultipartFile image) throws IOException 
+    {
+        UserP userP = new UserP(username, passwordEncoder.encode(password), description, "USER");
+        if (!image.isEmpty() && this.userService.findById(userP.getId()).isPresent()) {
+            userP = this.imageService.createImage(image, userP);
+        }
+        this.userService.save(userP);
+        return "login";
+    }
+    
 
 
     @GetMapping("/")
