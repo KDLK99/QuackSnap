@@ -41,7 +41,7 @@ public class SecurityConfiguration {
 		http
 			.authorizeHttpRequests(authorize -> authorize
 					// PUBLIC PAGES
-					.requestMatchers("/**", "/index", "/login", "/register", "/static/**", "/images/**").permitAll()
+					.requestMatchers("/","/contactus","/**.css" ,"/search" ,"/**.js" ,"/download_image/**" ,"/viewPost/**" ,"/index", "/images/**", "/error/**").permitAll()
 					// PRIVATE PAGES
 					.requestMatchers("/").hasAnyRole("USER")
 					.requestMatchers("/admin").hasAnyRole("ADMIN")

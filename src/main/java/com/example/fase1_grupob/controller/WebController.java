@@ -12,6 +12,7 @@ import com.example.fase1_grupob.model.UserP;
 import com.example.fase1_grupob.service.ImageService;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -80,9 +81,10 @@ public class WebController {
 
 
     @GetMapping("/")
-    public String showPosts(Model model) {
+    public String showPosts(Model model, HttpServletRequest request) {
 
         model.addAttribute("posts", this.postService.findAll());
+        model.addAttribute("user", request.isUserInRole("USER"));
         model.addAttribute("errormsg", "No posts yet.");
 
         return "index";
@@ -148,34 +150,21 @@ public class WebController {
         }
     }
 
-    @PostMapping("/viewPost/{index}")
+    @PostMapping("/addComment/{index}")
     public String comment(Model model, @PathVariable int index, @RequestParam String comment){
-        if(comment.isEmpty()){
-            return "redirect:/viewPost/{index}";
-        }
-        if(this.userService.findById(1).isPresent()){
+        if(this.userService.findById(1).isPresent() && !comment.isEmpty()){
             Comment comment1 = new Comment((long) 1, comment, this.userService.findById(1).get().getUsername());
 
             Optional<Post> post = this.postService.findById(index);
             if(post.isPresent()){
                 post.get().addComment(comment1);
                 this.postService.save(post.get(), post.get().getId());
-                model.addAttribute("comments", post.get().getComments(this.userService));
-
-                model.addAttribute("description", post.get().getDescription());
-                model.addAttribute("title", post.get().getTitle());
-                model.addAttribute("index", index);
-
-                model.addAttribute("likes", post.get().getLikes());
-
             }
-
         }
-
-        return "viewPost_template";
+        return "redirect:/viewPost/{index}";
     }
 
-    @PostMapping("/viewPost/{index}/increaseLikes")
+    @PostMapping("/{index}/increaseLikes")
     public String likes(@PathVariable int index){
 
         Optional<Post> post = this.postService.findById(index);
@@ -307,7 +296,7 @@ public class WebController {
         return "redirect:/viewPost/{indexPost}";
     }
 
-    @PostMapping("/viewPost/{index}/uploadFile")
+    @PostMapping("/{index}/uploadFile")
     public String uploadFile(Model model, @RequestParam MultipartFile file, @PathVariable int index){
         if (file == null || !file.isEmpty()){
             this.postService.uploadFile(index, file);
@@ -315,7 +304,7 @@ public class WebController {
         return "redirect:/viewPost/{index}";
     }
 
-    @GetMapping("/viewPost/{index}/downloadFile")
+    @GetMapping("/{index}/downloadFile")
     public ResponseEntity<Object> downloadFile(@PathVariable int index) throws MalformedURLException {
         return this.postService.downloadFile(index);
     }
