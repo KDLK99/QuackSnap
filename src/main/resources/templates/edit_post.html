@@ -38,7 +38,8 @@
         <p>Change post description:</p>
         <textarea type='text' name="imageDesc"></textarea>
         <input type='submit' value='Save'/>
-
+        <input type="hidden" name="_csrf" value="{{token}}"/>
+    </form>
     </div>
 </body>
 </html>

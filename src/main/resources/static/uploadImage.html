@@ -20,7 +20,7 @@
         <p>Image file:</p><input type='file' name='image' accept=".jpg, .jpeg" required/>
 		
 		  <input type='submit' value='Save'/>
-          
+        <input type="hidden" name="_csrf" value="{{token}}"/>
     </form>
 </div>
 <div class="buttonContainer">

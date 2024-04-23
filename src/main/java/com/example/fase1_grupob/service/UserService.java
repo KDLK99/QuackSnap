@@ -28,8 +28,8 @@ public class UserService {
     public UserService(UserRepository userRepository, ImageService imageService) {
         this.userRepository = userRepository;
         this.imageService = imageService;
-        UserP user = new UserP();
-        this.addUser(user);
+        //UserP user = new UserP();
+        //this.addUser(user);
     }
 
     public Collection<UserP> getAllUsers() {

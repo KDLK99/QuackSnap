@@ -16,6 +16,10 @@ public class UserP
     private Blob imageFile;
     @Column(columnDefinition = "LONGBLOB")
     private String username;
+    private String encodedPassword;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles;
     @Column(columnDefinition = "LONGBLOB")
     private String description;
 
@@ -39,11 +43,21 @@ public class UserP
         this.description = "Pepe the Duck: Nature lover and conservationist. Shares educational content about waterfowl and wildlife. Adventurous and creative, he shares his own illustrations and photographs of ducks and other wildlife.";
     }
 
+
+
     public UserP(String description)
     {
         this.description = description;
     }
-    
+
+    public UserP(String username, String pass, String description, String... roles) {
+        super();
+        this.username = username;
+        this.description = description;
+        this.encodedPassword = pass;
+        this.roles = List.of(roles);
+    }
+
     public String getDescription() {
         return description;
     }
@@ -129,5 +143,15 @@ public class UserP
             return false;
         return true;
     }
-    
+
+    public List<String> getRoles() {
+        return this.roles;
+    }
+    public void addRole(String role){
+        this.roles.add(role);
+    }
+
+    public String getEncodedPassword() {
+        return this.encodedPassword;
+    }
 }
