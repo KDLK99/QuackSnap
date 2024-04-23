@@ -1,11 +1,47 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <link rel="stylesheet" href="loginStyle.css">
+   
+</head>
 <body>
-<form action="/login" method="post">
-  <label>Username:</label><input type="text" name="username" /><br/>
-  <label>Password:</label><input type="password" name="password" /><br/>
-  <input type="hidden" name="_csrf" value="{{token}}"/>
-  <input type="submit" value="Sign In"/>
-</form>
+  <div class="loginContainer">
+  <div class="wrapper">
+    <div class="card-switch">
+        <label class="switch">
+           <input type="checkbox" class="toggle">
+           <span class="slider"></span>
+           <span class="card-side"></span>
+           <div class="flip-card__inner">
+              <div class="flip-card__front">
+                 <div class="title">Log in</div>
+                 <form class="flip-card__form" action="/login" method="post">
+                    <input class="flip-card__input" name="username" placeholder="Username" type="text">
+                    <input class="flip-card__input" name="password" placeholder="Password" type="password">
+                    
+                    <input type="hidden" name="_csrf" value="{{token}}"/>
+                    <button class="flip-card__btn" type="submit">Let`s go!</button>
+                 </form>
+              </div>
+              <div class="flip-card__back">
+                 <div class="title">Sign up</div>
+                 <form class="flip-card__form" action="/register" method="post" enctype="multipart/form-data">
+                    <input class="flip-card__input" name="username" placeholder="Username" type="text">
+                    <input class="flip-card__input" name="password" placeholder="Password" type="password">
+                    <textarea class="flip-card__input" placeholder="Description"  name="description" type="textarea"></textarea>
+                    <p>Image file:</p><input type='file' name='image' accept=".jpg, .jpeg" required/>
+                    <input type="hidden" name="_csrf" value="{{token}}"/>
+                    <button class="flip-card__btn">Confirm!</button>
+                 </form>
+              </div>
+           </div>
+        </label>
+    </div>   
+</div>
+</div>
+
 </body>
 </html>
