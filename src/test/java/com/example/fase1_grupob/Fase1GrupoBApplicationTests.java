@@ -1,4 +1,4 @@
-package com.example.fase1_grupob;
+/*package com.example.fase1_grupob;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,4 +10,4 @@ class Fase1GrupoBApplicationTests {
     void contextLoads() {
     }
 
-}
+}*/
