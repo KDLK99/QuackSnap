@@ -40,6 +40,9 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public Optional<UserP> findByName(String name){return userRepository.findByUsername(name);}
+
+
     public void addUser(UserP user) {
         userRepository.save(user);
     }

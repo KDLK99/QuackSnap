@@ -27,17 +27,18 @@ public class UserP
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @JsonIgnore
-    @OneToMany
-    private List<Post> userPosts = new ArrayList<>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Post> userPosts;
 
     @JsonIgnore
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(fetch = FetchType.EAGER ,cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<Post> likedPosts = new ArrayList<>();
 
 
     public UserP()
     {
         super();
+        this.userPosts = new ArrayList<>();
         this.imageFile= null;
         this.username = "Pepe";
         this.description = "Pepe the Duck: Nature lover and conservationist. Shares educational content about waterfowl and wildlife. Adventurous and creative, he shares his own illustrations and photographs of ducks and other wildlife.";
@@ -114,12 +115,12 @@ public class UserP
         this.id = id;
     }
 
-    public void addLikedPost(Optional<Post> post){
-        post.ifPresent(value -> this.likedPosts.add(value));
-    }
-
-    public void deleteLikedPost(Optional<Post> post){
-        post.ifPresent(value -> this.likedPosts.remove(value));
+    public void addLikedPost(Post post){
+        if (this.likedPosts.contains(post)){
+            this.likedPosts.remove(post);
+        } else {
+            this.likedPosts.add(post);
+        }
     }
 
     @Override

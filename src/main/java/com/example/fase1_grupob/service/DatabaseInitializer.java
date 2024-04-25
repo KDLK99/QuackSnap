@@ -21,6 +21,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 
 @Component
 public class DatabaseInitializer {
@@ -47,22 +48,23 @@ public class DatabaseInitializer {
         Path imagePath = IMAGES_FOLDER.resolve("profphoto1.jpg");
         Resource image = new UrlResource(imagePath.toUri());
         u1.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getFile().length()));
+        this.userService.save(u1);
 
         UserP u2 = userService.findById(2).get();
         //Set profile photo
         imagePath = IMAGES_FOLDER.resolve("profphoto2.jpg");
         image = new UrlResource(imagePath.toUri());
         u2.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getFile().length()));
+        this.userService.save(u2);
 
         //Create posts
         Post p1 = new Post();
         Post p2 = new Post();
 
-        postService.save(p1, null, null, "testing", "This is the first post", "Hello!!");
         imagePath = IMAGES_FOLDER.resolve("image_88f7214b-fa78-4bae-8be5-ed43af8b9ad4_test1.jpg");
         image = new UrlResource(imagePath.toUri());
         p1.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getFile().length()));
-        postService.save(p2, null, null, "testing2", "This is a test post", "Example title");
+
         imagePath = IMAGES_FOLDER.resolve("image_0df5d1a8-360c-43a4-8670-8700cdd2f106_test2.jpg");
         image = new UrlResource(imagePath.toUri());
         p2.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getFile().length()));
@@ -70,12 +72,12 @@ public class DatabaseInitializer {
         //Create some comments
         p1.addComment(new Comment((long) 1, "This is the first message", "Pepe"));
         p2.addComment(new Comment((long) 1, "Hello!!", "Pepe"));
-        p1.addLike(u1);
+        this.postService.addLike(u1, p1);
 
         //Add files
         p1.setAdditionalInformationFile("test.pdf");
 
-        postService.save(p1, null);
-        postService.save(p2, null);
+        postService.save(p1, 2L, null, "testing", "This is the first post", "Hello!!");
+        //postService.save(p2, 1L, null, "testing2", "This is a test post", "Example title");
     }
 }

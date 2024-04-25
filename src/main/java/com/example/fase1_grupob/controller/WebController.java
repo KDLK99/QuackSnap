@@ -93,7 +93,7 @@ public class WebController {
 
     @PostMapping("/upload_image")
     public String uploadPost(@RequestParam MultipartFile image, Model model,
-                               @RequestParam String imageCategory, @RequestParam String imageDesc, @RequestParam String postTitle) throws IOException {
+                               @RequestParam String imageCategory, @RequestParam String imageDesc, @RequestParam String postTitle, HttpServletRequest request) throws IOException {
 
         Files.createDirectories(IMAGES_FOLDER);
         Post post = new Post();
@@ -102,11 +102,7 @@ public class WebController {
             return "redirect:/uploadImage.html";
         }
 
-        this.postService.save(post, 1L,image, imageCategory, imageDesc, postTitle);
-
-        if(this.userService.findById(1).isEmpty()){
-            this.userService.findById(1).get().addPost(post);
-        }
+        this.postService.save(post, this.userService.findByName(request.getUserPrincipal().getName()).get().getId(),image, imageCategory, imageDesc, postTitle);
 
         return "redirect:/";
     }
@@ -151,9 +147,9 @@ public class WebController {
     }
 
     @PostMapping("/addComment/{index}")
-    public String comment(Model model, @PathVariable int index, @RequestParam String comment){
-        if(this.userService.findById(1).isPresent() && !comment.isEmpty()){
-            Comment comment1 = new Comment((long) 1, comment, this.userService.findById(1).get().getUsername());
+    public String comment(Model model, @PathVariable int index, @RequestParam String comment, HttpServletRequest request){
+        if(this.userService.findByName(request.getUserPrincipal().getName()).isPresent() && !comment.isEmpty()){
+            Comment comment1 = new Comment((long) this.userService.findByName(request.getUserPrincipal().getName()).get().getId(), comment, this.userService.findByName(request.getUserPrincipal().getName()).get().getUsername());
 
             Optional<Post> post = this.postService.findById(index);
             if(post.isPresent()){
@@ -165,12 +161,12 @@ public class WebController {
     }
 
     @PostMapping("/{index}/increaseLikes")
-    public String likes(@PathVariable int index){
+    public String likes(@PathVariable int index, HttpServletRequest request){
 
         Optional<Post> post = this.postService.findById(index);
-        if(post.isPresent() && this.userService.findById(1).isPresent()){
-            post.get().addLike(this.userService.findById(1).get());
-            this.userService.findById(1).get().addLikedPost(post);
+        if(post.isPresent() && this.userService.findByName(request.getUserPrincipal().getName()).isPresent()){
+            this.postService.addLike(this.userService.findByName(request.getUserPrincipal().getName()).get(), post.get());
+            this.userService.findByName(request.getUserPrincipal().getName()).get().addLikedPost(post.get());
             this.postService.save(post.get(), post.get().getId());
         }
 
@@ -179,16 +175,16 @@ public class WebController {
 
 
     @GetMapping("/deletePost/{index}")
-    public String deletePost(Model model, @PathVariable int index) throws MalformedURLException {
+    public String deletePost(Model model, @PathVariable int index, HttpServletRequest request) throws MalformedURLException {
         if(this.postService.findById(index).isPresent()) {
             Optional<Post> post = this.postService.findById(index);
-            if(post.isPresent() && this.userService.findById(1).isPresent()) {
+            if(post.isPresent() && this.userService.findByName(request.getUserPrincipal().getName()).isPresent()) {
                 this.postService.deleteById(post.get().getId());
                 
 
                 model.addAttribute("posts", this.postService.findAll());
 
-                this.userService.findById(1).get().deletePost(post.get());
+                this.userService.findByName(request.getUserPrincipal().getName()).get().deletePost(post.get());
             }
         }
 
@@ -238,13 +234,13 @@ public class WebController {
     }
 
     @GetMapping("/user")
-    public String user(Model model)
+    public String user(Model model, HttpServletRequest request)
     {
-        if(this.userService.findById(1).isPresent()) {
-            model.addAttribute("index", 1);
-            model.addAttribute("username", this.userService.findById(1).get().getUsername());
-            model.addAttribute("description", this.userService.findById(1).get().getDescription());
-            model.addAttribute("posts", this.userService.findById(1).get().getUserPosts());
+        if(this.userService.findByName(request.getUserPrincipal().getName()).isPresent()) {
+            model.addAttribute("index", this.userService.findByName(request.getUserPrincipal().getName()).get().getId());
+            model.addAttribute("username", this.userService.findByName(request.getUserPrincipal().getName()).get().getUsername());
+            model.addAttribute("description", this.userService.findByName(request.getUserPrincipal().getName()).get().getDescription());
+            model.addAttribute("posts", this.userService.findByName(request.getUserPrincipal().getName()).get().getUserPosts());
         }
 
         return "user_template";
@@ -257,9 +253,9 @@ public class WebController {
         return "edit_profile";
     }
     @PostMapping("/upload_info")
-    public String uploadInfo(@RequestParam String username, @RequestParam String description, @RequestParam MultipartFile image, Model model) throws IOException
+    public String uploadInfo(@RequestParam String username, @RequestParam String description, @RequestParam MultipartFile image, Model model, HttpServletRequest request) throws IOException
     {
-        UserP user = this.userService.findById(1).get();
+        UserP user = this.userService.findByName(request.getUserPrincipal().getName()).get();
 
         this.userService.save(user, username, description, image);
 
@@ -267,12 +263,12 @@ public class WebController {
     }
 
     @GetMapping("/updated_profile/{index}")
-    public ResponseEntity<Object> updateImageUSer(Model model, @PathVariable int index) throws MalformedURLException, SQLException {
-        if(this.userService.findById(1).isPresent()) {
-            Resource file = new InputStreamResource(this.userService.findById(1).get().getImage().getBinaryStream());
+    public ResponseEntity<Object> updateImageUSer(Model model, @PathVariable int index, HttpServletRequest request) throws MalformedURLException, SQLException {
+        if(this.userService.findByName(request.getUserPrincipal().getName()).isPresent()) {
+            Resource file = new InputStreamResource(this.userService.findByName(request.getUserPrincipal().getName()).get().getImage().getBinaryStream());
 
             return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
-                    .contentLength(this.userService.findById(1).get().getImage().length()).body(file);
+                    .contentLength(this.userService.findByName(request.getUserPrincipal().getName()).get().getImage().length()).body(file);
         }else{
             return ResponseEntity.notFound().build();
         }
@@ -281,9 +277,10 @@ public class WebController {
 
     @GetMapping("/userposts")
 
-    public String showUserPosts(Model model) {
+    public String showUserPosts(Model model, HttpServletRequest request) {
 
-        model.addAttribute("posts",  this.postService.findAll());
+        Collection <Post> posts = this.postService.findByUsername(request.getUserPrincipal().getName());
+        model.addAttribute("posts",  posts);
 
         return "user_post";
 
@@ -308,4 +305,6 @@ public class WebController {
     public ResponseEntity<Object> downloadFile(@PathVariable int index) throws MalformedURLException {
         return this.postService.downloadFile(index);
     }
+
+
 }

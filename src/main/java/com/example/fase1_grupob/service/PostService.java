@@ -3,9 +3,11 @@ package com.example.fase1_grupob.service;
 import com.example.fase1_grupob.model.Category;
 import com.example.fase1_grupob.model.Comment;
 import com.example.fase1_grupob.model.Post;
+import com.example.fase1_grupob.model.UserP;
 import com.example.fase1_grupob.repository.CategoryRepository;
 import com.example.fase1_grupob.repository.CommentRepository;
 import com.example.fase1_grupob.repository.PostRepository;
+import com.example.fase1_grupob.repository.UserRepository;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +30,7 @@ import java.util.*;
 public class PostService {
 
     private static final Path FILES_FOLDER = Paths.get(System.getProperty("user.dir"), "files");
+    private final UserRepository userRepository;
     private PostRepository postRepository;
     private ImageService imageService;
     private UserService userService;
@@ -35,12 +38,13 @@ public class PostService {
     private CommentRepository commentRepository;
 
 
-    public PostService(PostRepository postRepository, ImageService imageService, UserService userService, CategoryRepository categoryRepository, CommentRepository commentRepository){
+    public PostService(PostRepository postRepository, ImageService imageService, UserService userService, CategoryRepository categoryRepository, CommentRepository commentRepository, UserRepository userRepository){
         this.postRepository = postRepository;
         this.imageService = imageService;
         this.userService = userService;
         this.categoryRepository = categoryRepository;
         this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
     }
     public Collection<Post> findAll() {
         return postRepository.findAll();
@@ -50,8 +54,10 @@ public class PostService {
         return postRepository.findById(id);
     }
 
+    public  Collection<Post> findByUsername(String username){return userRepository.findByUsername(username).get().getUserPosts();}
 
-    public Post save(Post post, Long id, MultipartFile imageField, String imageCategory, String imageDesc, String postTitle) throws IOException {
+
+    public void save(Post post, Long id, MultipartFile imageField, String imageCategory, String imageDesc, String postTitle) throws IOException {
 
         if (imageField != null && !imageField.isEmpty()){
             post = imageService.createImage(imageField, post);
@@ -62,15 +68,22 @@ public class PostService {
 
         post.setDescription(imageDesc);
         post.setTitle(postTitle);
-        //post.setCreatorID(id);
 
-        return postRepository.save(post);
+        if(!this.userService.findById(id).isEmpty()){
+            UserP u = this.userService.findById(id).get();
+            u.addPost(post);
+            this.userRepository.save(u);
+        }
+
+        //return postRepository.save(post);
     }
 
-
-
     public Post save(Post post, Long id){
-        //post.setCreatorID(id);
+        if(!this.userService.findById(id).isEmpty()){
+            UserP u = this.userService.findById(id).get();
+            u.addPost(post);
+            this.userRepository.save(u);
+        }
         return this.postRepository.save(post);
     }
 
@@ -199,6 +212,13 @@ public class PostService {
 
         }else{
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Can't get local file");
+        }
+    }
+
+    public void addLike(UserP u, Post p){
+        if (p != null) {
+            p.addLike(u);
+            u.addLikedPost(p);
         }
     }
 
