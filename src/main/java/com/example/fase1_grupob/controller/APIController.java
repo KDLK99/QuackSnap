@@ -72,7 +72,7 @@ public class APIController {
         }
         Post post = new Post();
 
-        this.postService.save(post, this.userService.findByUsername(request.getUserPrincipal().getName()).get().getId(), image, categories, description, title);
+        this.postService.save(post, this.userService.findByName(request.getUserPrincipal().getName()).get().getId(), image, categories, description, title);
 
 
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(post.getId()).toUri();
@@ -92,7 +92,7 @@ public class APIController {
             newPost.setId(id);
             newPost.setDescription(description);
             newPost.setTitle(title);
-            this.postService.save(newPost, this.userService.findByUsername(request.getUserPrincipal().getName()).get().getId());
+            this.postService.save(newPost, this.userService.findByName(request.getUserPrincipal().getName()).get().getId());
 
             return ResponseEntity.ok(post);
         }else{
@@ -131,7 +131,7 @@ public class APIController {
     public ResponseEntity<Post> writeComment( @PathVariable long id, Comment comment, HttpServletRequest request)throws IOException {
         if(this.postService.findById(id).isPresent()) {
 
-            Comment comment1 = new Comment(this.userService.findByUsername(request.getUserPrincipal().getName()).get().getId(), comment.getText(), this.userService.findByUsername(request.getUserPrincipal().getName()).get().getUsername());
+            Comment comment1 = new Comment(this.userService.findByName(request.getUserPrincipal().getName()).get().getId(), comment.getText(), this.userService.findByName(request.getUserPrincipal().getName()).get().getUsername());
 
             Optional<Post> post = this.postService.findById(id);
 
@@ -146,14 +146,14 @@ public class APIController {
     @PutMapping( "/user")
     public ResponseEntity<UserP> updateUserData (String username, String description, MultipartFile image, HttpServletRequest request)throws IOException {
         if (this.userService.findById(1).isPresent()) {
-            UserP user = this.userService.findByUsername(request.getUserPrincipal().getName()).get();
+            UserP user = this.userService.findByName(request.getUserPrincipal().getName()).get();
             try {
                 this.userService.save(user, username, description, image);
             }catch (ResponseStatusException e){
                 return ResponseEntity.badRequest().build();
             }
 
-            return ResponseEntity.ok(this.userService.findByUsername(request.getUserPrincipal().getName()).get());
+            return ResponseEntity.ok(this.userService.findByName(request.getUserPrincipal().getName()).get());
         }else {
             return ResponseEntity.notFound().build();
         }
