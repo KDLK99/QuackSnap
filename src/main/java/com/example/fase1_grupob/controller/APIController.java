@@ -6,6 +6,7 @@ import com.example.fase1_grupob.model.Post;
 import com.example.fase1_grupob.model.UserP;
 import com.example.fase1_grupob.service.ImageService;
 import com.sun.jdi.request.ExceptionRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,9 +66,13 @@ public class APIController {
 
 
     @PostMapping(value = "/posts")
-    public ResponseEntity<Post> createPost(String description,  MultipartFile image, String title, String categories)throws IOException {
+    public ResponseEntity<Post> createPost(String description, MultipartFile image, String title, String categories, HttpServletRequest request)throws IOException {
+        if(image== null || image.isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
         Post post = new Post();
-        this.postService.save(post, 1L, image, categories, description, title);
+
+        this.postService.save(post, this.userService.findByUsername(request.getUserPrincipal().getName()).get().getId(), image, categories, description, title);
 
 
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(post.getId()).toUri();
@@ -77,7 +82,7 @@ public class APIController {
     }
 
     @PutMapping("/posts/{id}")
-    public ResponseEntity<Post> replacePost(@PathVariable long id, String description, String title) {
+    public ResponseEntity<Post> replacePost(@PathVariable long id, String description, String title, HttpServletRequest request) {
         if (this.postService.findById(id).isPresent()) {
             Post post = this.postService.findById(id).get();
             Post newPost = new Post();
@@ -87,7 +92,7 @@ public class APIController {
             newPost.setId(id);
             newPost.setDescription(description);
             newPost.setTitle(title);
-            this.postService.save(newPost, 1L);
+            this.postService.save(newPost, this.userService.findByUsername(request.getUserPrincipal().getName()).get().getId());
 
             return ResponseEntity.ok(post);
         }else{
@@ -123,10 +128,10 @@ public class APIController {
     }
 
     @PostMapping( "/posts/{id}/comment")
-    public ResponseEntity<Post> writeComment( @PathVariable long id, Comment comment)throws IOException {
+    public ResponseEntity<Post> writeComment( @PathVariable long id, Comment comment, HttpServletRequest request)throws IOException {
         if(this.postService.findById(id).isPresent()) {
 
-            Comment comment1 = new Comment((long) 1, comment.getText(), this.userService.findById(1).get().getUsername());
+            Comment comment1 = new Comment(this.userService.findByUsername(request.getUserPrincipal().getName()).get().getId(), comment.getText(), this.userService.findByUsername(request.getUserPrincipal().getName()).get().getUsername());
 
             Optional<Post> post = this.postService.findById(id);
 
@@ -139,16 +144,16 @@ public class APIController {
     }
 
     @PutMapping( "/user")
-    public ResponseEntity<UserP> updateUserData (String username, String description, MultipartFile image)throws IOException {
+    public ResponseEntity<UserP> updateUserData (String username, String description, MultipartFile image, HttpServletRequest request)throws IOException {
         if (this.userService.findById(1).isPresent()) {
-            UserP user = this.userService.findById(1).get();
+            UserP user = this.userService.findByUsername(request.getUserPrincipal().getName()).get();
             try {
                 this.userService.save(user, username, description, image);
             }catch (ResponseStatusException e){
                 return ResponseEntity.badRequest().build();
             }
 
-            return ResponseEntity.ok(this.userService.findById(1).get());
+            return ResponseEntity.ok(this.userService.findByUsername(request.getUserPrincipal().getName()).get());
         }else {
             return ResponseEntity.notFound().build();
         }

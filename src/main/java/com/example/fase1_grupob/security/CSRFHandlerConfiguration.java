@@ -1,4 +1,4 @@
-package com.example.fase1_grupob.controller;
+package com.example.fase1_grupob.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.web.csrf.CsrfToken;
