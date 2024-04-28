@@ -28,8 +28,6 @@ public class UserService {
     public UserService(UserRepository userRepository, ImageService imageService) {
         this.userRepository = userRepository;
         this.imageService = imageService;
-        //UserP user = new UserP();
-        //this.addUser(user);
     }
 
     public Collection<UserP> getAllUsers() {
@@ -66,12 +64,29 @@ public class UserService {
     }
 
     public void deleteById(long id) {
+        Optional<UserP> user = this.userRepository.findById(id);
+        user.get().deleteAllPosts();
+        this.userRepository.save(user.get());
         this.userRepository.deleteById(id);
     }
+
+
 
     public List<UserP> findByIds(List<Long> ids) {
         return userRepository.findAllById(ids);
     }
-    
+
+    public void save(UserP user, String description, MultipartFile image) throws IOException{
+        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.BLOCKS);
+        String safeHTML = policy.sanitize(description);
+
+        if (!image.isEmpty() && this.findById(user.getId()).isPresent()) {
+            user = this.imageService.createImage(image, user);
+        }
+
+        user.updateDescription(safeHTML);
+
+        this.save(user);
+    }
 }
 

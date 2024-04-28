@@ -11,6 +11,7 @@
     <img class="mainLogo" src="/images/logoprincipal.png">
 <div class="container">
     <form action="/upload_image" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="{{token}}"/>
         <p>Post title:</p>
         <input type='text' name='postTitle' required/>
         <p>Image category:</p>
@@ -18,9 +19,7 @@
         <p>Image description:</p>
         <textarea type='text' name='imageDesc' required></textarea>
         <p>Image file:</p><input type='file' name='image' accept=".jpg, .jpeg" required/>
-		
-		  <input type='submit' value='Save'/>
-        <input type="hidden" name="_csrf" value="{{token}}"/>
+        <input type='submit' value='Save'/>
     </form>
 </div>
 <div class="buttonContainer">

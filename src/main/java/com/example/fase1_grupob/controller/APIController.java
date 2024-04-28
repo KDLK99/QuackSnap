@@ -78,11 +78,18 @@ public class APIController {
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(post.getId()).toUri();
 
 
-        return ResponseEntity.created(location).body(post);
+        return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/posts/{id}")
     public ResponseEntity<Post> replacePost(@PathVariable long id, String description, String title, HttpServletRequest request) {
+
+        Optional<Post> post1 = this.postService.findById(id);
+
+        if(!request.isUserInRole("ADMIN") && !this.userService.findByName(request.getUserPrincipal().getName()).get().getUserPosts().contains(post1.get())){
+            return ResponseEntity.status(403).build();
+        }
+
         if (this.postService.findById(id).isPresent()) {
             Post post = this.postService.findById(id).get();
             Post newPost = new Post();
@@ -92,7 +99,7 @@ public class APIController {
             newPost.setId(id);
             newPost.setDescription(description);
             newPost.setTitle(title);
-            this.postService.save(newPost, this.userService.findByName(request.getUserPrincipal().getName()).get().getId());
+            this.postService.save(newPost);
 
             return ResponseEntity.ok(post);
         }else{
@@ -101,7 +108,12 @@ public class APIController {
     }
 
     @DeleteMapping("/posts/{id}")
-    public ResponseEntity<Post> deletePost(@PathVariable long id) throws IOException {
+    public ResponseEntity<Post> deletePost(@PathVariable long id, HttpServletRequest request) throws IOException {
+        Optional<Post> post1 = this.postService.findById(id);
+
+        if(!request.isUserInRole("ADMIN") && !this.userService.findByName(request.getUserPrincipal().getName()).get().getUserPosts().contains(post1.get())){
+            return ResponseEntity.status(403).build();
+        }
         if(this.postService.findById(id).isPresent()) {
             Post post = this.postService.findById(id).get();
 
@@ -119,7 +131,7 @@ public class APIController {
         if(this.postService.findById(id).isPresent()) {
             Post post = this.postService.findById(id).get();
             post.setLikes(post.getLikes() + 1);
-            this.postService.save(post, id);
+            this.postService.saveLikedPost(post, id);
             return ResponseEntity.ok(post);
         }else {
             return ResponseEntity.notFound().build();
@@ -136,7 +148,7 @@ public class APIController {
             Optional<Post> post = this.postService.findById(id);
 
             post.get().addComment(comment1);
-            this.postService.save(post.get(), post.get().getId());
+            this.postService.save(post.get());
             return ResponseEntity.ok(post.get());
         }else {
             return ResponseEntity.notFound().build();
@@ -169,7 +181,12 @@ public class APIController {
     }
 
     @DeleteMapping("/posts/{index}/comment/{position}")
-    public ResponseEntity<Comment> deleteComment(@PathVariable int index, @PathVariable int position){
+    public ResponseEntity<Comment> deleteComment(@PathVariable int index, @PathVariable int position, HttpServletRequest request){
+        Optional<Post> post = this.postService.findById(index);
+
+        if(!request.isUserInRole("ADMIN") && !this.userService.findByName(request.getUserPrincipal().getName()).get().getUserPosts().contains(post.get())){
+            return ResponseEntity.status(403).build();
+        }
 
         if(this.postService.findById(index).isEmpty() || this.postService.findById(index).get().getCounter() == 0){
             return ResponseEntity.notFound().build();
@@ -184,7 +201,14 @@ public class APIController {
     }
 
     @PostMapping("/posts/{index}/file")
-    public ResponseEntity<MultipartFile> uploadFile(@PathVariable int index, MultipartFile file){
+    public ResponseEntity<MultipartFile> uploadFile(@PathVariable int index, MultipartFile file, HttpServletRequest request){
+
+        Optional<Post> post = this.postService.findById(index);
+
+        if(!request.isUserInRole("ADMIN") && !this.userService.findByName(request.getUserPrincipal().getName()).get().getUserPosts().contains(post.get())){
+            return ResponseEntity.status(403).build();
+        }
+
         if(this.postService.findById(index).isPresent()) {
             if(file == null || file.isEmpty()){
                 return ResponseEntity.badRequest().build();

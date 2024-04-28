@@ -12,7 +12,7 @@ public class Category {
     @Column(columnDefinition = "LONGBLOB")
     private String category;
     @JsonIgnore
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.PERSIST})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.PERSIST, CascadeType.MERGE})
     private List<Post> posts;
 
     @Id

@@ -155,4 +155,8 @@ public class UserP
     public String getEncodedPassword() {
         return this.encodedPassword;
     }
+
+    public void deleteAllPosts(){
+        this.userPosts = new ArrayList<>();
+    }
 }

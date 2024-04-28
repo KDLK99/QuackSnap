@@ -65,6 +65,7 @@ public class SecurityConfiguration {
 		http
 				.authorizeHttpRequests(authorize -> authorize
 						// PRIVATE ENDPOINTS
+						.requestMatchers(HttpMethod.POST,"/api/auth/logout").hasRole("USER")
 						.requestMatchers(HttpMethod.POST,"/api/posts/**").hasRole("USER")
 						.requestMatchers(HttpMethod.POST,"/api/posts").hasRole("USER")
 						.requestMatchers(HttpMethod.PUT,"/api/posts/*/like").hasRole("USER")
@@ -72,10 +73,10 @@ public class SecurityConfiguration {
 						.requestMatchers(HttpMethod.PUT,"/api/user").hasRole("USER")
 						.requestMatchers(HttpMethod.DELETE,"/api/posts/**").hasRole("USER")
 						.requestMatchers(HttpMethod.DELETE,"/api/posts/*/comment/**").hasRole("USER")
+						// PUBLIC ENDPOINTS
 						.requestMatchers(HttpMethod.GET,"/api/searchBar").permitAll()
 						.requestMatchers(HttpMethod.GET,"/api/posts/*/file").permitAll()
 						.requestMatchers(HttpMethod.GET,"/api/posts/**").permitAll()
-						// PUBLIC ENDPOINTS
 						.anyRequest().permitAll()
 				);
 
@@ -109,7 +110,6 @@ public class SecurityConfiguration {
 					// PUBLIC PAGES
 					.requestMatchers("/","/contactus","/**.css" ,"/search" ,"/**.js" ,"/download_image/**" ,"/viewPost/**" ,"/index", "/images/**", "/error/**").permitAll()
 					// PRIVATE PAGES
-					.requestMatchers("/").hasAnyRole("USER")
 					.requestMatchers("/admin").hasAnyRole("ADMIN")
 					.anyRequest().authenticated()
 			)

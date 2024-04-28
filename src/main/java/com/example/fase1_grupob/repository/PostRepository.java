@@ -15,7 +15,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findPostsOrderByComments();
 
     @Query(value = """
-            SELECT * FROM post p NATURAL JOIN (SELECT DISTINCT cp.posts_id FROM category c NATURAL JOIN category_posts cp WHERE (:Category_id IS NULL OR cp.category_id=:Category_id)) as ccpi WHERE p.id=posts_id AND (:title IS NULL OR p.post_title=:title) ORDER BY CASE WHEN :orderby = 'likes' THEN p.likes
+            SELECT * FROM post p NATURAL JOIN (SELECT DISTINCT cp.posts_id FROM category c NATURAL JOIN category_posts cp WHERE if(:Category_id IS not NULL, cp.category_id=:Category_id, if(:title IS NULL, 1=2, 1=1))) as ccpi WHERE p.id=posts_id AND (:title IS NULL OR p.post_title=:title) ORDER BY CASE WHEN :orderby = 'likes' THEN p.likes
                                                                                                                                                                                                        WHEN :orderby = 'comments' THEN p.counter
                                                                                                                                                                                                        END DESC""", nativeQuery = true)
     List<Post> findPostsByCategoryIDOrdered(Integer Category_id, String orderby, String title);
