@@ -10,6 +10,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,20 +38,21 @@ public class DatabaseInitializer {
 
     @PostConstruct
     public void init() throws IOException{
-        UserP userP = new UserP("user", passwordEncoder.encode("pass"),"Pepe the Duck: Nature lover and conservationist. Shares educational content about waterfowl and wildlife. Adventurous and creative, he shares his own illustrations and photographs of ducks and other wildlife.", "USER");
+        UserP userP = new UserP("admin", passwordEncoder.encode("adminpass"),"Soy PatAdmin", "USER", "ADMIN");
         this.userService.save(userP);
-        userP = new UserP("admin", passwordEncoder.encode("adminpass"),"Soy PatAdmin", "USER", "ADMIN , USER");
+        userP = new UserP("user", passwordEncoder.encode("pass"),"Pepe the Duck: Nature lover and conservationist. Shares educational content about waterfowl and wildlife. Adventurous and creative, he shares his own illustrations and photographs of ducks and other wildlife.", "USER");
         this.userService.save(userP);
+        
 
         //Create Users
-        UserP u1 = userService.findById(1).get();
+        UserP u1 = userService.findById(2).get();
         //Set profile photo
         Path imagePath = IMAGES_FOLDER.resolve("profphoto1.jpg");
         Resource image = new UrlResource(imagePath.toUri());
         u1.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getFile().length()));
         this.userService.save(u1);
 
-        UserP u2 = userService.findById(2).get();
+        UserP u2 = userService.findById(1).get();
         //Set profile photo
         imagePath = IMAGES_FOLDER.resolve("profphoto2.jpg");
         image = new UrlResource(imagePath.toUri());
@@ -72,12 +74,12 @@ public class DatabaseInitializer {
         //Create some comments
         p1.addComment(new Comment((long) 1, "This is the first message", "Pepe"));
         p2.addComment(new Comment((long) 1, "Hello!!", "Pepe"));
-        this.postService.addLike(u1, p1);
+        //this.postService.addLike(u1, p1);
 
         //Add files
         p1.setAdditionalInformationFile("test.pdf");
 
-        postService.save(p1, 2L, null, "testing", "This is the first post", "Hello!!");
-        postService.save(p2, 1L, null, "testing2", "This is a test post", "Example title");
+        postService.save(p1, 1L, null, "testing", "This is the first post", "Hello!!");
+        postService.save(p2, 2L, null, "testing2", "This is a test post", "Example title");
     }
 }

@@ -37,7 +37,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.PERSIST})
     private List<UserP> likedUsers;
     @JsonView(Basic.class)
     private int counter = 0;
@@ -245,8 +245,11 @@ public class Post {
         return this.additionalInformationFile;
     }
 
-    public void deleteAllLikedUsers(){
-        for(UserP userp :this.likedUsers){
+
+    public void deleteAllUsers()
+    {
+        for(UserP userp : this.likedUsers)
+        {
             this.likedUsers.remove(userp);
         }
     }
@@ -262,5 +265,9 @@ public class Post {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+    public List<UserP> getLikedUsers()
+    {
+        return this.likedUsers;
     }
 }

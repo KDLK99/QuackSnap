@@ -1,0 +1,446 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #FDC362;
+}
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.photo-container {
+    display: flex;
+    align-items: center;
+}
+.photo {
+    max-width: 200px;
+    margin-right: 20px;
+}
+.photo-details {
+    margin-bottom: 20px;
+}
+.photo-name {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+.photo-description {
+    margin-bottom: 20px;
+}
+.buttons {
+    margin-bottom: 20px;
+}
+.comment-form {
+    margin-top: 9%;
+    position: absolute;
+    /*right:5%;
+    margin-left: -40%*/
+    
+}
+.comment-form input[type="text"] {
+    width: calc(100% - 100px);
+    padding: 8px;
+    margin-right: 10px;
+}
+.comment-form input[type="submit"] {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+
+.comment-react {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding: 0.5%;
+    background-color: #ffffff;
+    border-radius: 3%;
+    scale: 1.25;
+    width: 10%;
+    bottom:0%;
+    left: 100%;
+  
+}
+
+.comment-react button {
+    width: 35%;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: 0;
+    outline: none;
+
+}
+
+.comment-react button:after {
+    content: "";
+    width: 310%;
+    height: 100%;
+    position: absolute;
+    left: 50%;
+    background-color: #f5356e;
+    border-radius: 100%;
+    z-index: 0;
+    transform: scale(0);
+    bottom: 20%;
+}
+
+.comment-react button svg {
+    position: relative;
+    z-index: 9;
+}
+
+.comment-react button:hover:after {
+    animation: ripple 0.6s ease-in-out forwards;
+}
+
+.comment-react button:hover svg {
+    fill: #f5356e;
+}
+
+.comment-react button:hover svg path {
+    stroke: #f5356e;
+    fill: #f5356e;
+}
+
+.comment-react hr {
+    width: 80%;
+    height: 1%;
+    background-color: #ffffff;
+    margin: auto;
+    border: 0;
+}
+
+.comment-react span {
+    height: 35%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 100%;
+    font-weight: 600;
+    color: #707277;
+    position: absolute;
+    left: 1000%;
+    top: 28%;
+    text-align: center;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+
+}
+
+.comment-section {
+    display: flex;
+    align-items: center;
+}
+
+
+
+.comment-form {
+    flex: 1;
+
+}
+
+.comment-form1{
+    position:relative;
+    left:90%;
+    bottom:10%;
+}
+
+form{
+    display: inline;
+}
+
+
+.removeButton
+{
+    flex: left;
+    margin-left: 0%;
+    margin-top: 0%;
+    width:5%;
+}
+
+.editButton
+{
+    flex: left;
+    margin-left: 0%;
+    margin-top: 0%;
+    width: 5%;
+}
+
+.deleteButton {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgb(20, 20, 20);
+    border: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+    cursor: pointer;
+    transition-duration: .3s;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .svgIcon {
+    width: 12px;
+    transition-duration: .3s;
+  }
+  
+  .svgIcon path {
+    fill: white;
+  }
+  
+  .deleteButton:hover {
+    width: 140px;
+    border-radius: 50px;
+    transition-duration: .3s;
+    background-color: rgb(255, 69, 69);
+    align-items: center;
+  }
+  
+  .deleteButton:hover .svgIcon {
+    width: 50px;
+    transition-duration: .3s;
+    transform: translateY(60%);
+  }
+  
+  .deleteButton::before {
+    position: absolute;
+    top: -20px;
+    content: "Delete";
+    color: white;
+    transition-duration: .3s;
+    font-size: 2px;
+  }
+  
+  .deleteButton:hover::before {
+    font-size: 13px;
+    opacity: 1;
+    transform: translateY(30px);
+    transition-duration: .3s;
+  }
+
+
+
+
+  .edit-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgb(20, 20, 20);
+    border: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+    cursor: pointer;
+    transition-duration: 0.3s;
+    overflow: hidden;
+    position: relative;
+    text-decoration: none !important;
+  }
+  
+  .edit-svgIcon {
+    width: 17px;
+    transition-duration: 0.3s;
+  }
+  
+  .edit-svgIcon path {
+    fill: white;
+  }
+  
+  .edit-button:hover {
+    width: 120px;
+    border-radius: 50px;
+    transition-duration: 0.3s;
+    background-color: rgb(255, 69, 69);
+    align-items: center;
+  }
+  
+  .edit-button:hover .edit-svgIcon {
+    width: 20px;
+    transition-duration: 0.3s;
+    transform: translateY(60%);
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+  
+  .edit-button::before {
+    display: none;
+    content: "Edit";
+    color: white;
+    transition-duration: 0.3s;
+    font-size: 2px;
+  }
+  
+  .edit-button:hover::before {
+    display: block;
+    padding-right: 10px;
+    font-size: 13px;
+    opacity: 1;
+    transform: translateY(0px);
+    transition-duration: 0.3s;
+  }
+
+
+.buttonContainer
+{
+    float:left;
+    position: absolute;
+}
+
+.buttonArrow {
+    display: block;
+    position: relative;
+    width: 56px;
+    height: 56px;
+    margin: 0;
+    overflow: hidden;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+    border: 0;
+}
+
+.buttonArrow:before,
+.buttonArrow:after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    inset: 7px;
+}
+
+.buttonArrow:before {
+    border: 4px solid #f0eeef;
+    transition: opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1) 80ms,
+    transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 80ms;
+}
+
+.buttonArrow:after {
+    border: 4px solid #96daf0;
+    transform: scale(1.3);
+    transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+    transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    opacity: 0;
+}
+
+.buttonArrow:hover:before,
+.buttonArrow:focus:before {
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+    transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.buttonArrow:hover:after,
+.buttonArrow:focus:after {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1) 80ms,
+    transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 80ms;
+}
+
+.buttonArrow-box {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.buttonArrow-elem {
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin: 17px 18px 0 18px;
+    transform: rotate(180deg);
+    fill: #f0eeef;
+}
+
+.buttonArrow:hover .button-box,
+.buttonArrow:focus .button-box {
+    transition: 0.4s;
+    transform: translateX(-56px);
+}
+
+.deleteButtonContainer
+{
+  position: relative;
+  margin-left: 88%;
+  margin-top: -3.5%;
+  width: 5%;
+}
+
+.deleteButton2 {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background-color: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .deleteButton2 svg {
+    width: 44%;
+  }
+  .deleteButton2:hover {
+    background-color: rgb(237, 56, 56);
+    overflow: visible;
+  }
+  .bin path {
+    transition: all 0.2s;
+  }
+  .deleteButton2:hover .bin path {
+    fill: #fff;
+  }
+  .deleteButton2:active {
+    transform: scale(0.98);
+  }
+  .tooltip {
+    --tooltip-color: rgb(41, 41, 41);
+    position: absolute;
+  }
+
+  .additionalInfoContainer
+  {
+    position: relative;
+    margin-top: -2%;
+    left: -5%;
+
+  }
+  .likeButton
+  {
+    position: absolute;
+    margin-top: 80%;
+  }

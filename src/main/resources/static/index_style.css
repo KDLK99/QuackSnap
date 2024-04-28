@@ -109,6 +109,7 @@ img {
   .value:not(:active):hover,
   .value:focus {
     background-color: #21262C;
+    width: 154px;
   }
 
   .value:focus,

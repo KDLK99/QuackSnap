@@ -20,7 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 public class SecurityConfiguration {
 
 	@Autowired
@@ -108,9 +108,10 @@ public class SecurityConfiguration {
 		http
 			.authorizeHttpRequests(authorize -> authorize
 					// PUBLIC PAGES
-					.requestMatchers("/","/contactus","/**.css" ,"/search" ,"/**.js" ,"/download_image/**" ,"/viewPost/**" ,"/index", "/images/**", "/error/**").permitAll()
+					.requestMatchers("/","/login", "/register","/contactus","/**.css" ,"/search" ,"/**.js" ,"/download_image/**" ,"/viewPost/**" ,"/index", "/images/**", "/error/**").permitAll()
 					// PRIVATE PAGES
-					.requestMatchers("/admin").hasAnyRole("ADMIN")
+					.requestMatchers("/", "/upload_image").hasRole("USER")
+					.requestMatchers("/admin", "/deleteuser/**").hasRole("ADMIN")
 					.anyRequest().authenticated()
 			)
 			.formLogin(formLogin -> formLogin
