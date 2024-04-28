@@ -168,4 +168,12 @@ public class UserP
         }
     }
 
+    public void deleteLikedPost(Post post){
+        this.likedPosts.remove(post);
+    }
+
+
+    public void setUserPosts(List<Post> postslist){
+        this.userPosts = postslist;
+    }
 }

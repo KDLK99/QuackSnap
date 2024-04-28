@@ -37,7 +37,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @JsonIgnore
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.PERSIST})
     private List<UserP> likedUsers;
     @JsonView(Basic.class)
     private int counter = 0;
@@ -233,6 +233,10 @@ public class Post {
         this.counter--;
     }
 
+    public List<UserP> getLikedUsers(){
+        return this.likedUsers;
+    }
+
     public int getCounter(){
         return this.counter;
     }
@@ -266,8 +270,5 @@ public class Post {
     public int hashCode() {
         return Objects.hash(id);
     }
-    public List<UserP> getLikedUsers()
-    {
-        return this.likedUsers;
-    }
+
 }

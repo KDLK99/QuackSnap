@@ -29,6 +29,7 @@ import java.util.*;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -80,6 +81,14 @@ public class WebController {
 
     @GetMapping("/deleteuser/{idUser}")
     public String deleteuser(@PathVariable int idUser) {
+
+        List<Post> lista = this.userService.findById(idUser).get().getUserPosts();
+        List<Post> lista1 = new ArrayList<>(lista);
+        for(Post post : lista1){
+            this.postService.deleteById(post.getId());
+
+        }
+
         this.userService.deleteById(idUser);
         return "redirect:/admin";
     }
