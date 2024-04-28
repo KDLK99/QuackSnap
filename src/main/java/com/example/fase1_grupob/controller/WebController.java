@@ -27,6 +27,7 @@ import java.util.*;
 
 
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.example.fase1_grupob.service.PostService;
 import com.example.fase1_grupob.service.UserService;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -89,6 +91,11 @@ public class WebController {
 
         return "index";
     }
+    @GetMapping("/uploadImage")
+    public String uploadPost() {
+
+        return "uploadImage";
+    }
 
 
     @PostMapping("/upload_image")
@@ -108,10 +115,13 @@ public class WebController {
     }
 
     @GetMapping("/viewPost/{index}")
-    public String showPost(@PathVariable int index, Model model) throws MalformedURLException {
+    public String showPost(@PathVariable int index, Model model, HttpServletRequest request) throws MalformedURLException {
         if(this.postService.findById(index).isEmpty()){
             return "/templates/error/404.html";
         }
+        Optional<Post> post1 = this.postService.findById(index);
+
+        model.addAttribute("userPermission", (!request.isUserInRole("ADMIN") && !this.userService.findByName(request.getUserPrincipal().getName()).get().getUserPosts().contains(post1.get())) ? null : true);
 
         model.addAttribute("description", this.postService.findById(index).get().getDescription());
 
@@ -154,7 +164,7 @@ public class WebController {
             Optional<Post> post = this.postService.findById(index);
             if(post.isPresent()){
                 post.get().addComment(comment1);
-                this.postService.save(post.get(), post.get().getId());
+                this.postService.save(post.get());
             }
         }
         return "redirect:/viewPost/{index}";
@@ -167,7 +177,7 @@ public class WebController {
         if(post.isPresent() && this.userService.findByName(request.getUserPrincipal().getName()).isPresent()){
             this.postService.addLike(this.userService.findByName(request.getUserPrincipal().getName()).get(), post.get());
             this.userService.findByName(request.getUserPrincipal().getName()).get().addLikedPost(post.get());
-            this.postService.save(post.get(), post.get().getId());
+            this.postService.saveLikedPost(post.get(), post.get().getId());
         }
 
         return "redirect:/viewPost/{index}";
@@ -176,12 +186,19 @@ public class WebController {
 
     @GetMapping("/deletePost/{index}")
     public String deletePost(Model model, @PathVariable int index, HttpServletRequest request) throws MalformedURLException {
+
+        Optional<Post> post1 = this.postService.findById(index);
+
+        if(!request.isUserInRole("ADMIN") && !this.userService.findByName(request.getUserPrincipal().getName()).get().getUserPosts().contains(post1.get())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
         if(this.postService.findById(index).isPresent()) {
             Optional<Post> post = this.postService.findById(index);
             if(post.isPresent() && this.userService.findByName(request.getUserPrincipal().getName()).isPresent()) {
                 this.postService.deleteById(post.get().getId());
                 
-
+                Collection<Post> lista = this.postService.findAll();
                 model.addAttribute("posts", this.postService.findAll());
 
                 this.userService.findByName(request.getUserPrincipal().getName()).get().deletePost(post.get());
@@ -192,8 +209,15 @@ public class WebController {
     }
 
     @PostMapping("/updatePost/{index}")
-    public String updatePost(@PathVariable int index, @RequestParam String imageDesc, @RequestParam String postTitle) {
+    public String updatePost(@PathVariable int index, @RequestParam String imageDesc, @RequestParam String postTitle, HttpServletRequest request) {
         Optional<Post> post = this.postService.findById(index);
+
+
+
+        if(!request.isUserInRole("ADMIN") && !this.userService.findByName(request.getUserPrincipal().getName()).get().getUserPosts().contains(post.get())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
         if(post.isPresent()) {
             if (!imageDesc.isEmpty()) {
                 post.get().setDescription(imageDesc);
@@ -203,7 +227,7 @@ public class WebController {
                 post.get().setTitle(postTitle);
             }
 
-            this.postService.save(post.get(), post.get().getId());
+            this.postService.save(post.get());
         }
 
         return "redirect:/viewPost/{index}";
@@ -211,19 +235,28 @@ public class WebController {
 
 
     @GetMapping("/editPost/{index}")
-    public String updatePost(Model model, @PathVariable int index){
+    public String updatePost(Model model, @PathVariable int index, HttpServletRequest request){
+        Optional<Post> post = this.postService.findById(index);
+
+        if(!request.isUserInRole("ADMIN") && !this.userService.findByName(request.getUserPrincipal().getName()).get().getUserPosts().contains(post.get())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
         model.addAttribute("index", index);
         return "edit_post";
     }
 
     @PostMapping("/search")
-    public String searchByCategory(@RequestParam String category, Model model, @RequestParam String order, @RequestParam(required = false) String title) {
+    public String search(@RequestParam String category, Model model, @RequestParam String order, @RequestParam(required = false) String title, HttpServletRequest request) {
         /*if(((category.isEmpty() && (order == null || order.isEmpty())) || category.isEmpty() && order.equals("Default")) && (title == null || title.isEmpty())){
             return "redirect:/";
         }*/
 
         model.addAttribute("posts", this.postService.filteredPosts(Arrays.stream(category.split(" ")).toList(), order, title));
         model.addAttribute("errormsg", "No posts match that search criteria.");
+
+        model.addAttribute("user", request.isUserInRole("USER"));
+
+
         return "index";
     }
 
@@ -236,6 +269,7 @@ public class WebController {
     @GetMapping("/user")
     public String user(Model model, HttpServletRequest request)
     {
+
         if(this.userService.findByName(request.getUserPrincipal().getName()).isPresent()) {
             model.addAttribute("index", this.userService.findByName(request.getUserPrincipal().getName()).get().getId());
             model.addAttribute("username", this.userService.findByName(request.getUserPrincipal().getName()).get().getUsername());
@@ -253,17 +287,17 @@ public class WebController {
         return "edit_profile";
     }
     @PostMapping("/upload_info")
-    public String uploadInfo(@RequestParam String username, @RequestParam String description, @RequestParam MultipartFile image, Model model, HttpServletRequest request) throws IOException
+    public String uploadInfo(@RequestParam String description, @RequestParam MultipartFile image, Model model, HttpServletRequest request) throws IOException
     {
         UserP user = this.userService.findByName(request.getUserPrincipal().getName()).get();
 
-        this.userService.save(user, username, description, image);
+        this.userService.save(user, description, image);
 
         return "redirect:/user";
     }
 
-    @GetMapping("/updated_profile/{index}")
-    public ResponseEntity<Object> updateImageUSer(Model model, @PathVariable int index, HttpServletRequest request) throws MalformedURLException, SQLException {
+    @GetMapping("/updated_profile")
+    public ResponseEntity<Object> updateImageUSer(Model model, HttpServletRequest request) throws  SQLException {
         if(this.userService.findByName(request.getUserPrincipal().getName()).isPresent()) {
             Resource file = new InputStreamResource(this.userService.findByName(request.getUserPrincipal().getName()).get().getImage().getBinaryStream());
 
@@ -286,15 +320,26 @@ public class WebController {
 
     }
 
-    @GetMapping("/deleteComment/{indexPost}/{indexComment}")
-    public String deleteComment(@PathVariable int indexComment, @PathVariable int indexPost){
+    @PostMapping ("/deleteComment/{indexPost}/{indexComment}")
+    public String deleteComment(@PathVariable int indexComment, @PathVariable int indexPost, HttpServletRequest request){
+        Optional<Post> post = this.postService.findById(indexPost);
+
+        if(!request.isUserInRole("ADMIN") && !request.isUserInRole("ADMIN") && !this.userService.findByName(request.getUserPrincipal().getName()).get().getUserPosts().contains(post.get())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
         this.postService.deleteComment(indexPost, indexComment);
         
         return "redirect:/viewPost/{indexPost}";
     }
 
     @PostMapping("/{index}/uploadFile")
-    public String uploadFile(Model model, @RequestParam MultipartFile file, @PathVariable int index){
+    public String uploadFile(Model model, @RequestParam MultipartFile file, @PathVariable int index, HttpServletRequest request){
+        Optional<Post> post = this.postService.findById(index);
+
+        if(!request.isUserInRole("ADMIN") && !this.userService.findByName(request.getUserPrincipal().getName()).get().getUserPosts().contains(post.get())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
         if (file == null || !file.isEmpty()){
             this.postService.uploadFile(index, file);
         }

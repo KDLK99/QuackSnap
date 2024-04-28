@@ -31,7 +31,7 @@ public class DatabaseInitializer {
     private PostService postService;
     @Autowired
     private UserService userService;
-    //private UserRepository userRepository;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -78,6 +78,6 @@ public class DatabaseInitializer {
         p1.setAdditionalInformationFile("test.pdf");
 
         postService.save(p1, 2L, null, "testing", "This is the first post", "Hello!!");
-        //postService.save(p2, 1L, null, "testing2", "This is a test post", "Example title");
+        postService.save(p2, 1L, null, "testing2", "This is a test post", "Example title");
     }
 }

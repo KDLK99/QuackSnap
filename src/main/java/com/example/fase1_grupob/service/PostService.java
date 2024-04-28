@@ -25,7 +25,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-
 @Service
 public class PostService {
 
@@ -69,21 +68,20 @@ public class PostService {
         post.setDescription(imageDesc);
         post.setTitle(postTitle);
 
+
         if(!this.userService.findById(id).isEmpty()){
             UserP u = this.userService.findById(id).get();
             u.addPost(post);
             this.userRepository.save(u);
-        }
 
-        //return postRepository.save(post);
+
+        }
+        Collection<Post> lista = this.findAll();
+
+        //postRepository.save(post);
     }
 
-    public Post save(Post post, Long id){
-        if(!this.userService.findById(id).isEmpty()){
-            UserP u = this.userService.findById(id).get();
-            u.addPost(post);
-            this.userRepository.save(u);
-        }
+    public Post save(Post post){
         return this.postRepository.save(post);
     }
 
@@ -97,6 +95,9 @@ public class PostService {
             file1.delete();
         }
 
+
+        //this.postRepository.deleteById(id);
+
         for(Category category: categories)
         {
             if(this.categoryRepository.findAll().contains(category))
@@ -106,7 +107,10 @@ public class PostService {
             }
         }
 
-        this.postRepository.deleteById(id);
+        Collection<Category> lista = this.categoryRepository.findAll();
+        Collection<Post> lista1 = this.findAll();
+        //this.postRepository.deleteById(id);
+        Collection<Post> lista2 = this.findAll();
     }
 
     public List<Post> filteredPosts(List<String> categories, String order, String title){
@@ -122,6 +126,8 @@ public class PostService {
         }
 
         List<Post> posts = new ArrayList<>();
+        Collection<Category> lista = this.categoryRepository.findAll();
+        Collection<Post> lista1 = this.findAll();
         for(Category category: categoryList){
             if(this.categoryRepository.findAll().contains(category)){
                 category.setId(this.categoryRepository.findAll().get(this.categoryRepository.findAll().indexOf(category)).getId());
@@ -178,7 +184,7 @@ public class PostService {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The url is not a file resource");
             }
 
-            this.save(post.get(), post.get().getId());
+            this.save(post.get());
 
             Path filePath = FILES_FOLDER.resolve(fileName);
             try {
@@ -223,5 +229,12 @@ public class PostService {
     }
 
 
-
+    public Post saveLikedPost(Post post, long id) {
+        if(!this.userService.findById(id).isEmpty()){
+            UserP u = this.userService.findById(id).get();
+            u.addLikedPost(post);
+            this.userRepository.save(u);
+        }
+        return this.postRepository.save(post);
+    }
 }

@@ -21,14 +21,13 @@ public class Post {
     @Column(columnDefinition = "LONGBLOB")
     private String description;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.PERSIST})
-
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.PERSIST, CascadeType.MERGE})
     private List<Category> categories;
     @JsonView(Basic.class)
     @Column(columnDefinition = "LONGBLOB")
     private String postTitle;
     @JsonView(Basic.class)
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Comment> comments;
     @JsonView(Basic.class)
     private int likes;
@@ -38,7 +37,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @JsonIgnore
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<UserP> likedUsers;
     @JsonView(Basic.class)
     private int counter = 0;
@@ -246,4 +245,22 @@ public class Post {
         return this.additionalInformationFile;
     }
 
+    public void deleteAllLikedUsers(){
+        for(UserP userp :this.likedUsers){
+            this.likedUsers.remove(userp);
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Post post = (Post) o;
+        return Objects.equals(id, post.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
