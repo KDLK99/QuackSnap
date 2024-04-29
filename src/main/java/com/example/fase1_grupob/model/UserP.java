@@ -156,7 +156,24 @@ public class UserP
         return this.encodedPassword;
     }
 
-    public void deleteAllPosts(){
-        this.userPosts = new ArrayList<>();
+    public void deleteAllPosts()
+    {
+        for(Post post : this.getUserPosts())
+        {
+            if(!post.getLikedUsers().isEmpty())
+            {
+                post.deleteAllUsers();
+            }
+            
+        }
+    }
+
+    public void deleteLikedPost(Post post){
+        this.likedPosts.remove(post);
+    }
+
+
+    public void setUserPosts(List<Post> postslist){
+        this.userPosts = postslist;
     }
 }

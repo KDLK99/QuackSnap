@@ -29,6 +29,7 @@ import java.util.*;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -69,11 +70,34 @@ public class WebController {
     public String loginerror() {
         return "login";
     }
+
+    @GetMapping("/admin")
+    public String admin(HttpServletRequest request, Model model) 
+    {
+        model.addAttribute("usersRegistered", this.userService.getAllUsersExceptAdmin());
+        
+        return "godmode";
+    }
+
+    @GetMapping("/deleteuser/{idUser}")
+    public String deleteuser(@PathVariable int idUser) {
+
+        List<Post> lista = this.userService.findById(idUser).get().getUserPosts();
+        List<Post> lista1 = new ArrayList<>(lista);
+        for(Post post : lista1){
+            this.postService.deleteById(post.getId());
+
+        }
+
+        this.userService.deleteById(idUser);
+        return "redirect:/admin";
+    }
+    
     @PostMapping("/register")
     public String register(@RequestParam String username, @RequestParam String password, @RequestParam String description, @RequestParam MultipartFile image) throws IOException 
     {
         UserP userP = new UserP(username, passwordEncoder.encode(password), description, "USER");
-        if (!image.isEmpty() && this.userService.findById(userP.getId()).isPresent()) {
+        if (!image.isEmpty()) {
             userP = this.imageService.createImage(image, userP);
         }
         this.userService.save(userP);
@@ -87,6 +111,7 @@ public class WebController {
 
         model.addAttribute("posts", this.postService.findAll());
         model.addAttribute("user", request.isUserInRole("USER"));
+        model.addAttribute("admin", request.isUserInRole("ADMIN"));
         model.addAttribute("errormsg", "No posts yet.");
 
         return "index";
@@ -208,6 +233,7 @@ public class WebController {
         return "redirect:/";
     }
 
+
     @PostMapping("/updatePost/{index}")
     public String updatePost(@PathVariable int index, @RequestParam String imageDesc, @RequestParam String postTitle, HttpServletRequest request) {
         Optional<Post> post = this.postService.findById(index);
@@ -269,7 +295,7 @@ public class WebController {
     @GetMapping("/user")
     public String user(Model model, HttpServletRequest request)
     {
-
+        
         if(this.userService.findByName(request.getUserPrincipal().getName()).isPresent()) {
             model.addAttribute("index", this.userService.findByName(request.getUserPrincipal().getName()).get().getId());
             model.addAttribute("username", this.userService.findByName(request.getUserPrincipal().getName()).get().getUsername());

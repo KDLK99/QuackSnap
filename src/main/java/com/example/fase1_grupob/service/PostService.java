@@ -96,8 +96,6 @@ public class PostService {
         }
 
 
-        //this.postRepository.deleteById(id);
-
         for(Category category: categories)
         {
             if(this.categoryRepository.findAll().contains(category))
@@ -107,10 +105,19 @@ public class PostService {
             }
         }
 
-        Collection<Category> lista = this.categoryRepository.findAll();
-        Collection<Post> lista1 = this.findAll();
-        //this.postRepository.deleteById(id);
-        Collection<Post> lista2 = this.findAll();
+        for(UserP userP : post.get().getLikedUsers()){
+            userP.deleteLikedPost(post.get());
+            this.userService.save(userP);
+        }
+
+        for(UserP userP: this.userRepository.findAll()){
+            if(userP.getUserPosts().contains(post.get())){
+                userP.deletePost(post.get());
+                this.userService.save(userP);
+            }
+        }
+
+        this.postRepository.deleteById(id);
     }
 
     public List<Post> filteredPosts(List<String> categories, String order, String title){

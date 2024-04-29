@@ -7,6 +7,7 @@ import com.example.fase1_grupob.repository.UserRepository;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +33,13 @@ public class UserService {
 
     public Collection<UserP> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public Collection<UserP> getAllUsersExceptAdmin()
+    {
+        Collection<UserP> noAdmin = this.getAllUsers();
+        noAdmin.remove(this.findById(1).get());
+        return noAdmin;
     }
 
     public Optional<UserP> findById(long id) {
@@ -63,10 +71,17 @@ public class UserService {
         this.save(user);
     }
 
-    public void deleteById(long id) {
-        Optional<UserP> user = this.userRepository.findById(id);
-        user.get().deleteAllPosts();
-        this.userRepository.save(user.get());
+    public void deleteById(long id) 
+    {
+        
+        if(!this.userRepository.findById(id).get().getUserPosts().isEmpty())
+        {
+            Optional<UserP> user = this.userRepository.findById(id);
+            user.get().deleteAllPosts();
+            this.userRepository.save(user.get());
+            
+        }
+        Optional<UserP> user1 = this.userRepository.findById(id);
         this.userRepository.deleteById(id);
     }
 
