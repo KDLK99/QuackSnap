@@ -65,6 +65,7 @@ public class SecurityConfiguration {
 		http
 				.authorizeHttpRequests(authorize -> authorize
 						// PRIVATE ENDPOINTS
+						.requestMatchers(HttpMethod.DELETE,"/api/user/**").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.POST,"/api/auth/logout").hasRole("USER")
 						.requestMatchers(HttpMethod.POST,"/api/posts/**").hasRole("USER")
 						.requestMatchers(HttpMethod.POST,"/api/posts").hasRole("USER")

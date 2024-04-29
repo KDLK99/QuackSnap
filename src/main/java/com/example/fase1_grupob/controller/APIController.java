@@ -238,4 +238,20 @@ public class APIController {
         }
     }
 
+    @DeleteMapping("/user/{idUser}")
+    public ResponseEntity<Object> deleteUser(@PathVariable int idUser){
+        if(!this.userService.findById(idUser).isEmpty()) {
+            List<Post> lista = this.userService.findById(idUser).get().getUserPosts();
+            List<Post> lista1 = new ArrayList<>(lista);
+            for (Post post : lista1) {
+                this.postService.deleteById(post.getId());
+
+            }
+            this.userService.deleteById(idUser);
+
+            return ResponseEntity.status(204).build();
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
