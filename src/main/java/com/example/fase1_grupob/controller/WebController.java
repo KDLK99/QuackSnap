@@ -79,8 +79,8 @@ public class WebController {
         
         return "godmode";
     }
-
-    @GetMapping("/deleteuser/{idUser}")
+    
+    @PostMapping("/deleteuser/{idUser}")
     public String deleteuser(@PathVariable int idUser, HttpServletRequest request) throws ServletException {
 
         if(!request.isUserInRole("ADMIN") && this.userService.findByName(request.getUserPrincipal().getName()).get().getId() != idUser){
@@ -106,10 +106,10 @@ public class WebController {
     public String register(@RequestParam String username, @RequestParam String password, @RequestParam String description, @RequestParam MultipartFile image) throws IOException 
     {
         UserP userP = new UserP(username, passwordEncoder.encode(password), description, "USER");
-        if (!image.isEmpty()) {
+        if (!image.isEmpty() && !username.isEmpty() && !description.isEmpty() && !password.isEmpty()) {
             userP = this.imageService.createImage(image, userP);
+            this.userService.save(userP);
         }
-        this.userService.save(userP);
         return "login";
     }
     
@@ -155,7 +155,7 @@ public class WebController {
         }
         Optional<Post> post1 = this.postService.findById(index);
 
-        model.addAttribute("userPermission", (!request.isUserInRole("ADMIN") && !this.userService.findByName(request.getUserPrincipal().getName()).get().getUserPosts().contains(post1.get())) ? null : true);
+        model.addAttribute("userPermission", (request.isUserInRole("ADMIN") || (request.isUserInRole("USER") ? this.userService.findByName(request.getUserPrincipal().getName()).get().getUserPosts().contains(post1.get()) : false) ? true : null));
 
         model.addAttribute("description", this.postService.findById(index).get().getDescription());
 
@@ -218,7 +218,7 @@ public class WebController {
     }
 
 
-    @GetMapping("/deletePost/{index}")
+    @PostMapping("/deletePost/{index}")
     public String deletePost(Model model, @PathVariable int index, HttpServletRequest request) throws MalformedURLException {
 
         Optional<Post> post1 = this.postService.findById(index);
@@ -269,7 +269,7 @@ public class WebController {
     }
 
 
-    @GetMapping("/editPost/{index}")
+    @PostMapping("/editPost/{index}")
     public String updatePost(Model model, @PathVariable int index, HttpServletRequest request){
         Optional<Post> post = this.postService.findById(index);
 
