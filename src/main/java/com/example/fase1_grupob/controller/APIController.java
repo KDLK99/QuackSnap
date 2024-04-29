@@ -243,7 +243,11 @@ public class APIController {
     }
 
     @DeleteMapping("/user/{idUser}")
-    public ResponseEntity<Object> deleteUser(@PathVariable int idUser){
+    public ResponseEntity<Object> deleteUser(@PathVariable int idUser, HttpServletRequest request){
+
+        if(!request.isUserInRole("ADMIN") && this.userService.findByName(request.getUserPrincipal().getName()).get().getId() != idUser){
+            return ResponseEntity.status(403).build();
+        }
         if(!this.userService.findById(idUser).isEmpty()) {
             List<Post> lista = this.userService.findById(idUser).get().getUserPosts();
             List<Post> lista1 = new ArrayList<>(lista);
