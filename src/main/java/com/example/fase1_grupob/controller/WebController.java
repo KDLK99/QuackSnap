@@ -12,6 +12,7 @@ import com.example.fase1_grupob.model.UserP;
 import com.example.fase1_grupob.service.ImageService;
 
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +81,11 @@ public class WebController {
     }
 
     @GetMapping("/deleteuser/{idUser}")
-    public String deleteuser(@PathVariable int idUser) {
+    public String deleteuser(@PathVariable int idUser, HttpServletRequest request) throws ServletException {
+
+        if(!request.isUserInRole("ADMIN") && this.userService.findByName(request.getUserPrincipal().getName()).get().getId() != idUser){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
 
         List<Post> lista = this.userService.findById(idUser).get().getUserPosts();
         List<Post> lista1 = new ArrayList<>(lista);
@@ -88,9 +93,13 @@ public class WebController {
             this.postService.deleteById(post.getId());
 
         }
-
         this.userService.deleteById(idUser);
-        return "redirect:/admin";
+        if(request.isUserInRole("ADMIN")){
+            return "redirect:/admin";
+        }else{
+            request.logout();
+            return "redirect:/";
+        }
     }
     
     @PostMapping("/register")
