@@ -8,8 +8,10 @@ import com.example.fase1_grupob.service.ImageService;
 import com.sun.jdi.request.ExceptionRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.engine.jdbc.BlobProxy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.example.fase1_grupob.service.PostService;
@@ -37,6 +39,8 @@ public class APIController {
     private final PostService postService;
     private final UserService userService;
     private final ImageService imageService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public APIController(PostService postService, UserService userService, ImageService imageService){
         this.postService = postService;
@@ -249,9 +253,23 @@ public class APIController {
             }
             this.userService.deleteById(idUser);
 
-            return ResponseEntity.status(204).build();
+            return ResponseEntity.status(202).build();
         }else{
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<Object> register(@RequestParam String username, @RequestParam String password, @RequestParam String description, @RequestParam MultipartFile image) throws IOException
+    {
+        UserP userP = new UserP(username, passwordEncoder.encode(password), description, "USER");
+
+        if (!image.isEmpty() && !username.isEmpty() && !description.isEmpty() && !password.isEmpty()) {
+            userP = this.imageService.createImage(image, userP);
+            this.userService.save(userP);
+            return ResponseEntity.status(201).build();
+        }else{
+            return ResponseEntity.unprocessableEntity().build();
         }
     }
 }
