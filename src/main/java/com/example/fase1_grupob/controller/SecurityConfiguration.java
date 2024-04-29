@@ -75,6 +75,7 @@ public class SecurityConfiguration {
 						.requestMatchers(HttpMethod.DELETE,"/api/posts/**").hasRole("USER")
 						.requestMatchers(HttpMethod.DELETE,"/api/posts/*/comment/**").hasRole("USER")
 						// PUBLIC ENDPOINTS
+						.requestMatchers(HttpMethod.POST,"/api/register").permitAll()
 						.requestMatchers(HttpMethod.GET,"/api/searchBar").permitAll()
 						.requestMatchers(HttpMethod.GET,"/api/posts/*/file").permitAll()
 						.requestMatchers(HttpMethod.GET,"/api/posts/**").permitAll()
