@@ -1,8 +1,5 @@
 package com.example.fase1_grupob.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -14,7 +11,6 @@ import com.example.fase1_grupob.service.ImageService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -30,7 +26,6 @@ import java.util.*;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,7 +34,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.fase1_grupob.service.PostService;
 import com.example.fase1_grupob.service.UserService;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -77,7 +71,7 @@ public class WebController {
     {
         model.addAttribute("usersRegistered", this.userService.getAllUsersExceptAdmin());
         
-        return "godmode";
+        return "admin";
     }
     
     @PostMapping("/deleteuser/{idUser}")

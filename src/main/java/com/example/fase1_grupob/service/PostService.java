@@ -67,6 +67,7 @@ public class PostService {
 
         post.setDescription(imageDesc);
         post.setTitle(postTitle);
+        post.addCreator(this.userService.findById(id).get());
 
 
         if(!this.userService.findById(id).isEmpty()){
@@ -110,12 +111,9 @@ public class PostService {
             this.userService.save(userP);
         }
 
-        for(UserP userP: this.userRepository.findAll()){
-            if(userP.getUserPosts().contains(post.get())){
-                userP.deletePost(post.get());
-                this.userService.save(userP);
-            }
-        }
+        UserP userP1 = post.get().getCreator();
+        userP1.deletePost(post.get());
+        this.userService.save(userP1);
 
         this.postRepository.deleteById(id);
     }
@@ -133,8 +131,6 @@ public class PostService {
         }
 
         List<Post> posts = new ArrayList<>();
-        Collection<Category> lista = this.categoryRepository.findAll();
-        Collection<Post> lista1 = this.findAll();
         for(Category category: categoryList){
             if(this.categoryRepository.findAll().contains(category)){
                 category.setId(this.categoryRepository.findAll().get(this.categoryRepository.findAll().indexOf(category)).getId());
