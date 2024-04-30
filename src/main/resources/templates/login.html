@@ -19,8 +19,8 @@
               <div class="flip-card__front">
                  <div class="title">Log in</div>
                  <form class="flip-card__form" action="/login" method="post">
-                    <input class="flip-card__input" name="username" placeholder="Username" type="text">
-                    <input class="flip-card__input" name="password" placeholder="Password" type="password">
+                    <input class="flip-card__input" name="username" placeholder="Username" type="text" required="">
+                    <input class="flip-card__input" name="password" placeholder="Password" type="password" required="">
                     
                     <input type="hidden" name="_csrf" value="{{token}}"/>
                     <button class="flip-card__btn" type="submit">Let`s go!</button>
@@ -29,10 +29,10 @@
               <div class="flip-card__back">
                  <div class="title">Sign up</div>
                  <form class="flip-card__form" action="/register" method="post" enctype="multipart/form-data">
-                    <input class="flip-card__input" name="username" placeholder="Username" type="text">
-                    <input class="flip-card__input" name="password" placeholder="Password" type="password">
-                    <textarea class="flip-card__input" placeholder="Description"  name="description" type="textarea"></textarea>
-                    <p>Image file:</p><input type='file' name='image' accept=".jpg, .jpeg" required/>
+                    <input class="flip-card__input" name="username" placeholder="Username" type="text" required="">
+                    <input class="flip-card__input" name="password" placeholder="Password" type="password" required="">
+                    <textarea class="flip-card__input" placeholder="Description"  name="description" type="textarea" required=""></textarea>
+                    <p>Image file:</p><input type='file' name='image' accept=".jpg, .jpeg" required=""/>
                     <input type="hidden" name="_csrf" value="{{token}}"/>
                     <button class="flip-card__btn">Confirm!</button>
                  </form>
