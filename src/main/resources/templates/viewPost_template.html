@@ -98,6 +98,11 @@
         {{#additionalInformationFile}}
         <p>Additional Information:</p>
         {{/additionalInformationFile}}
+        {{^additionalInformationFile}}
+        {{#userPermission}}
+        <p>Additional Information:</p>
+        {{/userPermission}}
+        {{/additionalInformationFile}}
         {{#userPermission}}
       <form action="/{{index}}/uploadFile" method="post" enctype="multipart/form-data">
           <input type='file' name='file' accept=".pdf"/>

@@ -44,6 +44,9 @@ public class Post {
     @JsonView(Basic.class)
     private String additionalInformationFile;
 
+    @ManyToOne
+    private UserP creator;
+
 
     public Post() {
         this.description = null;
@@ -269,6 +272,14 @@ public class Post {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public void addCreator(UserP userP){
+        this.creator = userP;
+    }
+
+    public UserP getCreator(){
+        return this.creator;
     }
 
 }
