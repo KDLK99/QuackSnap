@@ -157,6 +157,10 @@ public class PostService {
 
     public String uploadFile(int index, MultipartFile file){
 
+        if(!file.getOriginalFilename().matches("[a-zA-Z.()]")){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The url is not a valid file resource");
+        }
+
         if (!Objects.equals(file.getContentType(), "application/pdf") || !Objects.requireNonNull(file.getOriginalFilename()).matches(".*\\.(pdf)") || file.getOriginalFilename().contains("/") || file.getOriginalFilename().contains("\\")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The url is not a file resource");
         }
@@ -207,6 +211,9 @@ public class PostService {
 
     public ResponseEntity<Object> downloadFile(int index) throws MalformedURLException {
         if(this.postRepository.findById((long)index).isPresent()) {
+            if(this.postRepository.findById((long) index).get().getAdditionalInformationFile() == null){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No file present");
+            }
 
             Path filePath = FILES_FOLDER.resolve(this.postRepository.findById((long) index).get().getAdditionalInformationFile());
 
