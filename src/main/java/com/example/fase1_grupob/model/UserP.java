@@ -16,8 +16,10 @@ public class UserP
     private Blob imageFile;
     @Column(columnDefinition = "LONGBLOB")
     private String username;
+    @JsonIgnore
     private String encodedPassword;
 
+    @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
     @Column(columnDefinition = "LONGBLOB")
