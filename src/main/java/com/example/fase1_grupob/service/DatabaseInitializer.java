@@ -38,9 +38,9 @@ public class DatabaseInitializer {
 
     @PostConstruct
     public void init() throws IOException{
-        UserP userP = new UserP("admin", passwordEncoder.encode("adminpass"),"Soy PatAdmin", "USER", "ADMIN");
+        UserP userP = new UserP("admin", passwordEncoder.encode("S^%V4JBWkCGi2i"),"Soy PatAdmin", "USER", "ADMIN");
         this.userService.save(userP);
-        userP = new UserP("user", passwordEncoder.encode("pass"),"Pepe the Duck: Nature lover and conservationist. Shares educational content about waterfowl and wildlife. Adventurous and creative, he shares his own illustrations and photographs of ducks and other wildlife.", "USER");
+        userP = new UserP("user", passwordEncoder.encode("eQJYFfK^23qijj"),"Pepe the Duck: Nature lover and conservationist. Shares educational content about waterfowl and wildlife. Adventurous and creative, he shares his own illustrations and photographs of ducks and other wildlife.", "USER");
         this.userService.save(userP);
         
 
