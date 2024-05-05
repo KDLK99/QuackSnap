@@ -442,7 +442,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"adminpass\"\r\n}",
+					"raw": "{\r\n    \"username\": \"user\",\r\n    \"password\": \"pass\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -820,11 +820,6 @@
 					"mode": "formdata",
 					"formdata": [
 						{
-							"key": "username",
-							"value": "{{$randomLoremWords}}",
-							"type": "text"
-						},
-						{
 							"key": "description",
 							"value": "{{$randomLoremLines}}",
 							"type": "text"
@@ -882,7 +877,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://localhost:8443/api/posts/1",
+					"raw": "https://localhost:8443/api/posts/2",
 					"protocol": "https",
 					"host": [
 						"localhost"
@@ -891,7 +886,7 @@
 					"path": [
 						"api",
 						"posts",
-						"1"
+						"2"
 					]
 				},
 				"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."

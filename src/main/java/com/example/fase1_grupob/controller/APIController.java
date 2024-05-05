@@ -95,17 +95,20 @@ public class APIController {
         }
 
         if (this.postService.findById(id).isPresent()) {
-            Post post = this.postService.findById(id).get();
-            Post newPost = new Post();
+            Optional<Post> post = this.postService.findById(id);
+            if(post.isPresent()) {
+                if (!description.isEmpty()) {
+                    post.get().setDescription(description);
+                }
 
-            newPost.setImage(post.getImage());
-            newPost.setCategories(post.getCategories());
-            newPost.setId(id);
-            newPost.setDescription(description);
-            newPost.setTitle(title);
-            this.postService.save(newPost);
+                if (!title.isEmpty()) {
+                    post.get().setTitle(title);
+                }
 
-            return ResponseEntity.ok(post);
+                this.postService.save(post.get());
+            }
+
+            return ResponseEntity.ok(post.get());
         }else{
             return ResponseEntity.notFound().build();
         }
@@ -160,11 +163,11 @@ public class APIController {
     }
 
     @PutMapping( "/user")
-    public ResponseEntity<UserP> updateUserData (String username, String description, MultipartFile image, HttpServletRequest request)throws IOException {
+    public ResponseEntity<UserP> updateUserData (String description, MultipartFile image, HttpServletRequest request)throws IOException {
         if (this.userService.findById(1).isPresent()) {
             UserP user = this.userService.findByName(request.getUserPrincipal().getName()).get();
             try {
-                this.userService.save(user, username, description, image);
+                this.userService.save(user, description, image);
             }catch (ResponseStatusException e){
                 return ResponseEntity.badRequest().build();
             }
