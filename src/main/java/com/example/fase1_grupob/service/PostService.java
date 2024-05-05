@@ -157,7 +157,7 @@ public class PostService {
 
     public String uploadFile(int index, MultipartFile file){
 
-        if(!file.getOriginalFilename().matches("[a-zA-Z.()]")){
+        if(!file.getOriginalFilename().matches("^[a-zA-Z.()_0-9- ]+$")){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The url is not a valid file resource");
         }
 
