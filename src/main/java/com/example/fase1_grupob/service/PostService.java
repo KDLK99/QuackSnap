@@ -161,7 +161,7 @@ public class PostService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The url is not a valid file resource");
         }
 
-        if (!Objects.equals(file.getContentType(), "application/pdf") || !Objects.requireNonNull(file.getOriginalFilename()).matches(".*\\.(pdf)") || file.getOriginalFilename().contains("/") || file.getOriginalFilename().contains("\\")) {
+        if (!Objects.equals(file.getContentType(), "application/pdf") || !Objects.requireNonNull(file.getOriginalFilename()).matches(".*\\.(pdf)") || file.getOriginalFilename().contains("/") || file.getOriginalFilename().contains("\\") || file.getOriginalFilename().contains("..")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The url is not a file resource");
         }
 
