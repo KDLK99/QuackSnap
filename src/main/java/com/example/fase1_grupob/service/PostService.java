@@ -227,7 +227,7 @@ public class PostService {
             return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "application/pdf").body(file);
 
         }else{
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Can't get local file");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't get local file");
         }
     }
 

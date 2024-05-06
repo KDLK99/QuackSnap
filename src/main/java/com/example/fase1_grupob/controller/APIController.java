@@ -164,7 +164,7 @@ public class APIController {
 
     @PutMapping( "/user")
     public ResponseEntity<UserP> updateUserData (String description, MultipartFile image, HttpServletRequest request)throws IOException {
-        if (this.userService.findById(1).isPresent()) {
+        if (this.userService.findByName(request.getUserPrincipal().getName()).isPresent()) {
             UserP user = this.userService.findByName(request.getUserPrincipal().getName()).get();
             try {
                 this.userService.save(user, description, image);
