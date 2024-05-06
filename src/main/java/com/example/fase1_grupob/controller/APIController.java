@@ -134,11 +134,12 @@ public class APIController {
     }
 
     @PostMapping(value = "/posts/{id}/like")
-    public ResponseEntity<Post> giveLike( @PathVariable long id)throws IOException {
+    public ResponseEntity<Post> giveLike( @PathVariable long id, HttpServletRequest request)throws IOException {
         if(this.postService.findById(id).isPresent()) {
             Post post = this.postService.findById(id).get();
-            post.setLikes(post.getLikes() + 1);
-            this.postService.saveLikedPost(post, id);
+            this.postService.addLike(this.userService.findByName(request.getUserPrincipal().getName()).get(), post);
+            this.userService.findByName(request.getUserPrincipal().getName()).get().addLikedPost(post);
+            this.postService.saveLikedPost(post, post.getId());
             return ResponseEntity.ok(post);
         }else {
             return ResponseEntity.notFound().build();
