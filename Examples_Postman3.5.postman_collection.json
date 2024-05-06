@@ -442,7 +442,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"user\",\r\n    \"password\": \"pass\"\r\n}",
+					"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"S^%V4JBWkCGi2i\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
