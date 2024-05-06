@@ -113,7 +113,7 @@ public class SecurityConfiguration {
 					// PUBLIC PAGES
 					.requestMatchers("/","/login", "/register","/contactus","/**.css" ,"/search" ,"/**.js" ,"/download_image/**" ,"/viewPost/**" ,"/index", "/images/**", "/error/**", "/*/downloadFile").permitAll()
 					// PRIVATE PAGES
-					.requestMatchers("/", "/upload_image", "/deleteuser/**").hasRole("USER")
+					.requestMatchers("/upload_image", "/deleteuser/**").hasRole("USER")
 					.requestMatchers("/admin").hasRole("ADMIN")
 					.anyRequest().authenticated()
 			)
