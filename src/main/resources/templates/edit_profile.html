@@ -60,7 +60,17 @@
 <!-- Initialize Quill editor -->
 <script>
     const quill = new Quill('#editor', {
-        theme: 'snow'
+        theme: 'snow',
+        modules: {
+                toolbar: [
+                    
+                    [{size: []}],
+                    ['bold', 'italic', 'underline'],
+                    [{'list': 'ordered'} 
+                    ]
+                                        
+                ]
+            }
     });
     quill.on('text-change', function () {
         document.getElementById('description-textarea').value = quill.root.innerHTML;
